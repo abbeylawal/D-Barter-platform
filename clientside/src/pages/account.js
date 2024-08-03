@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useCallback, useContext, useMemo } from "react";
+import { useState, useCallback, useContext, useMemo } from "react";
 import React from 'react';
 import Style from"../styles/account.module.css";
 import {useDropzone} from 'react-dropzone';
@@ -11,18 +11,29 @@ import ProfileForm from "../AccountPage/ProfileForm/ProfileForm";
 const account = () => {
     const [fileUrl, setFileUrl] = useState(null);
 
+    const onDrop = useCallback(async(acceptedFile) => {
+        setFileUrl(acceptedFile[0]);
+
+    }, []);
+
+    const {getRootProps, getInputProps} = useDropzone({
+        onDrop,
+        accept: "image/*",
+        maxSize: 5000000,
+    });
+
     return (
         <div className={Style.account}>
             <div className={Style.account_info}>
-                <h1>Profile Setiings</h1>
+                <h1>Profile Settings</h1>
                 <p>
 
                 </p>
 
             </div>
             <div className={Style.account_box}>
-                <div className={Style.account_box}>
-                    <input />
+                <div className={Style.account_box_img} {...getRootProps()}>
+                    <input {...getInputProps()} />
                     <Image
                         src={images.user1}
                         alt="account upload"
@@ -40,6 +51,6 @@ const account = () => {
             </div>
         </div>
     )
-}
+};
 
-export default account
+export default account;
