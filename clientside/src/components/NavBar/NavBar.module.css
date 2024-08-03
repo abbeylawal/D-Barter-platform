@@ -173,7 +173,37 @@
 }
 
 /* Responsive design */
-@media screen and (min-device-width: 320px) and
+@media screen and (min-device-width: 320px) and 
+(max-device-width: 425px) {
+    .navbar_container{
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .navbar_container_left {
+        grid-template-columns: 1fr;
+    }
+    
+    .navbar_container_right {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .navbar_container_right_menuBtn{
+        display: block;
+    }
+
+    .navbar_container_left_box_input_box,
+    .navbar_container_right_discover,
+    .navbar_container_right_help,
+    .navbar_container_right_button {
+        display: none;
+    }
+
+    .SideBar{
+        display: block;
+    }
+}
+
+@media screen and (min-device-width: 426px) and
 (max-device-width: 760px) {
     .navbar_container{
         grid-template-columns: 1fr 1fr;
@@ -184,6 +214,7 @@
     }
     
     .navbar_container_right {
+        margin-right: 5rem;
         grid-template-columns: repeat(3, 1fr);
     }
 
