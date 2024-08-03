@@ -19,6 +19,7 @@
     padding: 1rem 1.5rem;
     /* background-color: #f0f0f0; */
     border: 1px solid var(--main-bg-color);
+    background-color: var(--main-bg-color);
     border-radius: 2rem;
     transition: all .3s ease-in;
     font-size: 1.3rem;
@@ -26,7 +27,13 @@
 }
 
 .filter_box_left button:hover{
-    border: 1px solid var(--icons-color)
+    border: 1px solid var(--icons-color);
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+    color: var(--main-bg-color);
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+
 }
 
 .filter_box_right {
@@ -35,26 +42,69 @@
 }
 
 .filter_box_right_box {
+    border: 1px solid var(--icons-color);
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+    color: var(--icons-color);
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
     display: flex;
     align-items: center;
+    gap: 1rem;
     cursor: pointer;
 }
+
+.filter_box_left button:hover {
+    border: 1px solid var(--icons-color);
+    color: var(--icons-color);
+    box-shadow: var(--box-shadow);
+}
+
+/* .filter_box_right_box:hover {
+    border: 1px solid var(--icons-color);
+    color: var(--icons-color);
+    box-shadow: var(--box-shadow);
+} */
 
 .filter_box_items {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    padding: 2rem 0;
     margin-top: 20px;
-    padding: 10px;
-    /* border-top: 1px solid #ccc; */
+    border-top: 1px solid var(--icons-light-color);
+
 }
+
 
 .filter_box_items_box {
-    margin-bottom: 10px;
+    padding: 1rem;
+    /* margin-bottom: 10px; */
 }
 
-.filter_box_items_box_item,
-.filter_box_items_box_item_trans {
+.filter_box_items_box_item{
+/* .filter_box_items_box_item_trans { */
+    background-color: var(--icons-color);
+    padding: .5rem 1rem;
+    border-radius: 2rem;
+    color: var(--main-bg-color);
     display: flex;
     align-items: center;
+    gap: .5rem;
     cursor: pointer;
+}
+
+.filter_box_items_box_item_trans{
+    border: 1px solid var(--icons-color);
+    color: var(--icons-color);
+    padding: .5rem 1rem;
+    border-radius: 2rem;
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
 }
 
 .filter_box_items_box_item span,
@@ -62,9 +112,11 @@
     margin-left: 10px;
 }
 
+/* ========= FIRST BREAK POINT= ===== */
 @media screen and (min-device-width: 320px) and
 (max-device-width: 375px) {
     .filter_box{
+        width: 90%;
         display: grid;
         gap: 4rem;
     }
@@ -74,8 +126,103 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 2rem;
     }
-
+    
     .filter_box_left button{
-        padding: .2rem;
+        padding: 2rem;
+    }
+    
+    .filter_box_items {
+        width: 90%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        /* gap: .5rem; */
+
+    }
+    .filter_box_right_box{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4rem;
+        padding-inline: 2rem;
+    }
+
+    .filter_box_items_box_item,
+    .filter_box_items_box_item_trans{
+        justify-content: space-between;
+    }
+}
+
+@media screen and (min-device-width: 377px) and
+(max-device-width: 425px) {
+    .filter_box{
+        width: 90%;
+        display: grid;
+        gap: 4rem;
+    }
+
+    .filter_box_left{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        /* gap: .5rem */
+    }
+    
+    .filter_box_left button{
+        padding: 1rem;
+    }
+    
+    .filter_box_items {
+        width: 90%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+    .filter_box_right_box{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4rem;
+        padding-inline: 2rem;
+    }
+
+    .filter_box_items_box_item,
+    .filter_box_items_box_item_trans{
+        justify-content: space-between;
+    }
+}
+
+@media screen and (min-device-width: 427px) and
+(max-device-width: 786px) {
+    .filter_box{
+        display: grid;
+        gap: 4rem;
+        width: 90%;
+    }
+
+    .filter_box_left{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .filter_box_left button{
+        padding: 1rem;
+    }
+    
+    .filter_box_items {
+        width: 90%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+    .filter_box_right_box{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4rem;
+        padding-inline: 2rem;
+    }
+
+    .filter_box_items_box_item,
+    .filter_box_items_box_item_trans{
+        justify-content: space-between;
     }
 }
