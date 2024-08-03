@@ -12,7 +12,18 @@ import images from "../../img";
 
 
 const NFTCard = () => {
-    const featureArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+    const CardArray = [
+        images.nft_image_1,
+        images.nft_image_3,
+        images.nft_image_2,
+        images.nft_image_1,
+        images.nft_image_3,
+        images.nft_image_2,
+        images.nft_image_1,
+        images.nft_image_3,
+        images.nft_image_2,
+    ];
 
     const [like, setLike] = useState(true);
 
@@ -22,11 +33,11 @@ const NFTCard = () => {
 
     return (
         <div className={Style.NFTCard}>
-            {featureArray.map((el, i) => (
+            {CardArray.map((el, i) => (
                 <div className={Style.NFTCard_box} key={i + 1}>
                     <div className={Style.NFTCard_box_img}>
                         <Image
-                            src={images.nft_image_1}
+                            src={el}
                             // src={images[`nft_image_${i + 1}`]}
                             alt='NFT images'
                             width={400}
@@ -49,7 +60,7 @@ const NFTCard = () => {
                                 {""} 22
                             </div>
                         </div>
-                        
+
                         <div className={Style.NFTCard_box_update_right}>
                             <div className={Style.NFTCard_box_update_right_info}>
                                 <small> Remaining time</small>
