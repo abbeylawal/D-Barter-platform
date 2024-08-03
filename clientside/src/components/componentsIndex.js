@@ -9,10 +9,12 @@ import Filter from "./Filter/Filter";
 import BackToTopButton from "./BackToTopButton/BackToTopButton"
 import AuthForm from "./AuthForm/AuthForm";
 import Collection from "./Collection/Collection";
-import NFTCard from "./NFTCard/NFTCard"
+import NFTCard from "./NFTCard/NFTCard";
+import Banner from "./Banner/Banner";
 
 export {
     AuthForm,
+    Banner,
     Button,
     Footer,
     NavBar,
