@@ -10,9 +10,7 @@
     gap: 2rem;
       
 
-}
-
-.category_box  {
+}.category_box  {
     line-height: 0;
     transition: all .3s ease-in;
     border-radius: 1rem;
@@ -20,6 +18,27 @@
     cursor: pointer;
     padding-bottom: 1rem;
 
+}
+
+
+.category_box:hover {
+    box-shadow: var(--box-shadow);
+}
+
+.category_box_img{
+    border-radius: 1rem;
+}
+
+.category_box_title{
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.category_box_title span{
+    font-size: 3rem;
+    margin-top: 1rem;
 }
 
 @media screen and (min-device-width: 320px) and
