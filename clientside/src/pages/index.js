@@ -18,12 +18,12 @@ const Home = () => {
     <div>
         <div className={Style.homePage}>
 
-            {/* <MainSection/> */}
+            <MainSection/>
             <Title
               heading="New Collection"
               paragraph="Explore the NFT in the most featured categories."
             />
-            {/* <Collection /> */}
+            <Collection />
             <Title
               heading="Featured NFTs"
               paragraph="Explore the NFT in the most featured categories."
