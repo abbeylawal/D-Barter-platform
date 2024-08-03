@@ -24,7 +24,7 @@ const Footer = () => {
                 </div>
             </div>
             <div className={styles.footer_bottom}>
-                <p>&copy; 2024 Your Company. All rights reserved.</p>
+                <p>&copy; 2024 Bater Easy - Muftau Lawal. All rights reserved.</p>
             </div>
         </div>
     );
