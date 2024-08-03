@@ -12,11 +12,12 @@ const Notification = () => {
                     <Image src={images.user1} alt="profile image"
                     width={50}
                     height={50}
+                    style={{ borderRadius: '50%' }}
                     />
                 </div>
                 <div className={Style.notification_box_info}>
                     <h4>Muftau Lawal</h4>
-                    <p>Measure action your user...</p>
+                    <p>Measure action your..</p>
                     <small>3 minutes ago</small>
                 </div>
                 <span className={Style.notification_box_new}>
