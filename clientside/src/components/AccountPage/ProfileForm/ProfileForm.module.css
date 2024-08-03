@@ -1,0 +1,58 @@
+.Form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.Form_box {
+    width: 100%;
+    max-width: 600px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.Form_box_input {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.Form_box_input label {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.inputField {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.inputField .icon {
+    position: absolute;
+    left: 10px;
+    font-size: 1.2rem;
+    color: #888;
+}
+
+.inputField input {
+    width: 100%;
+    padding: 10px 10px 10px 30px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    font-size: 1rem;
+}
+
+.Button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
