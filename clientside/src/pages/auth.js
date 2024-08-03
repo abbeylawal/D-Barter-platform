@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AuthForm from "../components/AuthForm/AuthForm";
+import AuthForm from "../components/AccountPage/AuthForm/AuthForm";
 import Style from "../styles/auth.module.css";
 
 const Auth = () => {
