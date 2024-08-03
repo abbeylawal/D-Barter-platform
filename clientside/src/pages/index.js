@@ -7,6 +7,9 @@ import {
   Title,
   Category,
   Filter,
+  BackToTopButton,
+  Collection,
+  NFTCard
 
 } from '../components/componentsIndex';
 
@@ -14,19 +17,27 @@ const Home = () => {
   return (
     <div>
         <div className={Style.homePage}>
-            <MainSection/>
+
+            {/* <MainSection/> */}
+            <Title
+              heading="New Collection"
+              paragraph="Explore the NFT in the most featured categories."
+            />
+            {/* <Collection /> */}
+            <Title
+              heading="Featured NFTs"
+              paragraph="Explore the NFT in the most featured categories."
+            />
+            <Filter />
+            <NFTCard />
             {/* <NFTSlider /> */}
             <Title
               heading="Browse by Category"
               paragraph="Explore the NFT in the most featured categories."
             />
             <Category />
-            <Title
-              heading="Featured NFTs"
-              paragraph="Explore the NFT in the most featured categories."
-            />
-            <Filter />
         </div>
+        <BackToTopButton />
     </div>
   );
 };
