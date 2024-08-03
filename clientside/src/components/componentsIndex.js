@@ -7,7 +7,7 @@ import Title from "./Title/Title";
 import Category from "./Category/Category";
 import Filter from "./Filter/Filter";
 import BackToTopButton from "./BackToTopButton/BackToTopButton"
-import AuthForm from "./AuthForm/AuthForm";
+import AuthForm from "./AccountPage/AuthForm/AuthForm";
 import Collection from "./Collection/Collection";
 import NFTCard from "./NFTCard/NFTCard";
 import Banner from "./Banner/Banner";
