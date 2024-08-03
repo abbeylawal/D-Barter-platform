@@ -7,7 +7,7 @@ import { BsSearch } from 'react-icons/bs';
 import { CgMenuLeft, CgMenuRight } from 'react-icons/cg';
 
 import Style from './NavBar.module.css';
-import { Discover, HelpCenter, Notification, Profile, SideBar } from './index';
+import { Discover, HelpCenter, ToggleTheme, Notification, Profile, SideBar } from './index';
 import { Button } from "../componentsIndex";
 import images from "../../img";
 
@@ -60,6 +60,11 @@ const NavBar = () => {
                                 <HelpCenter />
                             </div>
                         )}
+                    </div>
+
+                    {/* Toggle Theme */}
+                    <div className={Style.navbar_container_right_toggle}>
+                        <ToggleTheme />
                     </div>
 
                     {/* Notification */}
