@@ -1,0 +1,24 @@
+.authContainer {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.formToggle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.formToggle span {
+    padding: 10px 20px;
+    border-bottom: 2px solid transparent;
+    transition: border-bottom 0.3s, color 0.3s;
+}
+
+.formToggle .active {
+    border-bottom: 2px solid #007BFF;
+    color: #007BFF;
+}
