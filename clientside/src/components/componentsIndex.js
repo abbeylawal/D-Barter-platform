@@ -10,6 +10,7 @@ import BackToTopButton from "./BackToTopButton/BackToTopButton"
 import AuthForm from "./AuthForm/AuthForm";
 import Collection from "./Collection/Collection";
 import NFTCard from "./NFTCard/NFTCard";
+import NFTCardTwo from "./NFTCard/NFTCardTwo/NFTCardTwo";
 import Banner from "./Banner/Banner";
 
 export {
@@ -26,4 +27,5 @@ export {
     BackToTopButton,
     Collection,
     NFTCard,
+    NFTCardTwo,
 };
