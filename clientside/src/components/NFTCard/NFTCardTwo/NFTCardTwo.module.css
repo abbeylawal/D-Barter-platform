@@ -1,0 +1,152 @@
+.container {
+    padding: 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.col6 {
+    width: 50%;
+}
+
+.textRight {
+    text-align: right;
+}
+
+.themeBtn {
+    background-color: #6c63ff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    width: 130px;
+    display: inline-block;
+}
+
+.themeBtn:hover {
+    background-color: #5348d5;
+}
+
+.trendingGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.colMd4 {
+    flex: 1;
+    min-width: 300px;
+}
+
+.trendingContent {
+    background-color: var(--fire-bubble);
+    border-radius: 15px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.trendingContent:hover {
+    transform: translateY(-0.5rem);
+}
+
+.trendingContent > img {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    width: 100%;
+}
+
+.trendingDesc {
+    padding: 1.5rem;
+    position: relative;
+}
+
+.userTitle {
+    text-transform: capitalize;
+    color: var(--deam-white);
+    margin: 0;
+}
+
+.userPosition {
+    text-transform: capitalize;
+    margin: 1rem 0;
+    font-size: 1.125rem;
+    line-height: 1.625rem;
+}
+
+.userImage {
+    position: absolute;
+    right: 1.125rem;
+    top: -1.875rem;
+    width: 3.75rem;
+    border-radius: 50%;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.vote {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.voteButton {
+    background-color: #6c63ff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.voteButton:hover {
+    background-color: #5348d5;
+}
+
+.voteCount {
+    font-size: 1rem;
+    color: var(--icons-color);
+}
+
+.offerButton {
+    background-color: #6c63ff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.offerButton:hover {
+    background-color: #5348d5;
+}
+
+/* Responsive styles */
+@media(min-width: 1400px) and (max-width: 1599px) {
+    .header-content form {
+        width: 78%;
+    }
+    .fire-bubble-art {
+        padding: 1.375rem;
+    }
+    .fire-content .fire-time {
+        padding: 1.375rem;
+    }
+    .fire-content .fire-time .middle-line {
+        left: 45%;
+    }
+}
