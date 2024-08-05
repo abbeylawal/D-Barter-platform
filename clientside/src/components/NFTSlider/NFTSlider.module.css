@@ -1,0 +1,222 @@
+.NFTSlider {
+    background-color: var(--main-bg-color);
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.NFTSlider_box {
+    background: #fff;
+    box-shadow: var(--box-shadow);
+    border-radius: 1rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 1200px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.NFTSlider_box:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.NFTSlider_box_left, .NFTSlider_box_right {
+    flex: 1;
+    padding: 2rem;
+}
+
+.NFTSlider_box_left h2 {
+    font-size: 2rem;
+    color: var(--icons-color);
+    margin-bottom: 1rem;
+}
+
+.NFTSlider_box_left_creator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.NFTSlider_box_left_creator_profile, .NFTSlider_box_left_creator_collection {
+    display: flex;
+    align-items: center;
+}
+
+.NFTSlider_box_left_creator_profile_img {
+    margin-left: 1rem;
+}
+
+.NFTSlider_box_left_creator_profile_img p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--icons-color);
+}
+
+.NFTSlider_box_left_creator_profile_img h4 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--icons-color);
+    display: flex;
+    align-items: center;
+}
+
+.NFTSlider_box_left_creator_profile_img h4 span {
+    margin-left: 0.5rem;
+    color: #00BFFF;
+}
+
+.NFTSlider_box_left_creator_collection_icon {
+    font-size: 1.5rem;
+    color: #FF4500;
+    margin-right: 0.5rem;
+}
+
+.NFTSlider_box_left_bidding {
+    margin-top: 2rem;
+}
+
+.NFTSlider_box_left_bidding_box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.NFTSlider_box_left_bidding_box small {
+    font-size: 0.875rem;
+    color: var(--icons-color);
+}
+
+.NFTSlider_box_left_bidding_box p {
+    font-size: 1.5rem;
+    color: var(--icons-color);
+    margin: 0;
+}
+
+.NFTSlider_box_left_bidding_box p span {
+    font-size: 1rem;
+    color: #888;
+}
+
+.NFTSlider_box_left_bidding_box_auction {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    color: var(--icons-color);
+    margin-bottom: 1rem;
+}
+
+.NFTSlider_box_left_bidding_box_icon {
+    font-size: 1.5rem;
+    color: var(--icons-color);
+    margin-right: 0.5rem;
+}
+
+.NFTSlider_box_left_bidding_box_timer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.NFTSlider_box_left_bidding_box_timer_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.NFTSlider_box_left_bidding_box_timer_item p {
+    font-size: 1.5rem;
+    color: var(--icons-color);
+    margin: 0;
+}
+
+.NFTSlider_box_left_bidding_box_timer_item span {
+    font-size: 0.875rem;
+    color: #888;
+}
+
+.NFTSlider_box_left_button {
+    display: flex;
+    gap: 1rem;
+}
+
+.NFTSlider_box_left_sliderBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    cursor: pointer;
+}
+
+.NFTSlider_box_left_sliderBtn_icon {
+    font-size: 2rem;
+    color: var(--icons-color);
+}
+
+.NFTSlider_box_right_box {
+    position: relative;
+}
+
+.NFTSlider_box_right_box img {
+    width: 100%;
+    border-radius: 1rem;
+}
+
+.NFTSlider_box_right_box_like {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    box-shadow: var(--box-shadow);
+}
+
+.NFTSlider_box_right_box_like svg {
+    color: #FF4500;
+    margin-right: 0.5rem;
+}
+
+.NFTSlider_box_right_box_like span {
+    font-size: 1rem;
+    color: var(--icons-color);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .NFTSlider_box {
+        flex-direction: column;
+    }
+
+    .NFTSlider_box_left, .NFTSlider_box_right {
+        padding: 1rem;
+    }
+
+    .NFTSlider_box_left h2 {
+        font-size: 1.5rem;
+    }
+
+    .NFTSlider_box_left_creator_profile_img h4 {
+        font-size: 1rem;
+    }
+
+    .NFTSlider_box_left_bidding_box_timer_item p {
+        font-size: 1.25rem;
+    }
+
+    .NFTSlider_box_left_bidding_box_timer_item span {
+        font-size: 0.75rem;
+    }
+
+    .NFTSlider_box_left_sliderBtn_icon {
+        font-size: 1.5rem;
+    }
+}
