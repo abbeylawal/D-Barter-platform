@@ -38,12 +38,47 @@
     cursor: pointer;
     border: 1px solid var(--icons-color);
     transition: all .3s ease-in;
-
-
 }
 
 .collection_cols_btn button:hover{
     background-color: transparent;
     color: var(--icons-color);
 
+}
+
+.collection_box {
+    width: 80%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+
+}
+
+@media screen and (max-width: 425px) {
+    .collection_title {
+    width: 90%;
+    }
+    .collection_box{
+    width: 90%;
+    grid-template-columns: 1fr;
+    gap: 4rem;
+    }
+
+
+    .collections_collections_btn button{
+        font-size: 0.7rem;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .collection_title {
+        width: 90%;
+    }
+    .collection_box{
+        width: 90%;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4rem;
+    }
+    
 }
