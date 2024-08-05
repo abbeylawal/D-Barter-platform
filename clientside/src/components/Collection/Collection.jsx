@@ -44,43 +44,44 @@ const Collection = () => {
 
     return (
         <div className={Style.collection}>
-            <div className={Style.collection_box}>
-                <h2>Top Listed Creators</h2>
-                <div className={Style.collection_cols}>
-                    <div className={Style.collection_cols_btn}>
-                        <button onClick={openPopular}>
-                            <BsFillAlarmFill /> Last 24 hours
-                        </button>
-                        <button onClick={openFollower}>
-                            <BsCalendar3 /> Last 7 days
-                        </button>
-                        <button onClick={openNews}>
-                            <BsFillCalendarDateFill /> Last 30 days
-                        </button>
-                    </div>
-                    {popular && (
-                        <div className={Style.collection_box}>
-                            {CardArray.map((el, i) => (
-                                <DaysComponent key={i + 1} />
-                            ))}
+                <div className={Style.collection_title}>
+                    <h2>Top Listed Barters</h2>
+
+                    <div className={Style.collection_cols}>
+                        <div className={Style.collection_cols_btn}>
+                            <button onClick={openPopular}>
+                                <BsFillAlarmFill /> 24 hours
+                            </button>
+                            <button onClick={openFollower}>
+                                <BsCalendar3 />  7 days
+                            </button>
+                            <button onClick={openNews}>
+                                <BsFillCalendarDateFill /> 30 days
+                            </button>
                         </div>
-                    )}
-                    {following && (
-                        <div className={Style.collection_box}>
-                            {followingArray.map((el, i) => (
-                                <DaysComponent key={i + 1} />
-                            ))}
-                        </div>
-                    )}
-                    {news && (
-                        <div className={Style.collection_box}>
-                            {newsArray.map((el, i) => (
-                                <DaysComponent key={i + 1} />
-                            ))}
-                        </div>
-                    )}
                 </div>
             </div>
+            {popular && (
+                <div className={Style.collection_box}>
+                    {CardArray.map((el, i) => (
+                        <DaysComponent key={i + 1} />
+                    ))}
+                </div>
+            )}
+            {following && (
+                <div className={Style.collection_box}>
+                    {followingArray.map((el, i) => (
+                        <DaysComponent key={i + 1} />
+                    ))}
+                </div>
+            )}
+            {news && (
+                <div className={Style.collection_box}>
+                    {newsArray.map((el, i) => (
+                        <DaysComponent key={i + 1} />
+                    ))}
+                </div>
+            )}
         </div>
     );
 };
