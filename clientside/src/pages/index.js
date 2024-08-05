@@ -19,10 +19,10 @@ const Home = () => {
         <div className={Style.homePage}>
 
             <MainSection/>
-            <Title
+            {/* <Title
               heading="New Collection"
               paragraph="Explore the NFT in the most featured categories."
-            />
+            /> */}
             <Collection />
             <Title
               heading="Featured NFTs"
