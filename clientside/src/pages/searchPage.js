@@ -14,7 +14,7 @@ const searchPage = () => {
         <Filter />
         <NFTCard />
         <NFTCardTwo />
-        {/* <NFTSlider /> */}
+        <NFTSlider />
 
     </div>
   )
