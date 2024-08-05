@@ -29,7 +29,7 @@ const NFTSlider = () => {
         },
         {
             title: "Hello NFT",
-            id: 1,
+            id: 2,
             name: "Muftau Lawal",
             collection: "Books",
             price: "0000006464444 ETH",
@@ -45,7 +45,7 @@ const NFTSlider = () => {
         },
         {
             title: "Hello NFT",
-            id: 1,
+            id: 3,
             name: "Muftau Lawal",
             collection: "Books",
             price: "0000006464444 ETH",
@@ -61,7 +61,7 @@ const NFTSlider = () => {
         },
         {
             title: "Pure Games",
-            id: 1,
+            id: 4,
             name: "Kevlin Smith",
             collection: "Accessories",
             price: "0000006464444 ETH",
@@ -77,6 +77,22 @@ const NFTSlider = () => {
         },
     ]
 
+    // ----- inc functions
+    const inc = useCallback(()=> {
+        if(idNumber +1 < sliderData.length) {
+            setIdNumber(setIdNumber + 1);
+        }
+    }, [idNumber, sliderData.length]);
+    // ----- dec functions
+    const dec = useCallback(()=> {
+        if(idNumber > 0) {
+            setIdNumber(setIdNumber - 1);
+        }
+    }, [idNumber, sliderData.length]);
+
+    // useEffect(() => {
+    //     inc();
+    // });
 
     return (
         <div className={Style.NFTSlider}>
@@ -103,12 +119,84 @@ const NFTSlider = () => {
 
                         <div className={Style.NFTSlider_box_left_creator_collection}>
                             <AiFillFire className={Style.NFTSlider_box_left_creator_collection_icon}/>
-                            <div className={Style.NFTSlider_box_left_creator_collecion_info}>
+                            <div className={Style.NFTSlider_box_left_creator_collection_info}>
                                 <p>Collection</p>
                                 <h4> 
                                     {sliderData[idNumber].collection}
                                 </h4>
                             </div>
+                        </div>
+                    </div>
+
+                    <div className={Style.NFTSlider_box_left_bidding}>
+                        <div className={Style.NFTSlider_box_left_bidding_box}>
+                            <small>Current Bid</small>
+                            <p>
+                                {sliderData[idNumber].price}
+                                <span>
+                                    $22,121
+                                </span>
+                            </p>
+                        </div>
+                        <p className={Style.NFTSlider_box_left_bidding_box_auction}>
+                            <MdTimer className={Style.NFTSlider_box_left_bidding_box_icon} />
+                            <span>Auction ending in</span>
+                        </p>
+
+                        <div className={Style.NFTSlider_box_left_bidding_box_timer}>
+
+                            <div className={Style.NFTSlider_box_left_bidding_box_timer_item}>
+                                <p>
+                                    {sliderData[idNumber].time.day}
+                                    <span>Days</span>
+                                </p>
+                            </div>
+                            <div className={Style.NFTSlider_box_left_bidding_box_timer_item}>
+                                <p>
+                                    {sliderData[idNumber].time.hours}
+                                    <span>Hours</span>
+                                </p>
+                            </div>
+                            <div className={Style.NFTSlider_box_left_bidding_box_timer_item}>
+                                <p>
+                                    {sliderData[idNumber].time.minutes}
+                                    <span>mins</span>
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div className={Style.NFTSlider_box_left_button}>
+                            <Button btnName="View" handleClick={()=> {}}/>
+                            <Button btnName="Offer" handleClick={()=> {}}/>
+                        </div>
+                    </div>
+
+                    <div className={Style.NFTSlider_box_left_sliderBtn}>
+                        <TbArrowBigLeftLines
+                        className={Style.NFTSlider_box_left_sliderBtn_icon} 
+                        onClick={()=> dec()}
+                        />
+                    </div>
+                    <div className={Style.NFTSlider_box_left_sliderBtn}>
+                        <TbArrowBigRightLines
+                        className={Style.NFTSlider_box_left_sliderBtn_icon} 
+                        onClick={()=> inc()}
+                        />
+                    </div>
+                </div>
+
+                <div className={Style.NFTSlider_box_right}>
+                    <div className={Style.NFTSlider_box_right_box}>
+                        <Image
+                            // className=''
+                            src={sliderData[idNumber].nftImage}
+                            alt="NFT Image"
+                        />
+
+                        <div className={Style.NFTSlider_box_right_box_like}>
+                            <AiFillHeart/>
+                            <span>{sliderData[idNumber].like} </span>
                         </div>
                     </div>
                 </div>
@@ -117,4 +205,4 @@ const NFTSlider = () => {
     )
 };
 
-export default NFTSlider
+export default NFTSlider;
