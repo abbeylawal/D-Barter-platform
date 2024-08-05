@@ -1,0 +1,10 @@
+.uploadProducts {
+    padding: 2rem;
+    background-color: var(--main-bg-color);
+    color: var(--icons-color);
+}
+
+.uploadProducts h1 {
+    margin-bottom: 2rem;
+    text-align: center;
+}
