@@ -9,7 +9,7 @@ import { CgMenuLeft, CgMenuRight } from 'react-icons/cg';
 import Style from './NavBar.module.css';
 import { Discover, HelpCenter, ToggleTheme, Notification, Profile, SideBar } from './index';
 import { Button } from "../componentsIndex";
-import images from "../../img";
+import images from "../../asserts/img";
 
 const NavBar = () => {
     const [activeMenu, setActiveMenu] = useState('');
