@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Style from "./Notification.module.css";
-import images from "../../../img";
+import images from "../../../asserts/img";
 
 const Notification = () => {
     return (
@@ -10,9 +10,9 @@ const Notification = () => {
             <div className={Style.notification_box}>
                 <div className={Style.notification_box_img}>
                     <Image src={images.user1} alt="profile image"
-                    width={50}
-                    height={50}
-                    style={{ borderRadius: '50%' }}
+                        width={50}
+                        height={50}
+                        style={{ borderRadius: '50%' }}
                     />
                 </div>
                 <div className={Style.notification_box_info}>
@@ -27,5 +27,5 @@ const Notification = () => {
         </div>
     );
 };
- 
+
 export default Notification;
