@@ -2,10 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { AiFillFire, AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { MdVerified, MdTimer } from 'react-icons/md';
-import { TbArrowBigLeftLines, TbArrowBigRightLines  } from 'react-icons/tb';
+import { TbArrowBigLeftLines, TbArrowBigRightLines } from 'react-icons/tb';
 
 import Style from "./NFTSlider.module.css";
-import images from '../../img';
+import images from '../../asserts/img';
 import Button from "../Button/Button";
 
 const NFTSlider = () => {
@@ -20,7 +20,7 @@ const NFTSlider = () => {
             like: 243,
             image: images.user1,
             nftImage: images.nft_image_1,
-            time:{
+            time: {
                 day: 27,
                 hours: 10,
                 minutes: 11,
@@ -36,7 +36,7 @@ const NFTSlider = () => {
             like: 243,
             image: images.user2,
             nftImage: images.nft_image_2,
-            time:{
+            time: {
                 day: 27,
                 hours: 10,
                 minutes: 11,
@@ -52,7 +52,7 @@ const NFTSlider = () => {
             like: 243,
             image: images.user2,
             nftImage: images.nft_image_2,
-            time:{
+            time: {
                 day: 27,
                 hours: 10,
                 minutes: 11,
@@ -68,7 +68,7 @@ const NFTSlider = () => {
             like: 243,
             image: images.user3,
             nftImage: images.nft_image_3,
-            time:{
+            time: {
                 day: 27,
                 hours: 10,
                 minutes: 11,
@@ -78,14 +78,14 @@ const NFTSlider = () => {
     ]
 
     // ----- inc functions
-    const inc = useCallback(()=> {
-        if(idNumber +1 < sliderData.length) {
+    const inc = useCallback(() => {
+        if (idNumber + 1 < sliderData.length) {
             setIdNumber(setIdNumber + 1);
         }
     }, [idNumber, sliderData.length]);
     // ----- dec functions
-    const dec = useCallback(()=> {
-        if(idNumber > 0) {
+    const dec = useCallback(() => {
+        if (idNumber > 0) {
             setIdNumber(setIdNumber - 1);
         }
     }, [idNumber, sliderData.length]);
@@ -101,8 +101,8 @@ const NFTSlider = () => {
                     <h2>{sliderData[idNumber].title}</h2>
                     <div className={Style.NFTSlider_box_left_creator}>
                         <div className={Style.NFTSlider_box_left_creator_profile}>
-                            <Image 
-                            className={Style.NFTSlider_box_left_creator_profile_img}
+                            <Image
+                                className={Style.NFTSlider_box_left_creator_profile_img}
                                 src={sliderData[idNumber].image}
                                 alt="Nft creator imag"
                                 width={50}
@@ -110,7 +110,7 @@ const NFTSlider = () => {
                             />
                             <div className={Style.NFTSlider_box_left_creator_profile_img}>
                                 <p>Creator</p>
-                                <h4>{sliderData[idNumber].name} 
+                                <h4>{sliderData[idNumber].name}
                                     <span><MdVerified /></span>
                                 </h4>
                             </div>
@@ -118,10 +118,10 @@ const NFTSlider = () => {
 
 
                         <div className={Style.NFTSlider_box_left_creator_collection}>
-                            <AiFillFire className={Style.NFTSlider_box_left_creator_collection_icon}/>
+                            <AiFillFire className={Style.NFTSlider_box_left_creator_collection_icon} />
                             <div className={Style.NFTSlider_box_left_creator_collection_info}>
                                 <p>Collection</p>
-                                <h4> 
+                                <h4>
                                     {sliderData[idNumber].collection}
                                 </h4>
                             </div>
@@ -167,21 +167,21 @@ const NFTSlider = () => {
                         </div>
 
                         <div className={Style.NFTSlider_box_left_button}>
-                            <Button btnName="View" handleClick={()=> {}}/>
-                            <Button btnName="Offer" handleClick={()=> {}}/>
+                            <Button btnName="View" handleClick={() => { }} />
+                            <Button btnName="Offer" handleClick={() => { }} />
                         </div>
                     </div>
 
                     <div className={Style.NFTSlider_box_left_sliderBtn}>
                         <TbArrowBigLeftLines
-                        className={Style.NFTSlider_box_left_sliderBtn_icon} 
-                        onClick={()=> dec()}
+                            className={Style.NFTSlider_box_left_sliderBtn_icon}
+                            onClick={() => dec()}
                         />
                     </div>
                     <div className={Style.NFTSlider_box_left_sliderBtn}>
                         <TbArrowBigRightLines
-                        className={Style.NFTSlider_box_left_sliderBtn_icon} 
-                        onClick={()=> inc()}
+                            className={Style.NFTSlider_box_left_sliderBtn_icon}
+                            onClick={() => inc()}
                         />
                     </div>
                 </div>
@@ -195,7 +195,7 @@ const NFTSlider = () => {
                         />
 
                         <div className={Style.NFTSlider_box_right_box_like}>
-                            <AiFillHeart/>
+                            <AiFillHeart />
                             <span>{sliderData[idNumber].like} </span>
                         </div>
                     </div>
