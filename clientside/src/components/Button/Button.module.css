@@ -4,7 +4,6 @@
     border: 1px solid var(--icons-color);
     font-size: 1.1rem;
     color: var(--shadow-light-color);
-    color: aliceblue;
     cursor: pointer;
     transition: all .2s ease-in;
     box-shadow: var(--box-shadow);
@@ -15,5 +14,5 @@
     background-color: var(--main-bg-color);
     border: 1px solid var(--icons-color);
     color: var(--icons-color);
-
+    transition: all .3s ease-in-out;
 }
