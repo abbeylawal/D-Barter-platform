@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 
 import Style from "./Profile.module.css";
-import images from '../../../img';
+import images from '../../../asserts/img';
 
 const Profile = () => {
     return (
