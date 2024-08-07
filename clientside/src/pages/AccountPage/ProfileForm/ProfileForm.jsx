@@ -2,7 +2,7 @@ import React from 'react';
 import { HiOutlineMail } from "react-icons/hi";
 import { MdOutlineHttp, MdOutlineContentCopy } from 'react-icons/md';
 import { TiSocialFacebook, TiSocialTwitter, TiSocialInstagram } from "react-icons/ti";
-import { Button } from "../../components/componentsIndex";
+import { Button } from "../../../components/componentsIndex";
 
 import Style from "./ProfileForm.module.css";
 

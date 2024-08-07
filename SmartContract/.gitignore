@@ -1,4 +1,7 @@
+# Node modules
 node_modules
+
+# Environment variables
 .env
 
 # Hardhat files
@@ -9,9 +12,56 @@ node_modules
 /typechain
 /typechain-types
 
-# solidity-coverage files
+# Solidity coverage files
 /coverage
 /coverage.json
 
 # Hardhat Ignition default folder for deployments against a local node
 ignition/deployments/chain-31337
+
+# Hardhat console history
+.history
+
+# Logs
+*.log
+logs
+
+# MacOS files
+.DS_Store
+
+# Visual Studio Code files
+.vscode/
+
+# JetBrains IDEs
+.idea/
+
+# Yarn files
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
+# Hardhat build info
+hardhat-build-info.json
+
+# Truffle files (if you are also using Truffle)
+/build
+
+# Debug files
+debug.log
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Remix IDE files
+remix-compiler.config.js
+remixd.lock
+
+# Hardhat test cache
+/hardhat-cache
+
+# Windows specific files
+Thumbs.db

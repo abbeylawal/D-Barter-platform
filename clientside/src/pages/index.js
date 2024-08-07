@@ -1,5 +1,4 @@
 import Header from '../components/Header';
-
 import Style from "../styles/Index.module.css";
 import {
   MainSection,

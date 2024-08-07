@@ -15,7 +15,7 @@ const Banner = ({ bannerImage }) => {
                     objectFit='cover'
                 />
             </div>
-            {/* <div className={Style.banner_img_mobile}>
+            <div className={Style.banner_img_mobile}>
                 <Image 
                     src={bannerImage}
                     alt="background image"
@@ -24,7 +24,7 @@ const Banner = ({ bannerImage }) => {
                     objectFit='cover'
                 />
 
-            </div> */}
+            </div>
             {/* <div className={Style.content}>
                 <h1>Welcome to Our NFT Marketplace</h1>
                 <p>Discover, create, and sell extraordinary NFTs</p>
