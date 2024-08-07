@@ -5,7 +5,7 @@ import { MdVerified } from "react-icons/md";
 
 // internal import
 import Style from "./DaysComponents.module.css";
-import images from "../../../img";
+import images from "../../../asserts/img";
 
 const DaysComponents = () => {
   return (
@@ -22,7 +22,7 @@ const DaysComponents = () => {
           />
         </div>
         <div className={Style.daysComponent_box_profile}>
-          <Image 
+          <Image
             className={Style.daysComponent_box_img_img_1}
             src={images.creatorbackground2}
             alt="profile"
@@ -30,7 +30,7 @@ const DaysComponents = () => {
             height={200}
             objectFit='covers'
           />
-          <Image 
+          <Image
             className={Style.daysComponent_box_img_img_2}
             src={images.creatorbackground2}
             alt="profile"
@@ -38,7 +38,7 @@ const DaysComponents = () => {
             height={200}
             objectFit='covers'
           />
-          <Image 
+          <Image
             className={Style.daysComponent_box_img_img_3}
             src={images.creatorbackground2}
             alt="profile"
@@ -51,7 +51,7 @@ const DaysComponents = () => {
           <h2>Amazing Collection</h2>
           <div className={Style.daysComponent_box_title_info}>
             <div className={Style.daysComponent_box_title_info_profile}>
-              <Image 
+              <Image
                 className={Style.daysComponent_box_title_info_profile_img}
                 src={images.user1}
                 alt="profile"
@@ -62,9 +62,9 @@ const DaysComponents = () => {
               <p>Creator
                 <span>
                   Muftau Lawal
-                    <small>
-                      <MdVerified/>
-                    </small>
+                  <small>
+                    <MdVerified />
+                  </small>
                 </span>
               </p>
             </div>
