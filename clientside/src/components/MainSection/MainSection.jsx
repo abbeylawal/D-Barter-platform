@@ -1,8 +1,8 @@
 import React from 'react';
 import Style from './MainSection.module.css';
 import Image from 'next/image';
-import {Button} from "../componentsIndex";
-import images from "../../img";
+import { Button } from "../componentsIndex";
+import images from "../../asserts/img";
 
 const MainContent = () => {
     return (
@@ -16,9 +16,9 @@ const MainContent = () => {
                     <Button btnName="Start your search" handleClick={() => { }} />
                 </div>
                 <div className={Style.mainsection_box_right}>
-                    <Image src={images.hero} alt="Main Section" 
-                    width={600} 
-                    height={600} 
+                    <Image src={images.hero} alt="Main Section"
+                        width={600}
+                        height={600}
                     />
                 </div>
             </div>
