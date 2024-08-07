@@ -34,7 +34,8 @@ const AuthorProfileCard = () => {
                 <div className={Style.AuthorProfileCard_box_img}>
                     <Image
                         className={Style.AuthorProfileCard_box_img_img}
-                        src={images.nft_image_1}
+                        // src={images.nft_image_1}
+                        src={images.user1}
                         alt='NFT Image'
                         width={220}
                         height={220}
