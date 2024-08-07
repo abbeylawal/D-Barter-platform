@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import { GrClose } from "react-icons/gr";
-import { 
+import {
     TiSocialFacebook,
-    TiSocialLinkedin,    
+    TiSocialLinkedin,
     TiSocialTwitter,
     TiSocialYouTube,
     TiSocialInstagram,
@@ -14,15 +14,15 @@ import {
 
 // Internal Imports
 import Style from "./SideBar.module.css";
-import images from "../../../img";
+import images from "../../../asserts/img";
 import Button from "../../Button/Button";
 
 
 // -------  SideBar -----------
 const SideBar = ({ setOpenSideMenu }) => {
     // -- USE - STATE
-    const [ openDiscover, setOpenDiscover ] = useState(false);
-    const [ openHelp, setOpenHelp ] = useState(false);
+    const [openDiscover, setOpenDiscover] = useState(false);
+    const [openHelp, setOpenHelp] = useState(false);
 
     // ---- Discover ----
     const discover = [
@@ -78,7 +78,7 @@ const SideBar = ({ setOpenSideMenu }) => {
 
     // Functions
     const openDiscoverMenu = () => {
-        if(!openDiscover){
+        if (!openDiscover) {
             setOpenDiscover(true);
         } else {
             setOpenDiscover(false);
@@ -86,7 +86,7 @@ const SideBar = ({ setOpenSideMenu }) => {
     };
 
     const openHelpMenu = () => {
-        if(!openHelp) {
+        if (!openHelp) {
             setOpenHelp(true);
 
         } else {
@@ -94,7 +94,7 @@ const SideBar = ({ setOpenSideMenu }) => {
         }
     };
 
-    const closeSideBar =() => {
+    const closeSideBar = () => {
         setOpenSideMenu(false);
     }
 
@@ -123,15 +123,15 @@ const SideBar = ({ setOpenSideMenu }) => {
                 <div>
                     <div className={Style.sidebar_menu_box} onClick={() => openDiscoverMenu()} >
                         <p>Discover</p>
-                        <TiArrowSortedDown/>
+                        <TiArrowSortedDown />
                     </div>
 
                     {
                         openDiscover && (
                             <div className={Style.sidebar_discover}>
-                                { discover.map((el, i) => (
-                                    <p key={i +1}>
-                                        <Link href={{pathname: `${el.link}`}}>{el.name}</Link>
+                                {discover.map((el, i) => (
+                                    <p key={i + 1}>
+                                        <Link href={{ pathname: `${el.link}` }}>{el.name}</Link>
                                     </p>
                                 ))}
                             </div>
@@ -143,15 +143,15 @@ const SideBar = ({ setOpenSideMenu }) => {
                 <div>
                     <div className={Style.sidebar_menu_box} onClick={() => openHelpMenu()} >
                         <p>Help Center</p>
-                        <TiArrowSortedDown/>
+                        <TiArrowSortedDown />
                     </div>
 
                     {
                         openHelp && (
                             <div className={Style.sidebar_help}>
-                                { helpCenter.map((el, i) => (
-                                    <p key={i +1}>
-                                        <Link href={{pathname: `${el.link}`}}>{el.name}</Link>
+                                {helpCenter.map((el, i) => (
+                                    <p key={i + 1}>
+                                        <Link href={{ pathname: `${el.link}` }}>{el.name}</Link>
                                     </p>
                                 ))}
                             </div>
@@ -161,7 +161,7 @@ const SideBar = ({ setOpenSideMenu }) => {
             </div>
 
             <div className={Style.sidebar_button}>
-                <Button btnName="Create" handleClick ={() =>{}} />
+                <Button btnName="Create" handleClick={() => { }} />
                 <Button btnName="Connect Wallet" handleClick={() => { }} />
             </div>
         </div>
