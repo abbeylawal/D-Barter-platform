@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 
 import Style from "../styles/connectWallet.module.css";
-import images from "../img";
+import images from "../asserts/img";
 
 const connectWallet = () => {
   const [activeBtn, setActiveBtn] = useState(1);
@@ -41,14 +41,14 @@ const connectWallet = () => {
               key={i + 1}
               onClick={() => setActiveBtn(i + 1)}
             >
-                <Image 
-                    className={Style.connectWallet_box_provider_item_img}
-                    src={el.provider}
-                    alt = {el.provider}
-                    width={50}
-                    height={50}
-                />
-                <p>{el.name}</p>
+              <Image
+                className={Style.connectWallet_box_provider_item_img}
+                src={el.provider}
+                alt={el.provider}
+                width={50}
+                height={50}
+              />
+              <p>{el.name}</p>
             </div>
           ))}
         </div>
