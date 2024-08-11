@@ -1,0 +1,191 @@
+/* .ProductDetailsImg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.ProductDetailsImg_box {
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    width: 100%;
+    max-width: 800px;
+    padding: 1rem;
+}
+
+.ProductDetailsImg_box_NFT {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.ProductDetailsImg_box_NFT_like {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.like_icon {
+    font-size: 2rem;
+    color: var(--icons-color);
+    cursor: pointer;
+}
+
+.ProductDetailsImg_box_NFT_img {
+    width: 100%;
+    height: auto;
+}
+
+.ProductDetailsImg_box_NFT_img_img {
+    border-radius: 1rem;
+}
+
+.box_description, .Img_box_details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+
+.Img_box_description_box, .Img_box_details_box {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    background-color: #f9f9f9;
+    margin-bottom: 1rem;
+}
+
+.Img_box_details_box small {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.Img_box_details_box p {
+    margin: 0;
+    padding: 0.5rem 0;
+    border-top: 1px solid #ddd;
+} */
+
+.ProductDetailsImg {
+  width: 100%;
+}
+
+.ProductDetailsImg_box {
+  width: 100%;
+}
+
+.ProductDetailsImg_box_NFT {
+  position: relative;
+  display: grid;
+}
+
+.ProductDetailsImg_box_NFT_img {
+  grid-column: 1/-1;
+  grid-row: 1/end;
+
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.ProductDetailsImg_box_NFT_img_img {
+  border-radius: 1rem;
+}
+
+/* .
+ProductDetailsImg_box_NFT_like {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background-color: var(--icons-color);
+  color: var(--main-bg-color);
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  z-index: 1;
+  }
+  */
+  
+.ProductDetailsImg_box_NFT_like {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    grid-column: 1/-1;
+    grid-row: 1/3;
+    z-index: 1111111;
+    align-self: flex-start;
+    padding-inline: 2rem;
+}
+
+.like_icon {
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.ProductDetailsImg_box_NFT_like p {
+  background-color: var(--icons-color);
+  padding: .2rem 1rem;
+color: var(--main-bg-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  border-radius: 2rem;
+  cursor: pointer;
+}
+
+.box_description,
+.Img_box_details {
+  display: flex;
+  align-items: center;
+  line-height: 0;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: var(--icons-color);
+  color: var(--main-bg-color);
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+  padding-inline: 1rem;
+  cursor: pointer;
+}
+
+.Img_box_description_box,
+.Img_box_details_box {
+  padding: 1rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--icons-color);
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.Img_box_details_box {
+  display: grid;
+  gap: 1rem;
+}
+
+.Img_box_details_box p,
+.Img_box_details_box small {
+  line-height: 1.2;
+  font-size: 1rem;
+}
+
+/* Responsive design */
+@media screen and (max-width: 35em) {
+  .ProductDetailsImg_box_NFT_like {
+    gap: 1rem;
+    font-size: 1rem;
+  }
+
+  .ProductDetailsImg_box_NFT_like p {
+    font-size: 1rem;
+  }
+}
