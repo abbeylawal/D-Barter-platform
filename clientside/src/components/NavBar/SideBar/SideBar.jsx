@@ -14,7 +14,7 @@ import {
 
 // Internal Imports
 import Style from "./SideBar.module.css";
-import images from "../../../asserts/img";
+import images from "../../../assets/img";
 import Button from "../../Button/Button";
 
 
