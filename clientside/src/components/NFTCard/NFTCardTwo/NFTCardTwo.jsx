@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import Image from "next/image";
 import Style from './NFTCardTwo.module.css';
-import nftData from '../../../asserts/Data/nftData.json';
+import nftData from '../../../assets/Data/nftData.json';
 
 const NFTCardTwo = () => {
     return (
         <div className={Style.container}>
             <div className={Style.header}>
                 <div className={Style.col6}>
-                    <h2>Trending Auctions</h2>
+                    <h2>Trending Listings</h2>
                 </div>
                 <div className={`${Style.col6} ${Style.textRight}`}>
                     <a href="#" className={Style.themeBtn}> View More </a>
