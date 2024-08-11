@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "cardImage": "https://yudiz.com/codepen/nft-store/card-1.svg",
+        "userName": "Wayne Garner",
+        "artName": "Flui oriental art",
+        "userImage": "https://yudiz.com/codepen/nft-store/user-pic3.svg"
+    },
+    {
+        "id": 2,
+        "cardImage": "https://yudiz.com/codepen/nft-store/card-2.svg",
+        "userName": "Cody Valdez",
+        "artName": "Human Areology",
+        "userImage": "https://yudiz.com/codepen/nft-store/user-pic4.svg"
+    },
+    {
+        "id": 3,
+        "cardImage": "https://yudiz.com/codepen/nft-store/card-3.svg",
+        "userName": "Jayden Daniel",
+        "artName": "Inko's Art",
+        "userImage": "https://yudiz.com/codepen/nft-store/user-pic5.svg"
+    }
+]
