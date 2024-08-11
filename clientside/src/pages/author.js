@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import Style from "../styles/author.module.css";
 import { Banner, NFTCardTwo, Title } from "../components/componentsIndex";
-import images from "../asserts/img";
+import images from "../assets/img";
 import {
   AuthorProfileCard,
   AuthorTabs,
   AuthorNFTCard,
 } from "./AuthorPage/compIndex";
-const author = () => {
+
+const Author = () => {
   const popularArray = [
     images.user1,
     images.user2,
@@ -19,32 +20,23 @@ const author = () => {
     images.user8,
     images.user9,
   ];
-  const [collectables, setCollectables] = useState(true);
-  const [created, setCreated] = useState(true);
-  const [listed, setListed] = useState(false);
-  const [like, setLike] = useState(false);
-  const [follower, setFollower] = useState(false);
-  const [following, setFollowing] = useState(false);
+
+  const [activeTab, setActiveTab] = useState("collectables");
 
   return (
     <div className={Style.Author}>
-      <Banner bannerImage={images.creatorbackground10} />
+      {/* <Banner bannerImage={images.creatorbackground10} /> */}
       <AuthorProfileCard />
-      <AuthorTabs
-        collectables={setCollectables}
-        created={setCreated}
-        listed={setListed}
-        like={setLike}
-      />
+      <AuthorTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       <AuthorNFTCard
-        collectables={collectables}
-        created={created}
-        listed={listed}
-        like={like}
+        collectables={activeTab === "collectables"}
+        created={activeTab === "created"}
+        listed={activeTab === "listed"}
+        like={activeTab === "liked"}
       />
       {/* <Title */}
     </div>
   );
 };
 
-export default author;
+export default Author;
