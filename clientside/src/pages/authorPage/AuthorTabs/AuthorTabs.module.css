@@ -1,5 +1,3 @@
-/* AuthorTabs.module.css */
-
 .AuthorTabs {
     width: 100%;
     margin: 8rem 0 3rem 0;
@@ -11,7 +9,6 @@
     justify-content: space-between;
     width: 80%;
     margin: 0 auto;
-    /* max-width: 1200px; */
 }
 .AuthorTabs_box_left_btn {
     display: flex;
@@ -19,11 +16,12 @@
     align-items: center;
 }
 
-/* .AuthorTabs_box_left {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-} */
+.AuthorTabs_box_left_btn .active {
+    border: 1px solid var(--icons-color);
+    background-color: var(--icons-color);
+    color: var(--main-bg-color);
+}
+
 
 .AuthorTabs_box_left_btn button {
     font-size: 1.2rem;
@@ -61,25 +59,15 @@
     width: 17.6rem;
     padding: 0 2rem;
     align-items: center;
-    gap: 1rem;
+    justify-content: space-between;
     cursor: pointer;
     grid-template-columns: 9fr 1fr;
     display: flex;
-/*     
-
-
-    cursor: pointer;
-    padding: 10px 20px;
-    background-color: var(--icons-bg-color);
-    border-radius: 4px;
-    color: var(--icons-color); */
 }
 
 .AuthorTabs_box_right_para  p{
     font-size: 1.2rem;
     line-height: 0.5;
-
-
 }
 
 
@@ -120,10 +108,11 @@
     border-radius: .2rem;
 }
 
+/* 
 .dropdown_item svg {
     margin-left: 10px;
     color: var(--icons-color);
-}
+} */
 
 
 @media screen and (max-device: 35em) {
@@ -135,6 +124,7 @@
         width: 90%;
         display: grid;
         grid-template-columns: 1fr;
+        gap: 2rem;
     }
 
     .AuthorTabs_box_left_btn{
@@ -161,21 +151,26 @@
 }
 
 
-@media screen and (min-device-width: 768px) {
-    .AuthorTabs {
+@media screen and (min-device-width: 320px) and
+(max-device-width: 767px) {
+    /* .AuthorTabs {
         margin: 8rem 0 3rem 0;
-    }
+    } */
 
     .AuthorTabs_box {
-        width: 80%;
+        width: 90%;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
     }
 
     .AuthorTabs_box_left_btn {
         gap: 2rem;
+        justify-content: space-around;
     }
 
     .AuthorTabs_box_right_para {
-        width: 17.6rem;
+        width: 90%;
     }
 
     .dropdown {
