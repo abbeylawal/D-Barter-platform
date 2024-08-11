@@ -9,7 +9,8 @@ import Filter from "./Filter/Filter";
 import BackToTopButton from "./BackToTopButton/BackToTopButton"
 import AuthForm from "./AuthForm/AuthForm";
 import Collection from "./Collection/Collection";
-import NFTCard from "./NFTCard/NFTCard";
+// import NFTSlider from "./NFTSlider/NFTSlider";
+import NFTCard from "./NFTCard/NFTCard"
 import NFTCardTwo from "./NFTCard/NFTCardTwo/NFTCardTwo";
 import Banner from "./Banner/Banner";
 
@@ -26,6 +27,7 @@ export {
     Filter,
     BackToTopButton,
     Collection,
+    // NFTSlider,
     NFTCard,
     NFTCardTwo,
 };
