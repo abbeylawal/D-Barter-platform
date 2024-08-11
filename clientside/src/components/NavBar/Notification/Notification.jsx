@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Style from "./Notification.module.css";
-import images from "../../../asserts/img";
+import images from "../../../assets/img";
 
 const Notification = () => {
     return (
