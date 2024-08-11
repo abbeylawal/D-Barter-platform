@@ -14,13 +14,13 @@ const Discover = () => {
             name: "Search",
             link: "searchPage"
         },
-        // {
-        //     name: "Author Profile",
-        //     link: "author-profile"
-        // },
+        {
+            name: "Author Profile",
+            link: "author"
+        },
         {
             name: "NFT Details",
-            link: "nft-details"
+            link: "product-details"
         },
         {
             name: "Account Setting",
