@@ -8,7 +8,7 @@ import {
   Filter,
   BackToTopButton,
   Collection,
-  NFTCard
+  NFTCard,
 
 } from '../components/componentsIndex';
 
@@ -22,6 +22,7 @@ const Home = () => {
               heading="New Collection"
               paragraph="Explore the NFT in the most featured categories."
             /> */}
+            <NFTSlider />
             <Collection />
             <Title
               heading="Featured NFTs"
@@ -29,14 +30,12 @@ const Home = () => {
             />
             <Filter />
             <NFTCard />
-            {/* <NFTSlider /> */}
             <Title
               heading="Browse by Category"
               paragraph="Explore the NFT in the most featured categories."
             />
             <Category />
         </div>
-        <BackToTopButton />
     </div>
   );
 };
