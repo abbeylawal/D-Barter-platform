@@ -4,7 +4,7 @@ import React from "react";
 import Style from "../styles/account.module.css";
 import { useDropzone } from "react-dropzone";
 
-import images from "../asserts/img";
+import images from "../assets/img";
 
 import ProfileForm from "./AccountPage/ProfileForm/ProfileForm";
 
