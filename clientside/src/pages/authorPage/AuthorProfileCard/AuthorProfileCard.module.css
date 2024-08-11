@@ -1,54 +1,67 @@
 .AuthorProfileCard {
-
     border-radius: 10px;
     box-shadow: var(--box-shadow);
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    margin-top: 5rem;
+    width: 90%;
+    max-width: 1200px;
+    margin: 5rem auto 0;
     z-index: 22222;
 }
 
 .AuthorProfileCard_box {
     display: grid;
-    width: 80%;
+    width: 100%;
     margin: 0 auto;
     grid-template-columns: 1fr 4fr 1.3fr;
     align-items: center;
     background-color: var(--main-bg-color);
-    gap: 3rem;
-    padding: 2.5rem 2rem;
+    gap: 5rem;
+    padding: 2rem;
     border-radius: 1rem;
-    text-align: center;
+    text-align: left;
 }
 
 .AuthorProfileCard_box_img {
-    margin-bottom: 20px;
+    width: 100%;
+    max-width: 220px;
+    margin: 0 auto 20px;
 }
 
 .AuthorProfileCard_box_img_img {
     border-radius: 1rem;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
 }
 
 .AuthorProfileCard_box_info h2 {
-    line-height: 0;
-    margin-top: -.5rem;
+    line-height: 1.2;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
     font-size: 2.5rem;
-    /* margin-bottom: 10px; */
+    font-weight: 900;
+}
+
+.AuthorProfileCard_box_info p {
+    display: flex;
+    margin: 1rem 0;
 }
 
 .AuthorProfileCard_box_info_address {
-    margin-top: -1rem;
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
 }
 
 .AuthorProfileCard_box_info_address input {
     border: none;
     outline: none;
-    width: 35%;
+    width: auto;
+    max-width: 200px;
     background: transparent;
     font-size: 1rem;
     color: var(--icons-color);
-    text-align: center;
 }
 
 .copy_icon {
@@ -56,10 +69,15 @@
     box-shadow: var(--box-shadow);
     transition: all .3s ease-in;
     color: var(--icons-color);
+    margin-left: 0.5rem;
+    padding: 0.2rem;
+    border-radius: 50%;
 }
 
 .copy_icon:hover {
     box-shadow: var(--box-shadow);
+    background-color: var(--icons-color);
+    color: var(--main-bg-color);
 }
 
 .AuthorProfileCard_box_info_social {
@@ -67,15 +85,15 @@
     align-items: center;
     gap: 1rem;
     font-size: 1.5rem;
-    /* margin-bottom: 20px; */
+    margin-top: 1rem;
 }
 
 .AuthorProfileCard_box_info_social a {
     background-color: var(--icons-color);
     color: var(--main-bg-color);
     border-radius: 50%;
-    /* font-size: 1.5rem; */
     display: grid;
+    place-items: center;
     padding: 0.5rem;
     border: 1px solid var(--icons-color);
     transition: all 0.3s ease;
@@ -86,8 +104,7 @@
     background-color: var(--main-bg-color);
     color: var(--icons-color);
     box-shadow: var(--box-shadow);
-    border: 1px solid var(--icons-color)
-
+    border: 1px solid var(--icons-color);
 }
 
 .AuthorProfileCard_box_share {
@@ -102,6 +119,11 @@
     cursor: pointer;
     font-size: 1.5rem;
     color: var(--icons-color);
+    transition: all 0.3s ease;
+}
+
+.AuthorProfileCard_box_share_icon:hover {
+    transform: scale(1.1);
 }
 
 .AuthorProfileCard_box_share_upload {
@@ -111,8 +133,8 @@
     border-radius: 10px;
     padding: .5rem;
     width: 15rem;
-    left: 2rem;
-    top: 5rem;
+    right: 0;
+    top: 3rem;
     z-index: 11111111;
 }
 
@@ -120,24 +142,83 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    line-height: 0;
-    padding: 0.3rem 0.5rem;
+    line-height: 1;
+    padding: 0.5rem;
     cursor: pointer;
     transition: all .3s ease-in;
+}
 
+.AuthorProfileCard_box_share_upload p:hover {
+    background-color: var(--icons-color);
+    color: var(--main-bg-color);
+    border-radius: .2rem;
+}
+
+.AuthorProfileCard_box_share_upload span {
+    font-size: 1.5rem;
 }
 
 .AuthorProfileCard_box_share_report {
     position: absolute;
-    background-color: white;
+    background-color: var(--main-bg-color);
     box-shadow: var(--box-shadow);
-    border-radius: 10px;
-    padding: 10px;
-    top: 60px;
-    right: 60px;
-    z-index: 10;
+    border-radius: 1rem;
+    padding: .5rem;
+    width: 10rem;
+    top: 3rem;
+    right: 0;
+    z-index: 100000;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 1rem;
     cursor: pointer;
+}
+
+.AuthorProfileCard_box_share_report p {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+    .AuthorProfileCard_box {
+        grid-template-columns: 1fr 2fr 1fr;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .AuthorProfileCard {
+        width: 95%;
+    }
+
+    .AuthorProfileCard_box {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2rem;
+    }
+
+    .AuthorProfileCard_box_img {
+        margin: 0 auto;
+    }
+
+    .AuthorProfileCard_box_info h2 {
+        justify-content: center;
+    }
+
+    .AuthorProfileCard_box_info p,
+    .AuthorProfileCard_box_info_address,
+    .AuthorProfileCard_box_info_social {
+        justify-content: center;
+    }
+
+    .AuthorProfileCard_box_share {
+        justify-content: center;
+    }
+
+    .AuthorProfileCard_box_share_upload,
+    .AuthorProfileCard_box_share_report {
+        right: 50%;
+        transform: translateX(50%);
+    }
 }
