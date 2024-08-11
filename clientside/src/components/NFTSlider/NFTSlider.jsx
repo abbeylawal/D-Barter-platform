@@ -5,7 +5,7 @@ import { MdVerified, MdTimer } from 'react-icons/md';
 import { TbArrowBigLeftLines, TbArrowBigRightLines } from 'react-icons/tb';
 
 import Style from "./NFTSlider.module.css";
-import images from '../../asserts/img';
+import images from '../../assets/img';
 import Button from "../Button/Button";
 
 const NFTSlider = () => {
@@ -77,18 +77,15 @@ const NFTSlider = () => {
         },
     ]
 
-    // ----- inc functions
+    // ----- inc function
     const inc = useCallback(() => {
-        if (idNumber + 1 < sliderData.length) {
-            setIdNumber(setIdNumber + 1);
-        }
-    }, [idNumber, sliderData.length]);
-    // ----- dec functions
+        setIdNumber((prevId) => (prevId + 1) % sliderData.length);
+    }, [sliderData.length]);
+
+    // ----- dec function
     const dec = useCallback(() => {
-        if (idNumber > 0) {
-            setIdNumber(setIdNumber - 1);
-        }
-    }, [idNumber, sliderData.length]);
+        setIdNumber((prevId) => (prevId - 1 + sliderData.length) % sliderData.length);
+    }, [sliderData.length]);
 
     // useEffect(() => {
     //     inc();
@@ -175,13 +172,11 @@ const NFTSlider = () => {
                     <div className={Style.NFTSlider_box_left_sliderBtn}>
                         <TbArrowBigLeftLines
                             className={Style.NFTSlider_box_left_sliderBtn_icon}
-                            onClick={() => dec()}
+                            onClick={dec}
                         />
-                    </div>
-                    <div className={Style.NFTSlider_box_left_sliderBtn}>
                         <TbArrowBigRightLines
                             className={Style.NFTSlider_box_left_sliderBtn_icon}
-                            onClick={() => inc()}
+                            onClick={inc}
                         />
                     </div>
                 </div>
@@ -189,7 +184,7 @@ const NFTSlider = () => {
                 <div className={Style.NFTSlider_box_right}>
                     <div className={Style.NFTSlider_box_right_box}>
                         <Image
-                            // className=''
+                            className={Style.NFTSlider_box_right_box_img}
                             src={sliderData[idNumber].nftImage}
                             alt="NFT Image"
                         />
