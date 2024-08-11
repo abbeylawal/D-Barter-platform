@@ -1,26 +1,21 @@
 import React, { useState } from 'react';
-import Image from 'next/image';
 import { TiArrowSortedDown, TiArrowSortedUp, TiTick } from "react-icons/ti";
 import Style from "./AuthorTabs.module.css";
 
-const AuthorTabs = ({ setCollectables, setCreated, setListed, setLike }) => {
+const AuthorTabs = ({ activeTab, setActiveTab }) => {
     const [openList, setOpenList] = useState(false);
-    const [activeBtn, setActiveBtn] = useState(0);
     const [selectedMenu, setSelectedMenu] = useState("Most Recent");
 
     const listArray = [
+        "Most Recent",
         "Curated",
         "Most Appreciated",
         "Most Discussed",
         "Most Viewed"
     ];
 
-    const openTab = (e, index) => {
-        setActiveBtn(index);
-        if (index === 1) setCollectables();
-        if (index === 2) setCreated();
-        if (index === 3) setListed();
-        if (index === 4) setLike();
+    const openTab = (tab) => {
+        setActiveTab(tab);
     };
 
     const openDropDown = () => {
@@ -37,21 +32,23 @@ const AuthorTabs = ({ setCollectables, setCreated, setListed, setLike }) => {
             <div className={Style.AuthorTabs_box}>
                 <div className={Style.AuthorTabs_box_left}>
                     <div className={Style.AuthorTabs_box_left_btn}>
-                        <button className={`${activeBtn === 1 ? Style.active : ""}`}
-                            onClick={(e) => openTab(e, 1)}>Collectables</button>
-                        <button className={`${activeBtn === 2 ? Style.active : ""}`}
-                            onClick={(e) => openTab(e, 2)}>Created</button>
-                        <button className={`${activeBtn === 3 ? Style.active : ""}`}
-                            onClick={(e) => openTab(e, 3)}>Listed</button>
-                        <button className={`${activeBtn === 4 ? Style.active : ""}`}
-                            onClick={(e) => openTab(e, 4)}>Liked</button>
+                        {['Collectables', 'Created', 'Listed', 'Liked'].map((tab, index) => (
+                            <button
+                                key={index}
+                                className={activeTab === tab.toLowerCase() ? Style.active : ""}
+                                onClick={() => openTab(tab.toLowerCase())}
+                            >
+                                {tab}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
                 <div className={Style.AuthorTabs_box_right}>
                     <div
                         className={Style.AuthorTabs_box_right_para}
-                        onClick={() => openDropDown()}>
+                        onClick={openDropDown}
+                    >
                         <p>{selectedMenu}</p>
                         {openList ? <TiArrowSortedUp /> : <TiArrowSortedDown />}
                     </div>
@@ -61,7 +58,8 @@ const AuthorTabs = ({ setCollectables, setCreated, setListed, setLike }) => {
                                 <div
                                     key={index}
                                     className={Style.dropdown_item}
-                                    onClick={() => selectMenu(item)}>
+                                    onClick={() => selectMenu(item)}
+                                >
                                     {item} {selectedMenu === item && <TiTick />}
                                 </div>
                             ))}
