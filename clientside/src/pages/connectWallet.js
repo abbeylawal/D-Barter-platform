@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 import Style from "../styles/connectWallet.module.css";
-import images from "../asserts/img";
+import images from "../assets/img";
 
 const connectWallet = () => {
   const [activeBtn, setActiveBtn] = useState(1);
