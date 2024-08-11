@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Style from "./AuthorNFTCard.module.css";
-import images from "../../../asserts/img";
+import images from "../../../assets/img";
 import { NFTCard } from '../../../components/componentsIndex';
 
 const AuthorNFTCard = ({ collectables, created, listed, like }) => {
