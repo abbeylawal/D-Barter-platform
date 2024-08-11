@@ -5,7 +5,7 @@ import { FiCopy } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
 
 import Style from "./AuthorProfileCard.module.css";
-import images from "../../../asserts/img";
+import images from "../../../assets/img";
 import { Button } from "../../../components/componentsIndex";
 import { TiSocialFacebook, TiSocialInstagram, TiSocialLinkedin, TiSocialTwitter } from 'react-icons/ti';
 
@@ -77,55 +77,54 @@ const AuthorProfileCard = () => {
                             <TiSocialTwitter />
                         </a>
                     </div>
+                </div>
+                <div className={Style.AuthorProfileCard_box_share}>
+                    <Button btnName="Follow" handleClick={() => { }} />
+                    <MdCloudUpload onClick={openShare} className={Style.AuthorProfileCard_box_share_icon} />
 
-                    <div className={Style.AuthorProfileCard_box_share}>
-                        <Button btnName="Follow" handleClick={() => { }} />
-                        <MdCloudUpload onClick={openShare} className={Style.AuthorProfileCard_box_share_icon} />
-
-                        {share && (
-                            <div className={Style.AuthorProfileCard_box_share_upload}>
-                                <p>
-                                    <span>
-                                        <TiSocialFacebook />
-                                    </span>{" "}
-                                    {""}
-                                    Facebook
-                                </p>
-                                <p>
-                                    <span>
-                                        <TiSocialInstagram />
-                                    </span>{" "}
-                                    {""}
-                                    Instagram
-                                </p>
-                                <p>
-                                    <span>
-                                        <TiSocialLinkedin />
-                                    </span>{" "}
-                                    {""}
-                                    Linkedin
-                                </p>
-                                <p>
-                                    <span>
-                                        <TiSocialTwitter />
-                                    </span>{" "}
-                                    {""}
-                                    Twitter
-                                </p>
-                            </div>
-                        )}
-
-                        <BsThreeDots onClick={openReport} className={Style.AuthorProfileCard_box_share_icon} />
-
-                        {report && (
-                            <p className={Style.AuthorProfileCard_box_share_report}>
+                    {share && (
+                        <div className={Style.AuthorProfileCard_box_share_upload}>
+                            <p>
                                 <span>
-                                    <MdOutlineReportProblem />
-                                </span>
-                                Report
+                                    <TiSocialFacebook />
+                                </span>{" "}
+                                {""}
+                                Facebook
                             </p>
-                        )}
-                    </div>
+                            <p>
+                                <span>
+                                    <TiSocialInstagram />
+                                </span>{" "}
+                                {""}
+                                Instagram
+                            </p>
+                            <p>
+                                <span>
+                                    <TiSocialLinkedin />
+                                </span>{" "}
+                                {""}
+                                Linkedin
+                            </p>
+                            <p>
+                                <span>
+                                    <TiSocialTwitter />
+                                </span>{" "}
+                                {""}
+                                Twitter
+                            </p>
+                        </div>
+                    )}
+
+                    <BsThreeDots onClick={openReport} className={Style.AuthorProfileCard_box_share_icon} />
+
+                    {report && (
+                        <p className={Style.AuthorProfileCard_box_share_report}>
+                            <span>
+                                <MdOutlineReportProblem />
+                            </span>
+                            Report
+                        </p>
+                    )}
                 </div>
             </div>
         </div>
