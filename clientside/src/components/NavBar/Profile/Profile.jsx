@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 
 import Style from "./Profile.module.css";
-import images from '../../../asserts/img';
+import images from '../../../assets/img';
 
 const Profile = () => {
     return (
@@ -33,7 +33,7 @@ const Profile = () => {
                     <div className={Style.profile_menu_one_item}>
                         <FaUserAlt />
                         <p>
-                            <Link href={{ pathname: '/myprofile' }}>My Profile</Link>
+                            <Link href={{ pathname: '/account' }}>My Profile</Link>
                         </p>
                     </div>
 
@@ -44,12 +44,12 @@ const Profile = () => {
                         </p>
                     </div>
 
-                    <div className={Style.profile_menu_one_item}>
+                    {/* <div className={Style.profile_menu_one_item}>
                         <FaUserEdit />
                         <p>
                             <Link href={{ pathname: '/account' }}>Edit Profile</Link>
                         </p>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className={Style.profile_menu_two}>
