@@ -9,7 +9,7 @@ import { CgMenuLeft, CgMenuRight } from 'react-icons/cg';
 import Style from './NavBar.module.css';
 import { Discover, HelpCenter, ToggleTheme, Notification, Profile, SideBar } from './index';
 import { Button } from "../componentsIndex";
-import images from "../../asserts/img";
+import images from "../../assets/img";
 
 const NavBar = () => {
     const [activeMenu, setActiveMenu] = useState('');
@@ -30,12 +30,12 @@ const NavBar = () => {
                 {/* navbar left */}
                 <div className={Style.navbar_container_left}>
                     <div className={Style.logo}>
-                        <Image 
-                        src={images.logo} 
-                        alt='BARTER MARKET PLACE' 
-                        href="/"
-                        width={100} 
-                        height={100} />
+                        <Image
+                            src={images.logo}
+                            alt='BARTER MARKET PLACE'
+                            href="/"
+                            width={100}
+                            height={100} />
                     </div>
                     <div className={Style.navbar_container_left_box_input}>
                         <div className={Style.navbar_container_left_box_input_box}>
