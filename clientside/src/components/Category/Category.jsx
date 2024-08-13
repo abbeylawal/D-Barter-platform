@@ -2,16 +2,16 @@ import React from 'react';
 import { BsCircleFill } from "react-icons/bs";
 import Image from "next/image";
 import Style from "./Category.module.css";
-import images from "../../assets/img";
+import images from "../../assets/img/";
 
 const Category = () => {
     const categories = [
-        { image: images.creatorbackground1, name: 'Fashion', count: '1995 NFTS' },
-        { image: images.creatorbackground10, name: 'Electronics', count: '320 NFTS' },
-        { image: images.creatorbackground2, name: 'Computers', count: '1780 NFTS' },
-        { image: images.creatorbackground11, name: 'Gadgets', count: '250 NFTS' },
-        { image: images.creatorbackground4, name: 'Mobiles', count: '500 NFTS' },
-        { image: images.creatorbackground5, name: 'Arts', count: '1340 NFTS' }
+        { image: images.fashionCategory, name: 'Fashion', count: '1995 NFTS' },
+        { image: images.electronicsCategory, name: 'Electronics', count: '320 NFTS' },
+        { image: images.computerCategory, name: 'Computers', count: '1780 NFTS' },
+        { image: images.gadgetsCategory, name: 'Gadgets', count: '250 NFTS' },
+        { image: images.mobileCategory, name: 'Mobiles', count: '500 NFTS' },
+        { image: images.artCategory, name: 'Arts', count: '1340 NFTS' }
     ];
 
     return (
@@ -23,9 +23,9 @@ const Category = () => {
                             src={category.image}
                             className={Style.category_box_img}
                             alt={`${category.name} Background`}
-                            width={350}
+                            width={170}
                             height={150}
-                            objectFit="cover"
+                            objectFit="contain"
                         />
 
                         <div className={Style.category_box_title}>

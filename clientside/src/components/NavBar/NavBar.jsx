@@ -29,14 +29,47 @@ const NavBar = () => {
             <div className={Style.navbar_container}>
                 {/* navbar left */}
                 <div className={Style.navbar_container_left}>
-                    <div className={Style.logo}>
+                    {/* <div className={Style.logo}>
                         <Image
                             src={images.logo}
                             alt='BARTER MARKET PLACE'
                             href="/"
                             width={100}
                             height={100} />
-                    </div>
+                    </div> */}
+                    <a className="navbar-brand flex-shrink-0" href="/">
+                        <svg
+                            xmlns="http://www.w3.org/2009/svg"
+                            viewBox="0 0 200 100"
+                            className="img-fluid"
+                            width="100"
+                        >
+                            <circle cx="50" cy="50" r="45" fill="#4c5773" />
+                            <path d="M30 50 L50 30 L70 50 L50 70 Z" fill="white" />
+                            <path d="M40 50 L50 40 L60 50 L50 60 Z" fill="#4c5773" />
+                            <text
+                                x="110"
+                                y="45"
+                                fontFamily="Arial, sans-serif"
+                                fontSize="24"
+                                fontWeight="bold"
+                                fill="#4c5773"
+                            >
+                                Barter
+                            </text>
+                             <text
+                                x="110"
+                                y="70"
+                                fontFamily="Arial, sans-serif"
+                                fontSize="24"
+                                fontWeight="bold"
+                                fill="#4c5773"
+                            >
+                                Easy
+                            </text>
+                        </svg>
+                        {/* <span>Barter Easy Store</span> */}
+                    </a>
                     <div className={Style.navbar_container_left_box_input}>
                         <div className={Style.navbar_container_left_box_input_box}>
                             <input type="text" placeholder="Search Item" />

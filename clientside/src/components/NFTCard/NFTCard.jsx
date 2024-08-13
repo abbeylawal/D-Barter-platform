@@ -14,15 +14,15 @@ import images from "../../assets/img";
 const NFTCard = () => {
 
     const CardArray = [
-        images.nft_image_1,
-        images.nft_image_3,
-        images.nft_image_2,
-        images.nft_image_1,
-        images.nft_image_3,
-        images.nft_image_2,
-        images.nft_image_1,
-        images.nft_image_3,
-        images.nft_image_2,
+        images.NFT_image_1,
+        images.NFT_image_3,
+        images.NFT_image_2,
+        images.NFT_image_6,
+        images.NFT_image_7,
+        images.NFT_image_5,
+        images.NFT_image_9,
+        images.NFT_image_4,
+        images.NFT_image_2,
     ];
 
     const [like, setLike] = useState(true);
@@ -40,9 +40,10 @@ const NFTCard = () => {
                             src={el}
                             // src={images[`nft_image_${i + 1}`]}
                             alt='NFT images'
-                            width={400}
-                            height={400}
+                            width={385}
+                            height={350}
                             className={Style.NFTCard_box_img_img}
+                            objectFit='contain'
                         />
                     </div>
 

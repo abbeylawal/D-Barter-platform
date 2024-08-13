@@ -1,15 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-// Importing OpenZeppelin libraries
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "hardhat/console.sol";
-
-// Importing the custom Counter library
 import "./Counter.sol";
 
-// ==================== Main ======================
 contract NFTMarketplace is ERC721URIStorage {
     using CounterLib for CounterLib.Counter;
 
@@ -186,23 +182,23 @@ contract NFTMarketplace is ERC721URIStorage {
         emit BarterItemCreated(tokenId, msg.sender, desiredTokenId, true);
     }
 
-    // function acceptBarterTrade(uint256 offeredTokenId, uint256 desiredTokenId) public {
-    //     BarterItem memory barterItem = idBarterItem[desiredTokenId];
-    //     require(barterItem.available, "The desired token is not available for barter");
-    //     require(barterItem.desiredTokenId == offeredTokenId, "The offered token does not match the desired token");
+    function acceptBarterTrade(uint256 offeredTokenId, uint256 desiredTokenId) public {
+        BarterItem memory barterItem = idBarterItem[desiredTokenId];
+        require(barterItem.available, "The desired token is not available for barter");
+        require(barterItem.desiredTokenId == offeredTokenId, "The offered token does not match the desired token");
 
-    //     address ownerOfOfferedToken = ownerOf(offeredTokenId);
-    //     address ownerOfDesiredToken = ownerOf(desiredTokenId);
+        address ownerOfOfferedToken = ownerOf(offeredTokenId);
+        address ownerOfDesiredToken = ownerOf(desiredTokenId);
 
-    //     require(ownerOfOfferedToken == msg.sender, "Only the owner of the offered token can accept the trade");
+        require(ownerOfOfferedToken == msg.sender, "Only the owner of the offered token can accept the trade");
 
-    //     _transfer(ownerOfOfferedToken, barterItem.owner, offeredTokenId);
-    //     _transfer(barterItem.owner, ownerOfOfferedToken, desiredTokenId);
+        _transfer(ownerOfOfferedToken, barterItem.owner, offeredTokenId);
+        _transfer(barterItem.owner, ownerOfOfferedToken, desiredTokenId);
 
-    //     idBarterItem[desiredTokenId].available = false;
+        idBarterItem[desiredTokenId].available = false;
 
-    //     emit BarterTradeCompleted(offeredTokenId, ownerOfOfferedToken, desiredTokenId, barterItem.owner);
-    // }
+        emit BarterTradeCompleted(offeredTokenId, ownerOfOfferedToken, desiredTokenId, barterItem.owner);
+    }
 
     function fetchItemsListed() public view returns (MarketItem[] memory) {
         uint256 totalItemCount = _tokenIds.current();

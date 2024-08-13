@@ -27,6 +27,7 @@
 
 .category_box_img{
     border-radius: 1rem;
+    align-items: start;
 }
 
 .category_box_title{

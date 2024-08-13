@@ -31,7 +31,7 @@ const Filter = () => {
         <div className={Style.filter}>
             <div className={Style.filter_box}>
                 <div className={Style.filter_box_left}>
-                    <button onClick={() => { }}>NFTs</button>
+                    <button onClick={() => { }}>Fashion</button>
                     <button onClick={() => { }}>Arts</button>
                     <button onClick={() => { }}>Music</button>
                     <button onClick={() => { }}>Sports</button>

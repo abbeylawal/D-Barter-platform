@@ -22,7 +22,7 @@
 /* Navbar left section */
 .navbar_container_left {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 4fr;
     align-items: center;
 }
 
@@ -63,7 +63,7 @@
 .navbar_container_right{
     /* margin: auto; */
     display: grid;
-    grid-template-columns: 2fr 2fr .3fr .5fr 1fr .3fr;
+    grid-template-columns: 1fr 2fr .3fr 0.2fr 1fr .3fr;
     gap: 1rem;
     align-items: center;
     /* align-self: flex-end; */

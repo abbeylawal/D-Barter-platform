@@ -25,7 +25,7 @@ const Author = () => {
 
   return (
     <div className={Style.Author}>
-      {/* <Banner bannerImage={images.creatorbackground10} /> */}
+      <Banner bannerImage={images.creatorbackground11} />
       <AuthorProfileCard />
       <AuthorTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       <AuthorNFTCard

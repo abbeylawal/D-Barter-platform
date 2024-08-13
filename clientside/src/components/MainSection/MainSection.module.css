@@ -11,7 +11,17 @@
 
 .mainsection_box_left{
     padding-right: 6rem;
+    flex-wrap: wrap;
+    display: flex;
+    width: 90%;
 
+}
+
+.mainsection_box_left_btn_box{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
 }
 
 .mainsection_box_right{
@@ -22,6 +32,9 @@
 .mainsection_box_left h1{
     font-size: 5rem;
     line-height: 1;
+    flex-wrap: wrap;
+    display: flex;
+    width: 90%;
 }
 
 .mainsection_box_left p{

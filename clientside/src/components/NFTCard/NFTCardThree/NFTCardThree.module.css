@@ -1,0 +1,113 @@
+.nftCardContainer {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .nftCardContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .nftCardContainer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.nftCard {
+  background-color: var(--icons-bg-color);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+}
+
+.nftImageContainer {
+  position: relative;
+}
+
+.nftImage {
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
+}
+
+.likeButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: var(--icons-light-color);
+  border-radius: 9999px;
+  padding: 0.25rem;
+}
+
+.likeIcon {
+  color: var(--icons-color);
+}
+
+.likedIcon {
+  color: #ef4444;
+}
+
+.likeCount {
+  color: var(--icons-color);
+  font-size: 0.75rem;
+  margin-left: 0.25rem;
+}
+
+.nftInfo {
+  padding: 1rem;
+}
+
+.nftName {
+  color: var(--icons-color);
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+.authorName {
+  color: #60a5fa;
+}
+
+.nftDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.categoryInfo {
+  color: var(--icons-light-color);
+  font-size: 0.875rem;
+}
+
+.category {
+  color: var(--icons-color);
+  font-weight: bold;
+}
+
+.timeLeft {
+  color: var(--icons-light-color);
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+.buyButton {
+  width: 100%;
+  background-color: var(--icons-color);
+  color: var(--main-bg-color);
+  padding: 0.5rem 0;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  transition: opacity 0.2s;
+}
+
+.buyButton:hover {
+  opacity: 0.9;
+}
+
+.buyButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--icons-light-color);
+}

@@ -12,6 +12,7 @@ import Collection from "./Collection/Collection";
 // import NFTSlider from "./NFTSlider/NFTSlider";
 import NFTCard from "./NFTCard/NFTCard"
 import NFTCardTwo from "./NFTCard/NFTCardTwo/NFTCardTwo";
+import NFTCardThree from "./NFTCard/NFTCardThree/NFTCardThree";
 import Banner from "./Banner/Banner";
 
 export {
@@ -30,4 +31,5 @@ export {
     // NFTSlider,
     NFTCard,
     NFTCardTwo,
+    NFTCardThree,
 };

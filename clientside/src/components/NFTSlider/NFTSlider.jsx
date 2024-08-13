@@ -17,11 +17,12 @@ const NFTSlider = () => {
             name: "Muftau Lawal",
             collection: "Books",
             price: "0000006464444 ETH",
+            swapCategory: ["Art", "Fashion", "Gadget"], // Fixed: Categories should be strings
             like: 243,
             image: images.user1,
-            nftImage: images.nft_image_1,
+            nftImage: images.NFT_image_9,
             time: {
-                day: 27,
+                day: 6,
                 hours: 10,
                 minutes: 11,
                 seconds: 6,
@@ -33,14 +34,15 @@ const NFTSlider = () => {
             name: "Muftau Lawal",
             collection: "Books",
             price: "0000006464444 ETH",
-            like: 243,
+            swapCategory: ["Gadget", "Electronics"], // Fixed: Categories should be strings
+            like: 207,
             image: images.user2,
-            nftImage: images.nft_image_2,
+            nftImage: images.NFT_image_2,
             time: {
-                day: 27,
-                hours: 10,
+                day: 5,
+                hours: 18,
                 minutes: 11,
-                seconds: 6,
+                seconds: 4,
             },
         },
         {
@@ -49,14 +51,15 @@ const NFTSlider = () => {
             name: "Muftau Lawal",
             collection: "Books",
             price: "0000006464444 ETH",
-            like: 243,
+            swapCategory: ["Art", "Books"], // Added a swapCategory for consistency
+            like: 180,
             image: images.user2,
-            nftImage: images.nft_image_2,
+            nftImage: images.NFT_image_8,
             time: {
-                day: 27,
-                hours: 10,
+                day: 5,
+                hours: 12,
                 minutes: 11,
-                seconds: 6,
+                seconds: 55,
             },
         },
         {
@@ -65,17 +68,18 @@ const NFTSlider = () => {
             name: "Kevlin Smith",
             collection: "Accessories",
             price: "0000006464444 ETH",
-            like: 243,
+            swapCategory: ["Games", "Accessories"], // Added a swapCategory for consistency
+            like: 165,
             image: images.user3,
-            nftImage: images.nft_image_3,
+            nftImage: images.NFT_image_7,
             time: {
-                day: 27,
-                hours: 10,
-                minutes: 11,
+                day: 3,
+                hours: 8,
+                minutes: 16,
                 seconds: 6,
             },
         },
-    ]
+    ];
 
     // ----- inc function
     const inc = useCallback(() => {
@@ -127,17 +131,18 @@ const NFTSlider = () => {
 
                     <div className={Style.NFTSlider_box_left_bidding}>
                         <div className={Style.NFTSlider_box_left_bidding_box}>
-                            <small>Current Bid</small>
+                            <small>Swap with</small>
                             <p>
-                                {sliderData[idNumber].price}
+                                {/* {sliderData[idNumber].price}
                                 <span>
                                     $22,121
-                                </span>
+                                </span> */}
+                                <p>{sliderData[idNumber].swapCategory}</p>
                             </p>
                         </div>
                         <p className={Style.NFTSlider_box_left_bidding_box_auction}>
                             <MdTimer className={Style.NFTSlider_box_left_bidding_box_icon} />
-                            <span>Auction ending in</span>
+                            <span>Listing ending in</span>
                         </p>
 
                         <div className={Style.NFTSlider_box_left_bidding_box_timer}>

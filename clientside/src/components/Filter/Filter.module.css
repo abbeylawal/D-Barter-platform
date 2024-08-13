@@ -12,6 +12,11 @@
     padding-bottom: 4rem;
 }
 
+/* .filter_box_left {
+    background-color: var(--icons-bg-color);
+    color: var(--icons-color);
+} */
+
 .filter_box_left button {
     border: none;
     outline: none;
@@ -19,7 +24,8 @@
     padding: 1rem 1.5rem;
     /* background-color: #f0f0f0; */
     border: 1px solid var(--main-bg-color);
-    background-color: var(--main-bg-color);
+    background-color: var(--icons-bg-color);
+    color: var(--icons-color);
     border-radius: 2rem;
     transition: all .3s ease-in;
     font-size: 1.3rem;

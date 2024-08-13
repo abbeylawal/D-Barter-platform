@@ -1,0 +1,33 @@
+```mermaid
+graph TD
+    User1[User 1] --> |Create Item| Marketplace
+    Marketplace --> |Mint NFT| Item1[NFT (Token 1)]
+    Marketplace --> |Assign Category| Item1
+    Item1 --> |Category Assigned| TokenCategories
+
+    User1 --> |Create Listing| Marketplace
+    Marketplace --> |List Token 1| Listing1[Listing 1]
+    Listing1 --> |Active & Desired Categories| Listings
+
+    User2[User 2] --> |Create Item| Marketplace
+    Marketplace --> |Mint NFT| Item2[NFT (Token 2)]
+    Marketplace --> |Assign Category| Item2
+    Item2 --> |Category Assigned| TokenCategories
+
+    User2 --> |Make Offer| Marketplace
+    Marketplace --> |Offer Token 2 for Listing 1| Offer1[Offer 1]
+    Offer1 --> |Offer Stored| OffersForListing
+
+    User1 --> |Accept Offer| Marketplace
+    Marketplace --> |Update Offer Status| Offer1
+    Marketplace --> |Deactivate Listing| Listing1
+    Marketplace --> |Create HTLC| HTLC1[HTLC 1]
+
+    User1 & User2 --> |Complete Swap| Marketplace
+    HTLC1 --> |Transfer Tokens| Marketplace
+    Marketplace --> |Update Owners| Item1 & Item2
+    Marketplace --> |Mark HTLC as Completed| HTLC1
+
+    classDef contract fill:#f96,stroke:#333,stroke-width:2px;
+    class Marketplace contract;
+```

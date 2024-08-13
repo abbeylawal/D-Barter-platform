@@ -1,4 +1,11 @@
 import collection from "./collection.png";
+import artCategory from "./cart/Art-Category-NFT.webp";
+import computerCategory from "./cart/Computers-Category-NFT.webp";
+import electronicsCategory from "./cart/Electronics-Category-NFT.webp";
+import fashionCategory from "./cart/Fashion-Category-NFT.webp";
+import gadgetsCategory from "./cart/Gadgets-Category-NFT.webp";
+import mobileCategory from "./cart/Mobile-Category-NFT.webp";
+
 import creatorbackground1 from "./creatorbackground-1.jpeg";
 import creatorbackground2 from "./creatorbackground-2.jpeg";
 import creatorbackground3 from "./creatorbackground-3.jpeg";
@@ -39,17 +46,43 @@ import getAble from "./getable.png";
 import nft_image_1 from "./nft-image-1.png";
 import nft_image_2 from "./nft-image-2.png";
 import nft_image_3 from "./nft-image-3.png";
-import musiceWave from "./musicwave.png";
+import musicWave from "./musicwave.png";
 import update from "./update.png";
 import provider1 from "./provider-1.png";
 import provider2 from "./provider-2.jpg";
 import provider3 from "./provider-3.png";
 import provider4 from "./provider-4.png";
+import NFT_image_1 from "./NFT-Image-1.webp";
+import NFT_image_2 from "./NFT-Image-2.webp";
+import NFT_image_3 from "./NFT-Image-3.webp";
+import NFT_image_4 from "./NFT-Image-4.webp";
+import NFT_image_5 from "./NFT-Image-5.webp";
+import NFT_image_6 from "./NFT-Image-6.webp";
+import NFT_image_7 from "./NFT-Image-7.webp";
+import NFT_image_8 from "./NFT-Image-8.webp";
+import NFT_image_9 from "./NFT-Image-9.webp";
+
 
 export default {
   collection,
   update,
-  musiceWave,
+  musicWave,
+  NFT_image_1,
+  NFT_image_2,
+  NFT_image_3,
+  NFT_image_4,
+  NFT_image_5,
+  NFT_image_6,
+  NFT_image_7,
+  NFT_image_8,
+  NFT_image_9,
+  // test ----
+  artCategory,
+  computerCategory,
+  fashionCategory,
+  electronicsCategory,
+  gadgetsCategory,
+  mobileCategory,
   nft_image_1,
   nft_image_2,
   nft_image_3,
