@@ -1,0 +1,219 @@
+.NFTSlider_box {
+    margin: 0 auto;
+    width: 80%;
+    padding-block: 10rem;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    align-items: center;
+}
+
+.NFTSlider_box_left {
+    grid-column: 1 / 7;
+    grid-row: 1/ -1;
+    background-color: var(--main-bg-color);
+    box-shadow: var(--box-shadow-2);
+    border-radius: 1rem;
+    padding: 2rem;
+    z-index: 11111111;
+    height: 92vh;
+}
+
+.NFTSlider_box_left h2 {
+    font-size: 2rem;
+    line-height: 0;
+}
+
+.NFTSlider_box_right {
+    grid-column: 6 / -1;
+    grid-row: 1 / -1;
+    padding: 1rem;
+    background-color: var(--main-bg-color);
+    border-radius: 2.5rem;
+    box-shadow: var(--main-bg-color);
+}
+
+/* Creator Section */
+.NFTSlider_box_left_creator {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+}
+
+.NFTSlider_box_left_creator_profile, .NFTSlider_box_left_creator_collection {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.NFTSlider_box_left_creator_profile_img {
+    border-radius: 50%;
+    /* width: 50px;
+    height: 50px;
+    object-fit: cover; */
+}
+
+.NFTSlider_box_left_creator_profile_info {
+    line-height: 0;
+}
+
+.NFTSlider_box_left_creator_profile_info p {
+    margin-bottom: -.7rem;
+    margin-top: 1rem;
+}
+
+.NFTSlider_box_left_creator_collection_icon {
+    font-size: 4rem;
+}
+
+.NFTSlider_box_left_creator_collection_info {
+    line-height: 0;
+}
+
+/* Bidding Box */
+.NFTSlider_box_left_bidding_box {
+    border: 3px solid var(--shadow-dark-color);
+    /* margin-block: 2rem; */
+    padding: 0 4rem;
+    border-radius: .5rem;
+}
+
+.NFTSlider_box_left_bidding_box small {
+    background-color: var(--shadow-dark-color);
+    padding: 1rem 2rem;
+    border-radius: .5rem;
+    font-weight: 600;
+}
+
+.NFTSlider_box_left_bidding_box_auction {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1rem;
+    color: var(--icons-color);
+    margin-bottom: 1rem;
+}
+
+.NFTSlider_box_left_bidding_box_icon {
+    font-size: 2rem;
+}
+
+.NFTSlider_box_left_bidding_box_timer {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    text-align: center;
+    padding: 1rem 0rem 1rem 0rem;
+    border-bottom: 1px solid var(--shadow-dark-color);
+}
+
+.NFTSlider_box_left_bidding_box_timer_item p {
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 0;
+}
+
+/* Buttons */
+.NFTSlider_box_left_button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+    padding-block: 2rem 0rem;
+}
+
+.NFTSlider_box_left_sliderBtn {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    font-size: 2rem;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.NFTSlider_box_left_sliderBtn_icon {
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: all .3s ease-in;
+}
+
+.NFTSlider_box_left_sliderBtn_icon:hover {
+    background-color: var(--shadow-dark-color);
+    border-radius: 50%;
+    padding: 1rem;
+}
+
+/* Right Section */
+.NFTSlider_box_right_box {
+    position: relative;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    border-radius: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.NFTSlider_box_right_box_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 2rem;
+}
+
+.NFTSlider_box_right_box_like {
+    position: absolute;
+    top: 3rem;
+    right: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.2rem;
+    background-color: var(--icons-color);
+    color: var(--shadow-dark-color);
+    padding: 0.5rem 1rem;
+    border-radius: 5rem;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 65em) {
+    .NFTSlider_box {
+        width: 90%;
+        padding-top: 28rem;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .NFTSlider_box_left {
+        height: 110vh;
+        padding: 1.5rem;
+    }
+
+    .NFTSlider_box_right {
+        margin-top: -52rem;
+    }
+
+    .NFTSlider_box_left_creator {
+        gap: 1rem;
+        grid-template-columns: 1.8fr 1fr;
+    }
+
+    .NFTSlider_box_left_creator_profile_info {
+        font-size: 0.8rem;
+    }
+
+    .NFTSlider_box_left_creator_collection {
+        font-size: 1.5rem;
+    }
+
+    .NFTSlider_box_left_creator_collection_info {
+        font-size: 0.8rem;
+    }
+
+    .NFTSlider_box_left_bidding_box_timer {
+        gap: 2rem;
+    }
+
+    .NFTSlider_box_left_bidding_box_timer p {
+        font-size: 1rem;
+    }
+}

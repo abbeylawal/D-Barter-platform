@@ -1,0 +1,180 @@
+.AuthorTabs {
+    width: 100%;
+    margin: 8rem 0 3rem 0;
+}
+
+.AuthorTabs_box {
+
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 0 auto;
+}
+.AuthorTabs_box_left_btn {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.AuthorTabs_box_left_btn .active {
+    border: 1px solid var(--icons-color);
+    background-color: var(--icons-color);
+    color: var(--main-bg-color);
+}
+
+
+.AuthorTabs_box_left_btn button {
+    font-size: 1.2rem;
+    border: 1px solid var(--icons-color);
+    outline: 0;
+    background-color: var(--main-bg-color);
+    color: var(--icons-color);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 2rem;
+    transition: all .3s ease-in;
+}
+
+
+.AuthorTabs_box_left_btn button.active {
+    border: 1px solid var(--icons-color);
+    background-color: var(--icons-color);
+    color: var(--main-bg-color);
+}
+
+.AuthorTabs_box_left_btn button:hover {
+    border: 1px solid var(--icons-color);
+    background-color: var(--icons-color);
+    color: var(--main-bg-color);
+}
+
+.AuthorTabs_box_right {
+    position: relative;
+    
+}
+
+.AuthorTabs_box_right_para {
+    border: 1px solid var(--icons-color);
+    border-radius: 2rem;
+    width: 17.6rem;
+    padding: 0 2rem;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    grid-template-columns: 9fr 1fr;
+    display: flex;
+}
+
+.AuthorTabs_box_right_para  p{
+    font-size: 1.2rem;
+    line-height: 0.5;
+}
+
+
+.dropdown {
+    background-color: var(--main-bg-color);
+    padding: 1rem;
+    width: 16rem;
+    left: -3rem;
+    position: absolute;
+    z-index: 11111;
+    border-radius: 1rem;
+    margin-top: 1.5rem;
+    box-shadow: var(--box-shadow);
+
+}
+
+.dropdown_item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    line-height: 0;
+
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dropdown_item p {
+    transition: all .3s ease-in;
+    padding: 0 1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.dropdown_item:hover {
+    background-color: var(--icons-color);
+    color: var(--main-bg-color);
+    border-radius: .2rem;
+}
+
+/* 
+.dropdown_item svg {
+    margin-left: 10px;
+    color: var(--icons-color);
+} */
+
+
+@media screen and (max-device: 35em) {
+    .AuthorTabs{
+        margin: 3rem 0 3rem 0;
+    }
+
+    .AuthorTabs_box{
+        width: 90%;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .AuthorTabs_box_left_btn{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        box-shadow: var(--box-shadow);
+        padding: 0.5rem;
+        border-radius: 1rem;
+        padding: 2rem 1rem;
+    }
+
+    .AuthorTabs_box_right{
+        margin-top: 2rem;
+    }
+
+    .AuthorTabs_box_right_para{
+        width: 100%;
+    }
+
+    .dropdown_list{
+        left: 4rem;
+    }
+}
+
+
+@media screen and (min-device-width: 320px) and
+(max-device-width: 767px) {
+    /* .AuthorTabs {
+        margin: 8rem 0 3rem 0;
+    } */
+
+    .AuthorTabs_box {
+        width: 90%;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .AuthorTabs_box_left_btn {
+        gap: 2rem;
+        justify-content: space-around;
+    }
+
+    .AuthorTabs_box_right_para {
+        width: 90%;
+    }
+
+    .dropdown {
+        width: 16rem;
+        left: -3rem;
+    }
+}

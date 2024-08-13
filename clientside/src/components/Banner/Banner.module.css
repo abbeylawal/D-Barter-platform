@@ -1,0 +1,63 @@
+.banner {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+}
+
+/* Mobile-specific banner image */
+.banner_img_mobile {
+    display: none;
+}
+
+@media screen and (max-width: 35em) {
+    .banner_img_mobile {
+        display: block;
+        width: 100%; /* Ensure the mobile image is fully responsive */
+        height: auto; /* Maintain the aspect ratio */
+    }
+    .banner {
+        display: none;
+    }
+}
+
+/* Overlay styling */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Content styling within the banner */
+.content {
+    position: relative;
+    z-index: 2;
+}
+
+.content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.content p {
+    font-size: 1.25rem;
+}
+
+/* Responsive typography */
+@media screen and (max-width: 35em) {
+    .content h1 {
+        font-size: 1.75rem;
+    }
+    .content p {
+        font-size: 1rem;
+    }
+}

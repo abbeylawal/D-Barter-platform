@@ -1,0 +1,59 @@
+```mermaid
+graph TD
+    subgraph "Frontend (React - Next.js)"
+        A[User Interface]
+        B[Web3 Integration]
+    end
+
+    subgraph "Backend (Node.js - Express)"
+        C[API Server]
+        D[Authentication]
+        E[User Management]
+    end
+
+    subgraph "Database"
+        F[(MongoDB)]
+    end
+
+    subgraph "Blockchain (Ethereum)"
+        G[Smart Contracts]
+        H[NFT Creation]
+        I[Marketplace]
+        J[Escrow/Lock]
+    end
+
+    subgraph "Development & Deployment"
+        K[Hardhat]
+    end
+
+    subgraph "Storage"
+        L[IPFS]
+    end
+
+    A <--> B
+    B <--> C
+    C <--> D
+    C <--> E
+    E <--> F
+    B <--> G
+    G <--> H
+    G <--> I
+    G <--> J
+    K --> G
+    H --> L
+    I --> L
+
+    classDef frontend fill:#e0f7fa,stroke:#006064;
+    classDef backend fill:#e8f5e9,stroke:#1b5e20;
+    classDef database fill:#fff3e0,stroke:#e65100;
+    classDef blockchain fill:#f3e5f5,stroke:#4a148c;
+    classDef devops fill:#fce4ec,stroke:#880e4f;
+    classDef storage fill:#e8eaf6,stroke:#1a237e;
+
+    class A,B frontend;
+    class C,D,E backend;
+    class F database;
+    class G,H,I,J blockchain;
+    class K devops;
+    class L storage;
+```

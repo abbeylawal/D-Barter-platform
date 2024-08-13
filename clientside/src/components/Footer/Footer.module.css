@@ -1,0 +1,105 @@
+/* Footer.module.css */
+
+.footer {
+    background-color: var(--main-bg-color);
+    color: var(--text-color);
+    padding: 2rem 0;
+    box-shadow: var(--box-shadow);
+    transition: background-color var(--transition-speed);
+    font-size: var(--font-size);
+}
+
+.footerContainer {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 80rem; 
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.footerSection {
+    margin-bottom: 2rem;
+    flex: 1 1 25%; 
+    min-width: 15rem; 
+    transition: color var(--transition-speed);
+}
+
+.footerSection h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    transition: color var(--transition-speed);
+}
+
+.footerSection p {
+    margin: 0.5rem 0;
+    transition: color var(--transition-speed);
+}
+
+.socialLinks {
+    display: flex;
+    gap: 1rem;
+    transition: gap var(--transition-speed);
+}
+
+.icon {
+    font-size: 2rem;
+    color: var(--icons-color);
+    transition: color var(--transition-speed), transform var(--transition-speed);
+}
+
+.icon:hover {
+    color: var(--link-hover-color);
+    transform: scale(1.1);
+}
+
+.footerBottom {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    transition: color var(--transition-speed);
+}
+
+.footerSection a {
+    color: var(--link-color);
+    text-decoration: none;
+    transition: color var(--transition-speed), text-decoration var(--transition-speed);
+}
+
+.footerSection a:hover {
+    color: var(--link-hover-color);
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .footerContainer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footerSection {
+        margin-bottom: 1.5rem;
+        text-align: center;
+        flex: 1 1 100%;
+    }
+
+    .socialLinks {
+        justify-content: center;
+    }
+
+    .footerBottom {
+        font-size: 0.8rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .footerSection h3 {
+        font-size: 1.25rem;
+    }
+
+    .icon {
+        font-size: 1.5rem;
+    }
+}

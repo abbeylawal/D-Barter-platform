@@ -1,0 +1,19 @@
+graph TD
+    A[User] -->|Interacts with| B[Next.js Frontend]
+    B -->|React Components| C[Web3 Integration]
+    C -->|Ethereum Transactions| D[Hardhat Development Environment]
+    D -->|Deploys| E[Barter Easy Smart Contract]
+    E -->|Executes on| F[Ethereum Blockchain]
+    
+    G[Smart Contract Functions] -->|Defined in| E
+    H[Test Suite] -->|Verifies| E
+    
+    I[MetaMask] -->|Connects to| C
+    J[Ethers.js] -->|Facilitates| C
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+    style C fill:#dfd,stroke:#333,stroke-width:2px
+    style D fill:#fdd,stroke:#333,stroke-width:2px
+    style E fill:#ddf,stroke:#333,stroke-width:2px
+    style F fill:#ffd,stroke:#333,stroke-width:2px

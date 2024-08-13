@@ -1,0 +1,241 @@
+.ProductDescription {
+  width: 100%;
+}
+
+.ProductDescription_box {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.ProductDescription_box_share {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.ProductDescription_box_share_box {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  font-size: 1.3rem;
+}
+
+.ProductDescription_box_share_box_icon {
+  cursor: pointer;
+}
+
+.ProductDescription_box_share_box_social {
+  position: absolute;
+  top: 20rem;
+  left: 78%;
+  width: 15rem;
+  background-color: var(--main-bg-color);
+  box-shadow: var(--box-shadow);
+  border-radius: .5rem;
+  padding: 1rem;
+}
+
+.ProductDescription_box_share p{
+    background-color: var(--icons-color);
+    color: var(--main-bg-color);
+    padding: .2rem .8rem;
+    border-radius: 2rem;
+
+}
+
+.ProductDescription_box_share_box_social a {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  color: var(--icons-color);
+  transition: all .3s ease-in;
+}
+
+.ProductDescription_box_share_box_social a:hover{
+    background-color: var(--icons-color);
+    color: var(--main-bg-color);
+    border-radius: .5rem;
+    padding: 0.5em .5rem;
+}
+
+.ProductDescription_box_profile h1 {
+  font-size: 3.2rem;
+  line-height: 1;
+}
+
+.ProductDescription_box_profile_box {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  /* padding: 1rem 0; */
+  padding-bottom: 1.5rem;
+}
+
+.ProductDescription_box_profile_box_left {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  gap: 1rem;
+}
+
+.ProductDescription_box_profile_box_left_img {
+  border-radius: 50%;
+}
+
+.ProductDescription_box_profile_box_left_info small{
+  font-weight: 500;
+}
+
+.ProductDescription_box_profile_box_left_info span {
+    font-weight: 800;
+}
+
+/* Bidding */
+.ProductDescription_box_profile_bidding {
+  margin-top: 1.5rem;
+}
+
+.ProductDescription_box_profile_bidding p {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.3rem;
+  line-height: 0;
+}
+
+.ProductDescription_box_profile_bidding_box_timer {
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.ProductDescription_box_profile_bidding_box_timer_item p {
+  font-size: 2rem;
+  line-height: 0;
+  font-weight: 900;
+}
+
+.ProductDescription_box_profile_bidding_box_timer_item span {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.ProductDescription_box_profile_box_price {
+    line-height: 0;
+    margin-top: 2.5rem;
+    /* align-items: flex-end; */
+    align-items: center;
+    justify-content: space-between;
+
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 3rem;
+
+}
+/* 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 0;
+  margin-top: 2rem;
+} */
+
+.ProductDescription_box_profile_box_price_bid {
+    border: 2px solid var(--icons-color);
+    border-radius: 1.5rem;
+    padding: .5rem 1rem;
+
+}
+
+.ProductDescription_box_profile_box_price_bid small {
+    font-size: 1.2rem;
+    background-color: var(--icons-color);
+    color: var(--main-bg-color);
+    padding: 0.5rem 1rem;
+    border-radius: .5rem;
+    margin-left: 1.2rem;
+  /* font-weight: 500; */
+}
+
+.ProductDescription_box_profile_box_price_bid p {
+  font-size: 1.3rem;
+  padding: .5rem 0 0 0;
+  font-weight: 700;
+  line-height: 0;
+}
+
+.ProductDescription_box_profile_bidding_box_button {
+  display: flex;
+  gap: 2rem;
+  margin-top: 3rem;
+  align-items: center;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background-color: var(--icons-color);
+  color: var(--main-bg-color);
+  padding: 1rem 2rem;
+  border: 1px solid var(--icons-color);
+  border-radius: 2rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.ProductDescription_box_profile_bidding_box_tabs {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.ProductDescription_box_profile_bidding_box_tabs button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 0;
+  background-color: var(--shadow-dark-color);
+  color: var(--icons-color);
+  border-radius: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ProductDescription_box_profile_bidding_box_tabs button.active {
+  background-color: var(--icons-color);
+  color: var(--main-bg-color);
+}
+
+.ProductDescription_box_profile_bidding_box_card {
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+@media screen and (max-width: 35em) {
+
+    .ProductDescription_box{
+        width: 90%;
+    }
+
+  .ProductDescription_box_share_box_social {
+    left: 35%;
+  }
+  
+  .ProductDescription_box_profile_bidding_box_button {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .button {
+    font-size: 1rem;
+    padding: .5rem 1rem;
+  }
+
+}
