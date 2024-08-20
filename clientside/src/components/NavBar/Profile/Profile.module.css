@@ -10,6 +10,7 @@
     left: -17rem;
     top: 4.5rem;
     z-index: 222222222;
+    box-shadow: var(--box-shadow);
 }
 
 
