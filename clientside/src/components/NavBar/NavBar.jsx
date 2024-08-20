@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 
@@ -11,17 +11,27 @@ import { Discover, HelpCenter, ToggleTheme, Notification, Profile, SideBar } fro
 import { Button } from "../componentsIndex";
 import images from "../../assets/img";
 
+
+import { NFTMarketplaceContext } from "../../../SmartContract/Context/NFTMarketplaceContext";
+
 const NavBar = () => {
     const [activeMenu, setActiveMenu] = useState('');
     const [openSideMenu, setOpenSideMenu] = useState(false);
 
-    const handleMenuClick = (menu) => {
-        setActiveMenu(activeMenu === menu ? '' : menu);
+    const handleMenuEnter = (menu) => {
+        setActiveMenu(menu);
+    };
+
+    const handleMenuLeave = () => {
+        setActiveMenu('');
     };
 
     const toggleSideBar = () => {
         setOpenSideMenu(!openSideMenu);
     };
+
+    // Smart Contract Section
+    const { currentAccount, connectWallet } = useContext(NFTMarketplaceContext);
 
     return (
         <div className={Style.navbar}>
@@ -37,6 +47,7 @@ const NavBar = () => {
                             width={100}
                             height={100} />
                     </div> */}
+
                     <a className="navbar-brand flex-shrink-0" href="/">
                         <svg
                             xmlns="http://www.w3.org/2009/svg"
@@ -57,7 +68,7 @@ const NavBar = () => {
                             >
                                 Barter
                             </text>
-                             <text
+                            <text
                                 x="110"
                                 y="70"
                                 fontFamily="Arial, sans-serif"
@@ -69,6 +80,7 @@ const NavBar = () => {
                             </text>
                         </svg>
                         {/* <span>Barter Easy Store</span> */}
+
                     </a>
                     <div className={Style.navbar_container_left_box_input}>
                         <div className={Style.navbar_container_left_box_input_box}>
@@ -81,8 +93,12 @@ const NavBar = () => {
                 {/* navbar Right */}
                 <div className={Style.navbar_container_right}>
                     {/* Discover Menu */}
-                    <div className={Style.navbar_container_right_discover}>
-                        <p onClick={() => handleMenuClick('discover')}>Discover</p>
+                    <div
+                        className={Style.navbar_container_right_discover}
+                        onMouseEnter={() => handleMenuEnter('discover')}
+                        onMouseLeave={handleMenuLeave}
+                    >
+                        <p>Discover</p>
                         {activeMenu === 'discover' && (
                             <div className={Style.navbar_container_right_discover_box}>
                                 <Discover />
@@ -91,8 +107,12 @@ const NavBar = () => {
                     </div>
 
                     {/* HelpCenter Menu */}
-                    <div className={Style.navbar_container_right_help}>
-                        <p onClick={() => handleMenuClick('help')}>Help Center</p>
+                    <div
+                        className={Style.navbar_container_right_help}
+                        onMouseEnter={() => handleMenuEnter('help')}
+                        onMouseLeave={handleMenuLeave}
+                    >
+                        <p>Help</p>
                         {activeMenu === 'help' && (
                             <div className={Style.navbar_container_right_help_box}>
                                 <HelpCenter />
@@ -106,25 +126,38 @@ const NavBar = () => {
                     </div>
 
                     {/* Notification */}
-                    <div className={Style.navbar_container_right_notify}>
-                        <MdNotifications className={Style.notify} onClick={() => handleMenuClick('notification')} />
+                    <div
+                        className={Style.navbar_container_right_notify}
+                        onMouseEnter={() => handleMenuEnter('notification')}
+                        onMouseLeave={handleMenuLeave}
+                    >
+                        <MdNotifications className={Style.notify} />
                         {activeMenu === 'notification' && <Notification />}
                     </div>
 
                     {/* Create Button */}
                     <div className={Style.navbar_container_right_button}>
-                        <Button btnName="Create" handleClick={() => { }} />
+                        {currentAccount == "" ?
+                            (<Button btnName="Connect" handleClick={() => connectWallet()} />) :
+                            (
+                                <Link href={{ pathname: "/upload-products" }} >
+                                    <Button btnName="Create" handleClick={() => { }} />
+                                </Link>
+                            )}
                     </div>
 
                     {/* User Profile */}
-                    <div className={Style.navbar_container_right_profile_box}>
+                    <div
+                        className={Style.navbar_container_right_profile_box}
+                        onMouseEnter={() => handleMenuEnter('profile')}
+                        onMouseLeave={handleMenuLeave}
+                    >
                         <div className={Style.navbar_container_right_profile}>
                             <Image
                                 src={images.user1}
                                 alt="Profile"
                                 width={40}
                                 height={40}
-                                onClick={() => handleMenuClick('profile')}
                                 className={Style.navbar_container_right_profile}
                             />
                             {activeMenu === 'profile' && <Profile />}
