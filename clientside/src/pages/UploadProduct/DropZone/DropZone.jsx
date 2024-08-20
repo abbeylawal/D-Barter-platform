@@ -2,29 +2,40 @@ import React, { useCallback, useState, useMemo, useContext } from 'react';
 import { useDropzone } from 'react-Dropzone';
 import Image from 'next/image';
 import Style from './DropZone.module.css';
-import images from "../../../assets/img"
-
-
+import images from "../../../assets/img";
 
 
 const DropZone = ({
     title,
     heading,
     subHeading,
-    itemName,
+    name,
     description,
     fileSize,
     category,
     swapCategory,
-    properties,
-    image,
+    uploadToIPFS,
+    setImage
 }) => {
 
     const [fileUrl, setFileUrl] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
+    const [error, setError] = useState(null);
 
     const onDrop = useCallback(async (acceptedFile) => {
-        setFileUrl(acceptedFile[0])
-    })
+        setIsUploading(true);
+        setError(null);
+        try {
+            const url = await uploadToIPFS(acceptedFile[0]);
+            setFileUrl(url);
+            setImage(url);
+        } catch (err) {
+            console.error("Error uploading file:", err);
+            setError("Failed to upload file. Please try again.");
+        } finally {
+            setIsUploading(false);
+        }
+    }, [uploadToIPFS, setImage]);
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
@@ -38,14 +49,14 @@ const DropZone = ({
                 <input {...getInputProps()
                 } />
                 <div className={Style.DropZone_box_input}>
-                    <p>title</p>
+                    <p>upload File Type: JPEG, PNG, WEBP MAX 100MB</p>
                     <div className={Style.DropZone_box_input_img}>
                         <Image
                             className={Style.DropZone_box_input_img_img}
-                            src={image}
+                            src={images.upload}
                             alt="upload"
-                            width={100}
-                            height={100}
+                            width={150}
+                            height={150}
                             objectFit='contain'
                         />
                     </div>
@@ -58,39 +69,32 @@ const DropZone = ({
                     <div className={Style.DropZone_box_aside_box}>
                         <Image
                             className={Style.DropZone_box_input_img_img}
-                            src={images.NFT_image_1}
+                            src={fileUrl}
                             alt="uploaded nft"
                             width={200}
                             height={200}
+                            layout="responsive"
                         />
                         <div className={Style.DropZone_box_aside_box_preview}>
                             <div className={Style.DropZone_box_aside_box_preview_one}>
                                 <p>
-                                    <span>NFT Name:</span>
-                                    {itemName || ""}
+                                    <span>NFT Name:{" "}</span>
+                                    {name || ""}
                                 </p>
                             </div>
                             <div className={Style.DropZone_box_aside_box_preview_two}>
                                 <p>
-                                    <span>Description:</span>
+                                    <span>Description:{" "}</span>
                                     {description || ""}
                                 </p>
                             </div>
                             <div className={Style.DropZone_box_aside_box_preview_three}>
                                 <p>
-                                    <span>Properties:</span>
-                                    {properties || ""}
-                                </p>
-                                <p>
-                                    <span>FileSize:</span>
-                                    {fileSize || ""}
-                                </p>
-                                <p>
                                     <span>Category:</span>
                                     {category || ""}
                                 </p>
                                 <p>
-                                    <span>Swap with:</span>
+                                    <span>Swap:</span>
                                     {swapCategory || ""}
                                 </p>
                             </div>
@@ -102,38 +106,6 @@ const DropZone = ({
             )}
         </div>
     )
-}
+};
 
-export default DropZone
-
-
-// const DropZone = ({ onFilesAdded }) => {
-//     const [files, setFiles] = useState([]);
-
-//     const onDrop = useCallback((acceptedFiles) => {
-//         setFiles((prevFiles) => [...prevFiles, ...acceptedFiles.slice(0, 6)]);
-//         onFilesAdded(acceptedFiles);
-//     }, [onFilesAdded]);
-
-//     const { getRootProps, getInputProps } = useDropzone({
-//         onDrop,
-//         accept: 'image/*',
-//         maxSize: 5000000,
-//     });
-
-//     return (
-//         <div {...getRootProps({ className: Style.DropZone })}>
-//             <input {...getInputProps()} />
-//             <p>Drag & drop some files here, or click to select files</p>
-//             <div className={Style.preview}>
-//                 {files.map((file, index) => (
-//                     <div key={index} className={Style.previewImage}>
-//                         <Image src={URL.createObjectURL(file)} alt={`Preview ${index}`} layout="fill" objectFit="cover" />
-//                     </div>
-//                 ))}
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default DropZone;
+export default DropZone;
