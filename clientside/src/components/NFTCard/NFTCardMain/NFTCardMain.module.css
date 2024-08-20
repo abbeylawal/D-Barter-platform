@@ -1,0 +1,129 @@
+.NFTCardMain {
+  width: 80%;
+  margin: 0auto;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem;
+}
+
+.NFTCardMain_box {
+  display: grid;
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+  border-radius: 1rem;
+}
+
+.NFTCardMain_box:hover {
+  box-shadow: var(--box-shadow);
+}
+
+.NFTCardMain_box_like {
+  padding: 1rem;
+  grid-column: 1/-1;
+  grid-row: 1/-1;
+  z-index: 11111;
+}
+
+@media screen and (max-width; 35em) {
+  .NFTCardMain {
+    width: 90%;
+    grid-template-columns: 1fr;
+  }
+}
+
+/* .NFTCardMain {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+} */
+
+/* .NFTCardMain_box {
+    background-color: #1f2937;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+
+
+.NFTCardMain_box_like_box {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 9999px;
+    padding: 0.5rem;
+}
+
+.likeButton {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ef4444;
+    font-size: 1.25rem;
+}
+
+.likeButton span {
+    margin-left: 0.25rem;
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+.NFTCardMain_box_img {
+    position: relative;
+    height: 250px;
+}
+
+.NFTCardMain_box_info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+}
+
+.NFTCardMain_box_info_left p {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: white;
+}
+
+.NFTCardMain_box_info small {
+    font-size: 0.875rem;
+    color: #d1d5db;
+}
+
+.NFTCardMain_box_price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-top: 1px solid #374151;
+}
+
+.NFTCardMain_box_price_box {
+    display: flex;
+    flex-direction: column;
+}
+
+.NFTCardMain_box_price_box small {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+.NFTCardMain_box_price_box p {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+}
+
+.NFTCardMain_box_price_stock {
+    display: flex;
+    align-items: center;
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+.NFTCardMain_box_price_stock svg {
+    margin-right: 0.25rem;
+} */
