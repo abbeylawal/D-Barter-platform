@@ -7,10 +7,11 @@ import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import Style from "./ProductDetailsImg.module.css";
 import images from "../../../assets/img";
 
-const ProductDetailsImg = () => {
+const ProductDetailsImg = ({ nft }) => {
     const [description, setDescription] = useState(false);
     const [details, setDetails] = useState(true);
     const [like, setLike] = useState(false);
+    const imageSrc = nft.image || images[`NFT_image_${nft.id}`];
 
     const likeNFT = () => {
         setLike(!like);
@@ -45,7 +46,8 @@ const ProductDetailsImg = () => {
                     <div className={Style.ProductDetailsImg_box_NFT_img}>
                         <Image
                             className={Style.ProductDetailsImg_box_NFT_img_img}
-                            src={images.nft_image_1}
+                            // src={nft.image || images.NFT_image_${nft.id}}
+                            src={imageSrc}
                             width={600}
                             height={600}
                             // width={700}
@@ -64,7 +66,9 @@ const ProductDetailsImg = () => {
                 {
                     description && (
                         <div className={Style.Img_box_description_box}>
-                            <p>Tattooed Kitty Gang</p>
+                            <p>
+                                {nft.description}
+                            </p>
                         </div>
                     )
                 }
@@ -81,12 +85,11 @@ const ProductDetailsImg = () => {
                             <p>
                                 <small>Contact Address</small>
                                 <br />
-                                0x50f54473530e4f9w801711c
+                                {nft.seller}
                             </p>
                             <p>
-                                <small>Token ID</small>
-                                <br />
-                                12209203800
+                                <small>Token ID</small>{" "}
+                                {nft.id}
                             </p>
                         </div>
                     )
