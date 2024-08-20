@@ -89,8 +89,8 @@
 
 .navbar_container_right_discover:hover,
 .navbar_container_right_help:hover {
-    border: 1px solid var(--icons-color);
-    padding: .5rem .1rem;
+    border-bottom: 1px solid var(--icons-color);
+    /* padding: .5rem .1rem; */
     border-radius: 2rem;
     background-color: var(--main-bg-color);
     color: var(--icons-color);
