@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { MdOutlineHttp, MdOutlineAttachFile } from "react-icons/md";
 import { FaPercent } from "react-icons/fa";
-// import { AiTwotonePropertySafety } from "react-icons/ai";
+import { AiTwoTonePropertySafety } from "react-icons/ai";
 import { TiTick } from "react-icons/ti";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 // Internal imports
 import DropZone from './DropZone/DropZone';
@@ -12,39 +13,42 @@ import Style from './UploadForm.module.css';
 import images from "../../assets/img";
 import { Button } from "../../components/componentsIndex.js";
 
-const UploadForm = () => {
+const UploadForm = ({ uploadToIPFS, createNFT }) => {
+    const [price, setPrice] = useState("");
     const [active, setActive] = useState(0);
-    const [itemName, setItemName] = useState("");
-    const [website, setWebsite] = useState("");
+    const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [royalties, setRoyalties] = useState("");
     const [fileSize, setFileSize] = useState("");
     const [category, setCategory] = useState("");
+    const [image, setImage] = useState("null");
+
+
+    const router = useRouter()
 
     const categoryArray = [
         {
-            images: images.NFT_image_1,
+            image: images.NFT_image_1,
             category: "Fashion",
         },
         {
-            images: images.NFT_image_2,
-            category: "Fashion",
+            image: images.NFT_image_2,
+            category: "Gadgets",
         },
         {
-            images: images.NFT_image_3,
-            category: "Fashion",
+            image: images.NFT_image_3,
+            category: "Computers",
         },
         {
-            images: images.NFT_image_4,
-            category: "Fashion",
+            image: images.NFT_image_4,
+            category: "Mobile",
         },
         {
-            images: images.NFT_image_5,
-            category: "Fashion",
+            image: images.NFT_image_5,
+            category: "Electronics",
         },
         {
-            images: images.NFT_image_6,
-            category: "Fashion",
+            image: images.NFT_image_6,
+            category: "Photography",
         },
     ];
 
@@ -54,12 +58,14 @@ const UploadForm = () => {
                 title="JPG, PNG, WEBM, MAX 100MB"
                 heading="Drag & drop file"
                 subHeading="or Browse media on your device"
-                itemName={itemName}
+                name={name}
                 description={description}
                 fileSize={fileSize}
                 category={category}
                 swap={category}
-                image={images.upload}
+                // image={images.upload}
+                setImage={setImage}
+                uploadToIPFS={uploadToIPFS}
             />
 
             <div className={Style.upload_box}>
@@ -70,8 +76,8 @@ const UploadForm = () => {
                             type="text"
                             placeholder="Enter item name"
                             className={formStyle.inputField}
-                            onChange={(e) => setItemName(e.target.value)}
-                            value={itemName}
+                            onChange={(e) => setName(e.target.value)}
+                            value={name}
                         />
                     </div>
                 </div>
@@ -104,15 +110,32 @@ const UploadForm = () => {
                             key={i + 1}
                             onClick={() => { setActive(i + 1); setCategory(el.category); }}
                         >
-                            <img src={el.images} alt={el.category} className={Style.slider_image} />
+
+                            <div className={Style.upload_box_slider_box}>
+                                <div className={Style.upload_box_slider_box_img}>
+                                    <Image
+                                        className={Style.upload_box_slider_box_img_img}
+                                        src={el.image}
+                                        alt="Category Image"
+                                        height={70}
+                                        width={70}
+                                    />
+                                </div>
+                                <div className={Style.upload_box_slider_box_img_icon}>
+                                    <TiTick />
+                                </div>
+                            </div>
+                            <p> {el.category}</p>
+                            {/* <img src={el.images} NFT_image_3 className={Style.slider_image} /> */}
                         </div>
                     ))}
                 </div>
             </div>
 
-            {/* Add buttons or additional fields here */}
-            <br />
-            <br />
+            <div className={Style.upload_box_btn}>
+                <Button btnName="Upload" handleClick={async () => createNFT(name, image, description, router, category)} classStyle={Style.upload_box_btn_style} />
+                <Button btnName="Preview" handleClick={() => { }} classStyle={Style.upload_box_btn_style} />
+            </div>
         </div>
     );
 };
