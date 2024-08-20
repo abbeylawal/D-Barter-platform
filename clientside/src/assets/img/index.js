@@ -48,6 +48,7 @@ import nft_image_2 from "./nft-image-2.png";
 import nft_image_3 from "./nft-image-3.png";
 import musicWave from "./musicwave.png";
 import update from "./update.png";
+import upload from "./upload.png";
 import provider1 from "./provider-1.png";
 import provider2 from "./provider-2.jpg";
 import provider3 from "./provider-3.png";
@@ -66,6 +67,7 @@ import NFT_image_9 from "./NFT-Image-9.webp";
 export default {
   collection,
   update,
+  upload,
   musicWave,
   NFT_image_1,
   NFT_image_2,
