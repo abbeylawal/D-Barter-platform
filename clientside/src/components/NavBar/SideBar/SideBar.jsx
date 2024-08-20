@@ -161,7 +161,14 @@ const SideBar = ({ setOpenSideMenu }) => {
             </div>
 
             <div className={Style.sidebar_button}>
-                <Button btnName="Create" handleClick={() => { }} />
+                {currentAccount == "" ?
+                    (<Button btnName="Connect" handleClick={() => connectWallet()} />) :
+                    (
+                        <Link href={{ pathname: "/upload-products" }} >
+                            <Button btnName="Create" handleClick={() => { }} />
+                        </Link>
+                    )}
+                
                 <Button btnName="Connect Wallet" handleClick={() => { }} />
             </div>
         </div>
