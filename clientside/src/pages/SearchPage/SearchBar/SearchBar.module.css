@@ -49,6 +49,7 @@
     border: 0;
     outline: 0;
     background-color: var(--main-bg-color);
+    color: var(--icons-color);
     border-radius: 5rem;
     font-size: 1rem;
 }
