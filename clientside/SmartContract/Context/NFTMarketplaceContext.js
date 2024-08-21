@@ -1,41 +1,24 @@
 import React, { useState, useEffect } from "react";
-import Web3Modal from "web3modal";
 import { ethers } from "ethers";
-// import axios from "axios";
+import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 const axios = require("axios");
 const FormData = require("form-data");
+require('dotenv').config();
 
-// const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
-const pinata_api_key = "2b2c6ce6b05d623e6407";
-const pinata_secret_key = "efa89f9d28aba92403f0406a85e71e51fd61e0f8284acbb40b8b04658790f9da";
-
-const projectId = "";
-const projectSecretKey = "";
-const auth = `Basic ${Buffer.from(`${projectId}:${projectSecretKey}`).toString("base64")}`;
-
-const subdomain = "";
-
-const ipfsHost = "infura-ipfs.io";
-
-const client = ipfsHttpClient({
-  host: "infura-ipfs.io",
-  port: 5001,
-  protocol: "https",
-  headers: {
-    authorization: auth
-  },
-});
 
 import { NFTMarketplaceAddress, NFTMarketplaceABI } from "./constants";
 
-const fetchContract = (signerOrProvider) =>
-  new ethers.Contract(
+const fetchContract = (signerOrProvider) => {
+  console.log("NFTMarketplaceAddress:", NFTMarketplaceAddress);
+
+  return new ethers.Contract(
     NFTMarketplaceAddress,
     NFTMarketplaceABI,
     signerOrProvider
-  );
+  )
+};
 
   
 export const NFTMarketplaceContext = React.createContext();
@@ -48,21 +31,40 @@ export const NFTMarketplaceProvider = ({ children }) => {
   "Barter Easy is a platform that simplifies bartering through smart contracts. By using blockchain, it ensures secure, transparent, and automated trades without intermediaries. Whether for digital or physical items, Barter Easy offers a user-friendly interface for seamless and trustworthy transactions.";
   
   const [currentAccount, setCurrentAccount] = useState("");
+  const [openError, setOpenError] = useState(false);
   // const [listingPrice, setListingPrice] = useState("0");
 
   const router = useRouter();
   
   const connectSmartContract = async () => {
-    try {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
-      const contract = fetchContract(signer);
-      return contract;
-    } catch (error) {
-      console.log("Error connecting to Smart Contract:", error);
-    }
+      try {
+          console.log("Initializing Web3Modal...");
+          const web3Modal = new Web3Modal();
+
+          console.log("Connecting to wallet...");
+          const connection = await web3Modal.connect();
+          console.log("Wallet connected:", connection);
+
+          console.log("Creating provider...");
+          const provider = new ethers.BrowserProvider(connection);
+          console.log("Provider created:", provider);
+
+          console.log("Getting signer...");
+          const signerPromise = provider.getSigner();
+          console.log("signer details:", signerPromise);
+          
+          const signer = await signerPromise;
+          const userAddress = signer.address;
+          console.log("Signer obtained. Address:", userAddress);
+
+          console.log("Fetching contract...");
+          const contract = fetchContract(signer);
+          console.log("Contract fetched:", contract);
+
+          return contract;
+      } catch (error) {
+          console.log("Error connecting to Smart Contract:", error);
+      }
   };
 
   const checkWalletConnection = async () => {
@@ -134,9 +136,9 @@ const uploadToIPFS = async (file) => {
         formData,
         {
           headers: {
-            "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
-            pinata_api_key: pinata_api_key,
-            pinata_secret_api_key: pinata_secret_key,
+            "Content-Type": "multipart/form-data",
+            pinata_api_key: process.env.PINATA_API_KEY,
+            pinata_secret_api_key: process.env.PINATA_SECRET_API_KEY,
           },
           maxContentLength: Infinity,
           maxBodyLength: Infinity,
@@ -184,28 +186,7 @@ const uploadToIPFS = async (file) => {
   // //   }
   // // };
 
-  // const createNFT = async (name, image, description, router) => {
-  //   if (!name || !description || !image) 
-  //     return console.log("Data is Missing !!"), setOpenError(true);
 
-  //   const data = JSON.stringify({ name, description, image });
-
-  //   try {
-  //     const added = await client.add(data);
-  //     const url = `https://${ipfsHost}/ipfs/${added.path}`;
-
-  //     const contract = await connectSmartContract();
-  //     const transaction = await contract.createToken(url);
-  //     await transaction.wait();
-
-  //     console.log(transaction)
-  //     router.push("/searchPage");
-
-  //     // await createSale(url, price);
-  //   } catch (error) {
-  //     console.log("Error creating NFT:", error);
-  //   }
-  // };
 
  const createNFT = async (name, image, description, router) => {
    if (!name || !description || !image) {
@@ -223,28 +204,45 @@ const uploadToIPFS = async (file) => {
        {
          headers: {
            "Content-Type": "application/json",
-           pinata_api_key: pinata_api_key,
-           pinata_secret_api_key: pinata_secret_key,
-         },
+            pinata_api_key: process.env.PINATA_API_KEY,
+            pinata_secret_api_key: process.env.PINATA_SECRET_API_KEY,
+          },
        }
      );
 
-     const url = `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
-     console.log(url);
+      const url = `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
+      console.log("IPFS URL:", url);
 
-     const contract = await connectSmartContract();
-     const transaction = await contract.createToken(url);
-     await transaction.wait();
+      // Connect to the smart contract
+      let contract;
+      try {
+          contract = await connectSmartContract();
+      } catch (connectionError) {
+          console.error("Error connecting to smart contract:", connectionError);
+          setOpenError(true);
+          return;
+      }
 
-     console.log(transaction);
-     router.push("/searchPage");
+      // Ensure contract is defined before calling createToken
+      if (!contract) {
+          console.error("Contract is undefined.");
+          setOpenError(true);
+          return;
+      }
 
-     // await createSale(url, price);
-   } catch (error) {
-     console.error("Error creating NFT:", error);
-     setOpenError(true);
-   }
- };
+      console.log("Contract:", contract);
+
+      // Attempt to create the token
+      console.log("Attempting to create token with URL:", url);
+      const transaction = await contract.createToken(url);
+      console.log("Transaction:", transaction);
+      
+      router.push("/searchPage");
+  } catch (error) {
+      console.error("Error creating NFT:", error);
+      setOpenError(true);
+    }
+};
 
     const createBarterListing = async (tokenId, durationInDays) => {
     try {
@@ -296,7 +294,7 @@ const uploadToIPFS = async (file) => {
     }
   };
 
-  const fetchAllListings = async () => {
+  const fetchNFTs = async () => {
     try {
       const contract = await connectSmartContract();
       const data = await contract.fetchAllListings();
@@ -390,46 +388,57 @@ const uploadToIPFS = async (file) => {
     }
   };
 
-  const fetchNFTs = async () => {
-    try {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      
-      const contract = fetchContract(provider);
+// const fetchNFTs = async () => {
+//   try {
+//     const web3Modal = new Web3Modal();
+//     const connection = await web3Modal.connect();
 
-      const data = await contract.fetchMarketItems();
+//     if (!connection) {
+//       console.error("No connection established");
+//       return;
+//     }
 
-      const items = await Promise.all(
-        data.map(
-          async ({ tokenId, seller, owner }) => {
-            const tokenURI = await contract.tokenURI(tokenId);
-            const {
-              data: { image, name, description },
-            } = await axios.get(tokenURI);
-            // const price = ethers.utils.formatUnits(
-            //   unformattedPrice.toString(),
-            //   "ether"
-            // );
+//     const provider = new ethers.BrowserProvider(connection);
+//     console.log("Provider created:", provider);
 
-            return {
-              tokenId: tokenId.toNumber(),
-              seller,
-              owner,
-              image,
-              name,
-              description,
-              tokenURI,
-            };
-          }
-        )
-      );
+//     if (!provider) {
+//       console.error("Provider not initialized");
+//       return;
+//     }
 
-      return items;
-    } catch (error) {
-      console.log("Error fetching NFTs:", error);
-    }
-  };
+//     const contract = fetchContract(provider);
+
+//     if (!contract) {
+//       console.error("Contract not initialized");
+//       return;
+//     }
+
+//     const data = await contract.fetchMarketItems();
+
+//     const items = await Promise.all(
+//       data.map(async ({ tokenId, seller, owner }) => {
+//         const tokenURI = await contract.tokenURI(tokenId);
+//         const {
+//           data: { image, name, description },
+//         } = await axios.get(tokenURI);
+
+//         return {
+//           tokenId: tokenId.toNumber(),
+//           seller,
+//           owner,
+//           image,
+//           name,
+//           description,
+//           tokenURI,
+//         };
+//       })
+//     );
+
+//     return items;
+//   } catch (error) {
+//     console.error("Error fetching NFTs:", error);
+//   }
+// };
 
   useEffect(() => {
     fetchNFTs();
@@ -543,19 +552,6 @@ const uploadToIPFS = async (file) => {
     }
   };
 
-  useEffect(() => {
-    fetchListingPrice();
-  }, []);
-
-  const fetchListingPrice = async () => {
-    try {
-      const contract = await connectSmartContract();
-      const price = await contract.getListingPrice();
-      setListingPrice(price.toString());
-    } catch (error) {
-      console.log("Error fetching listing price:", error);
-    }
-  };
 
   return (
     <NFTMarketplaceContext.Provider
@@ -575,7 +571,7 @@ const uploadToIPFS = async (file) => {
         currentAccount,
         titleData,
         titleCover,
-        fetchAllListings,
+        // fetchAllListings,
         fetchMyNFTs,
         fetchMyListings,
         getBarterOffers,
