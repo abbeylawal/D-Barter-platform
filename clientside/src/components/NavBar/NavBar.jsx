@@ -48,33 +48,35 @@ const NavBar = () => {
                             height={100} />
                     </div> */}
 
-                    <a className="navbar-brand flex-shrink-0" href="/">
+                    <a className="navbar-brand flex-shrink-3" href="/"
+                    style={{ position: "relative", zIndex: 9999999999, marginRight: "1rem" }}
+                    >
                         <svg
                             xmlns="http://www.w3.org/2009/svg"
-                            viewBox="0 0 200 100"
+                            viewBox="0 0 250 100"
                             className="img-fluid"
                             width="100"
                         >
-                            <circle cx="50" cy="50" r="45" fill="#4c5773" />
+                            <circle cx="50" cy="50" r="45" fill="var(--icons-color)" />
                             <path d="M30 50 L50 30 L70 50 L50 70 Z" fill="white" />
-                            <path d="M40 50 L50 40 L60 50 L50 60 Z" fill="#4c5773" />
+                            <path d="M40 50 L50 40 L60 50 L50 60 Z" fill="var(--main-bg-color)" />
                             <text
                                 x="110"
-                                y="45"
+                                y="50"
                                 fontFamily="Arial, sans-serif"
-                                fontSize="24"
+                                fontSize="38"
                                 fontWeight="bold"
-                                fill="#4c5773"
+                                fill="var(--icons-color)"
                             >
                                 Barter
                             </text>
                             <text
                                 x="110"
-                                y="70"
+                                y="75"
                                 fontFamily="Arial, sans-serif"
-                                fontSize="24"
+                                fontSize="26"
                                 fontWeight="bold"
-                                fill="#4c5773"
+                                fill="var(--icons-color)"
                             >
                                 Easy
                             </text>
