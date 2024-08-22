@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Image from "next/image";
 import { MdVerified, MdCloudUpload, MdTimer, MdReport, MdOutlineDeleteSweep, MdReportProblem } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
@@ -11,13 +11,17 @@ import {
   TiSocialInstagram,
 } from "react-icons/ti";
 import { BiTransferAlt, BiDollar } from "react-icons/bi";
+import Link from "next/link";
+// SMART CONTRACT
+import { NFTMarketplaceContext } from "../../../../SmartContract/Context/NFTMarketplaceContext";
 
 import Style from "./ProductDescription.module.css";
 import images from "../../../assets/img";
 import { Button } from "../../../components/componentsIndex";
 import { ProductTabs } from "../ProductDetailsIndex"
 
-const ProductDescription = () => {
+const ProductDescription = ({ nft }) => {
+  const { currentAccount } = useContext(NFTMarketplaceContext);
   const [social, setSocial] = useState(false);
   const [productMenu, setProductMenu] = useState(false);
   const [history, setHistory] = useState(false);
@@ -40,6 +44,7 @@ const ProductDescription = () => {
   const OwnerArray = [
     images.user1,
   ]
+
 
   const openSocial = () => {
     setSocial(!social);
@@ -119,7 +124,7 @@ const ProductDescription = () => {
           </div>
         </div>
         <div className={Style.ProductDescription_box_profile}>
-          <h1>BearX #23453</h1>
+          <h1>{nft.name} #{nft.id}</h1>
           <div className={Style.ProductDescription_box_profile_box}>
             <div className={Style.ProductDescription_box_profile_box_left}>
               <Image
@@ -130,9 +135,11 @@ const ProductDescription = () => {
                 height={40}
               />
               <div className={Style.ProductDescription_box_profile_box_left_info}>
-                <small>Creator</small><br/>
-                <span> Muftau Lawal <MdVerified />
-                </span>
+                <small>Creator</small><br />
+                <Link href={{ pathname: "/author", query: `${nft.seller}` }} >
+                  <span> Muftau Lawal <MdVerified />
+                  </span>
+                </Link>
               </div>
             </div>
           </div>
@@ -164,22 +171,35 @@ const ProductDescription = () => {
 
             <div className={Style.ProductDescription_box_profile_box_price}>
               <div className={Style.ProductDescription_box_profile_box_price_bid}>
-                <small>Current Bid</small>
+                <small>Swap With</small>
+
+                {/* TODO: using swap with category  */}
                 <p>
                   1.000 ETH <span>( $3, 221.22)</span>
                 </p>
               </div>
-
-              <span>[51 in stock]</span>
             </div>
 
             <div className={Style.ProductDescription_box_profile_bidding_box_button}>
-              <Button
+              {/* {currentAccount == nft.seller.toLowerCase() ? (
+                <p>
+                  Accept Offer
+                </p>
+              ) : currentAccount == nft.owner.toLowerCase() ? (
+                <Button
+                  icon={<FaWallet />}
+                  btnName="List on Marketplace"
+                  handleClick={() => { }}
+                  classStyle={Style.button}
+                />
+              ) : (<Button
                 icon={<FaWallet />}
-                btnName="Place a bid"
+                btnName="Buy NFT"
                 handleClick={() => { }}
                 classStyle={Style.button}
-              />
+              />)
+              } */}
+
               <Button
                 icon={<FaPercentage />}
                 btnName="Make Offer"

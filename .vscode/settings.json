@@ -1,4 +1,5 @@
 {
   "cSpell.words": ["ipfs", "mainsection"],
-  "conventionalCommits.scopes": ["Smart contract"]
+  "conventionalCommits.scopes": ["Smart contract"],
+  "cSpell.ignoreWords": ["Lawal", "Muftau"]
 }

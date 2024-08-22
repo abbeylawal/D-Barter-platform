@@ -18,7 +18,7 @@ const ProductTabs = ({ dataTab, icon }) => {
 
                     <div className={Style.ProductTabs_box_info}>
                         <span>
-                            Offer by $760 by <span>Kevlin Smith</span>
+                            Offer by <span>Kevlin Smith</span>
                             {/* <small>
                                 <MdVerified />
                             </small> */}

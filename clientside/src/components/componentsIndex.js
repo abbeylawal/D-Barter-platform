@@ -13,12 +13,18 @@ import Collection from "./Collection/Collection";
 import NFTCard from "./NFTCard/NFTCard"
 import NFTCardTwo from "./NFTCard/NFTCardTwo/NFTCardTwo";
 import NFTCardThree from "./NFTCard/NFTCardThree/NFTCardThree";
+import NFTCardMain from "./NFTCard/NFTCardMain/NFTCardMain";
 import Banner from "./Banner/Banner";
+import Loader from "./Loader/Loader";
+import Error from "./Error/Error";
+
 
 export {
     AuthForm,
     Banner,
     Button,
+    Error,
+    Loader,
     Footer,
     NavBar,
     MainSection,
@@ -28,8 +34,8 @@ export {
     Filter,
     BackToTopButton,
     Collection,
-    // NFTSlider,
     NFTCard,
+    NFTCardMain,
     NFTCardTwo,
     NFTCardThree,
 };

@@ -113,7 +113,7 @@
     z-index: 111;
     align-items: flex-end;
     overflow: hidden;
-    justify-items: flex-start;
+    /* justify-items: flex-start; */
 }
 
 .NFTCard_box_update_details_price {
@@ -170,6 +170,16 @@
     font-size: 1.5rem;
     text-align: end;
 }
+
+
+.hover-scale-image {
+    transition: transform 0.3s ease;
+}
+
+.hover-scale-image:hover img {
+    transform: scale(1.1);
+}
+
 
 /*=========== Media queries ========*/
 @media screen and (min-device-width: 320px) and (max-device-width: 425px) {

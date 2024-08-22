@@ -8,8 +8,9 @@
     background-color: var(--main-bg-color);
 
     left: -17rem;
-    top: 4.5rem;
+    top: 2.4rem;
     z-index: 222222222;
+    box-shadow: var(--box-shadow);
 }
 
 

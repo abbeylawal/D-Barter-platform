@@ -1,28 +1,33 @@
-import React, { useState } from "react";
+import React from "react";
+import { useRouter } from "next/router";
 import AuthForm from "../components/AuthForm/AuthForm";
 import Style from "../styles/auth.module.css";
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const router = useRouter();
+  const isLogin = router.query.mode !== "register";
 
-  const toggleForm = () => {
-    setIsLogin(!isLogin);
+  const handleToggle = (mode) => {
+    router.push({
+      pathname: "/auth",
+      query: mode === "register" ? { mode: "register" } : {},
+    });
   };
 
   return (
     <div className={Style.authContainer}>
       <div className={Style.formToggle}>
         <span
-          onClick={() => setIsLogin(true)}
+          onClick={() => handleToggle("login")}
           className={isLogin ? Style.active : ""}
         >
-          Login
+          Sign In
         </span>
         <span
-          onClick={() => setIsLogin(false)}
+          onClick={() => handleToggle("register")}
           className={!isLogin ? Style.active : ""}
         >
-          Registration
+          Register
         </span>
       </div>
       <AuthForm isLogin={isLogin} />

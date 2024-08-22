@@ -17,13 +17,15 @@ import {
 
 } from '../components/componentsIndex';
 
-import { NFTMarketplaceContext } from "../../SmartContract/Context/NFTMarketplaceContext";
+// import { NFTMarketplaceContext } from "../../SmartContract/Context/NFTMarketplaceContext";
 
 
 
 const Home = () => {
-  const { } = useContext(NFTMarketplaceContext);
-  // const { checkContract } = useContext(NFTMarketplaceContext);
+  // const { checkWalletConnection } = useContext(NFTMarketplaceContext);
+  // useEffect(() => {
+  //   checkWalletConnection();
+  // }, []);
 
   return (
     <div>

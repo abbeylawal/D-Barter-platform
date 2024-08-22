@@ -39,8 +39,9 @@ const ToggleTheme = () => {
                 checked={darkMode}
             />
             <label className={Style.dark_mode_label} htmlFor='dark-mode-toggle'>
-                <FaSun />
-                <FaMoon />
+                <FaSun className={Style.icon} />
+                <FaMoon className={Style.icon} />
+                <div className={Style.ball}></div>
             </label>
         </div>
     );

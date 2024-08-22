@@ -10,16 +10,18 @@ import Button from "../Button/Button";
 
 const NFTSlider = () => {
     const [idNumber, setIdNumber] = useState(1);
-    const sliderData = [
+
+    const [sliderData, setSliderData] = useState([
         {
-            title: "Hello NFT",
+            title: "Dream Headset",
             id: 1,
             name: "Muftau Lawal",
             collection: "Books",
             price: "0000006464444 ETH",
-            swapCategory: ["Art", "Fashion", "Gadget"], // Fixed: Categories should be strings
+            swapCategory: ["Art", "Fashion", "Gadget"],
             like: 243,
-            image: images.user1,
+            liked: false,
+            creatorImage: images.user1,
             nftImage: images.NFT_image_9,
             time: {
                 day: 6,
@@ -34,9 +36,10 @@ const NFTSlider = () => {
             name: "Muftau Lawal",
             collection: "Books",
             price: "0000006464444 ETH",
-            swapCategory: ["Gadget", "Electronics"], // Fixed: Categories should be strings
+            swapCategory: ["Gadget", "Electronics"],
             like: 207,
-            image: images.user2,
+            liked: false,
+            creatorImage: images.user2,
             nftImage: images.NFT_image_2,
             time: {
                 day: 5,
@@ -51,9 +54,10 @@ const NFTSlider = () => {
             name: "Muftau Lawal",
             collection: "Books",
             price: "0000006464444 ETH",
-            swapCategory: ["Art", "Books"], // Added a swapCategory for consistency
+            swapCategory: ["Art", "Books"],
             like: 180,
-            image: images.user2,
+            liked: false,
+            creatorImage: images.user2,
             nftImage: images.NFT_image_8,
             time: {
                 day: 5,
@@ -68,9 +72,10 @@ const NFTSlider = () => {
             name: "Kevlin Smith",
             collection: "Accessories",
             price: "0000006464444 ETH",
-            swapCategory: ["Games", "Accessories"], // Added a swapCategory for consistency
+            swapCategory: ["Games", "Accessories"],
             like: 165,
-            image: images.user3,
+            liked: false,
+            creatorImage: images.user3,
             nftImage: images.NFT_image_7,
             time: {
                 day: 3,
@@ -79,21 +84,36 @@ const NFTSlider = () => {
                 seconds: 6,
             },
         },
-    ];
+    ]);
 
-    // ----- inc function
     const inc = useCallback(() => {
         setIdNumber((prevId) => (prevId + 1) % sliderData.length);
     }, [sliderData.length]);
 
-    // ----- dec function
     const dec = useCallback(() => {
         setIdNumber((prevId) => (prevId - 1 + sliderData.length) % sliderData.length);
     }, [sliderData.length]);
 
-    // useEffect(() => {
-    //     inc();
-    // });
+    const handleLike = () => {
+        setSliderData(prevData => {
+            const newData = [...prevData];
+            const currentItem = newData[idNumber];
+            currentItem.liked = !currentItem.liked;
+            currentItem.like += currentItem.liked ? 1 : -1;
+            return newData;
+        });
+    };
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            inc();
+        }, 4000);
+
+        return () => clearInterval(timer);
+    }, [inc]);
+
+    const currentNFT = sliderData[idNumber];
+
 
     return (
         <div className={Style.NFTSlider}>
@@ -104,7 +124,7 @@ const NFTSlider = () => {
                         <div className={Style.NFTSlider_box_left_creator_profile}>
                             <Image
                                 className={Style.NFTSlider_box_left_creator_profile_img}
-                                src={sliderData[idNumber].image}
+                                src={sliderData[idNumber].creatorImage}
                                 alt="Nft creator imag"
                                 width={50}
                                 height={50}
@@ -132,13 +152,18 @@ const NFTSlider = () => {
                     <div className={Style.NFTSlider_box_left_bidding}>
                         <div className={Style.NFTSlider_box_left_bidding_box}>
                             <small>Swap with</small>
-                            <p>
-                                {/* {sliderData[idNumber].price}
-                                <span>
-                                    $22,121
-                                </span> */}
-                                <p>{sliderData[idNumber].swapCategory}</p>
-                            </p>
+
+                            {/* TODO: ---- fix */}
+
+                            <ul>
+                                {sliderData[idNumber].swapCategory.map((item, index) => {
+                                    return (
+                                        <li key={index}>
+                                            {item}
+                                        </li>
+                                    )
+                                })}
+                            </ul>
                         </div>
                         <p className={Style.NFTSlider_box_left_bidding_box_auction}>
                             <MdTimer className={Style.NFTSlider_box_left_bidding_box_icon} />
@@ -185,18 +210,20 @@ const NFTSlider = () => {
                         />
                     </div>
                 </div>
-
                 <div className={Style.NFTSlider_box_right}>
                     <div className={Style.NFTSlider_box_right_box}>
                         <Image
                             className={Style.NFTSlider_box_right_box_img}
-                            src={sliderData[idNumber].nftImage}
+                            src={currentNFT.nftImage}
                             alt="NFT Image"
                         />
 
-                        <div className={Style.NFTSlider_box_right_box_like}>
-                            <AiFillHeart />
-                            <span>{sliderData[idNumber].like} </span>
+                        <div
+                            className={Style.NFTSlider_box_right_box_like}
+                            onClick={handleLike}
+                        >
+                            {currentNFT.liked ? <AiFillHeart  style={{color: 'red'}} /> : <AiOutlineHeart />}
+                            <span>{currentNFT.like}</span>
                         </div>
                     </div>
                 </div>

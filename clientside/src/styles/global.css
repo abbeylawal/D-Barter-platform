@@ -16,6 +16,8 @@
     -.3rem -.3rem 1rem var(--shadow-dark-color);
 }
 
+
+
 [data-theme='dark'] {
     --icons-color: #ffffff;
     --icons-light-color: #ffffff41;

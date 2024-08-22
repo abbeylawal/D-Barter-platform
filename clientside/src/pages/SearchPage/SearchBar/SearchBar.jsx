@@ -1,34 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BsSearch, BsArrowRight } from 'react-icons/bs';
 import Style from './SearchBar.module.css';
 
-const SearchBar = ({ onSearch }) => {
-    const [query, setQuery] = useState('');
+const SearchBar = ({ onHandleSearch, onClearSearch }) => {
+    const [search, setSearch] = useState("");
+    const [searchItem, setSearchItem] = useState(search);
 
-    const handleInputChange = (e) => {
-        setQuery(e.target.value);
-    };
+    useEffect(() => {
+        const timer = setTimeout(() => setSearch(searchItem), 1000);
+        return () => clearTimeout(timer);
+    }, [searchItem]);
 
-    const handleSearch = () => {
-        if (onSearch) {
-            onSearch(query);
+    useEffect(() => {
+        if (search) {
+            onHandleSearch(search);
+        } else {
+            onClearSearch();
         }
-    };
+    }, [search, onHandleSearch, onClearSearch]);
 
     return (
         <div className={Style.SearchBar}>
             <div className={Style.SearchBar_box}>
+                <BsSearch className={Style.SearchBar_box_icon} />
                 <input
-                    type="text"
-                    value={query}
-                    onChange={handleInputChange}
-                    placeholder="Search NFTs..."
                     className={Style.searchInput}
+                    type="text"
+                    placeholder="Search items"
+                    onChange={(e) => setSearchItem(e.target.value)}
+                    value={searchItem}
                 />
-                <BsSearch
-                    onClick={handleSearch}
-                    className={`${Style.SearchBar_box_icon} ${query ? Style.active : ''}`}
-                />
+                <BsArrowRight className={Style.SearchBar_box_icon} />
             </div>
         </div>
     );

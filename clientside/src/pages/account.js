@@ -25,7 +25,7 @@ const account = () => {
     <div className={Style.account}>
       <div className={Style.account_info}>
         <h1>Profile Settings</h1>
-        <p></p>
+        {/* <p></p> */}
       </div>
       <div className={Style.account_box}>
         <div className={Style.account_box_img} {...getRootProps()}>

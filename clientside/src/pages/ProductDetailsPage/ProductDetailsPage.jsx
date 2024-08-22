@@ -2,12 +2,12 @@ import React from 'react'
 import Style from "./ProductDetailsPage.module.css";
 import { ProductDescription, ProductDetailsImg, ProductTabs } from "./ProductDetailsIndex";
 
-const ProductDetailsPage = () => {
+const ProductDetailsPage = ({nft}) => {
     return (
         <div className={Style.ProductDetailsPage} >
             <div className={Style.ProductDetailsPage_box}>
-                <ProductDetailsImg />
-                <ProductDescription />
+                <ProductDetailsImg nft={nft} />
+                <ProductDescription nft={nft} />
 
             </div>
         </div>
