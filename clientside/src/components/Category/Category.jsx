@@ -18,14 +18,17 @@ const Category = () => {
         <div className={Style.box_category}>
             <div className={Style.category}>
                 {categories.map((category, i) => (
-                    <div className={Style.category_box} key={i}>
+                    <div className={Style.category_box} key={i}
+                    
+                    >
                         <Image
                             src={category.image}
                             className={Style.category_box_img}
                             alt={`${category.name} Background`}
-                            width={170}
-                            height={150}
+                            width={200}
+                            height={170}
                             objectFit="contain"
+                            layout="intrinsic"
                         />
 
                         <div className={Style.category_box_title}>

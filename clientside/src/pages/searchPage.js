@@ -11,7 +11,7 @@ import { NFTCardTwo } from "../components/componentsIndex";
 import { NFTCardMain } from "../components/componentsIndex";
 import { NFTCard } from "../components/componentsIndex";
 import { Category } from "../components/componentsIndex";
-import images from "../assets/img";
+import images from "../assets/img/";
 // import NFTCardTwo from "../collectionPage/collectionIndex";
 
 // SMART CONTRACT
@@ -20,7 +20,10 @@ import { NFTMarketplaceContext } from "../../SmartContract/Context/NFTMarketplac
 const searchPage = () => {
   const { fetchNFTs } = useContext(NFTMarketplaceContext);
   const [nfts, setNfts] = useState([]);
+  const [filteredNFTs, setFilteredNFTs] = useState([]);
   const [nftsCopy, setNftsCopy] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null)
   const [cardArray, setCardArray] = useState([
     {
       id: 1,
@@ -69,40 +72,39 @@ const searchPage = () => {
   ]);
 
   useEffect(() => {
-    fetchNFTs()
-      .then((item) => {
-        if (Array.isArray(item)) {
-          setNfts(item.reverse());
-          setNftsCopy(item);
-        } else {
-          console.error("fetchNFTs did not return an array:", item);
-          setNfts(cardArray);
-          setNftsCopy(cardArray);
-        }
-      })
-      .catch((error) => {
+    const fetchAllNFTs = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        console.log("Fetching NFTs...");
+        const fetchedNFTs = await fetchNFTs();
+        console.log("Fetched NFTs:", fetchedNFTs);
+        setNfts(fetchedNFTs);
+        setFilteredNFTs(fetchedNFTs);
+      } catch (error) {
         console.error("Error fetching NFTs:", error);
-        setNfts(cardArray);
-        setNftsCopy(cardArray);
-      });
-  }, [fetchNFTs, cardArray]);
+        setError(
+          "Failed to fetch NFTs. Please check the console for more details."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllNFTs();
+  }, [fetchNFTs]);
+
 
   const onHandleSearch = (value) => {
-    const filteredNFTs = nfts.filter(({ name }) => {
-      name.toLowerCase().includes(value.toLowerCase());
-    });
+    const filteredNFTs = nfts.filter(({ name }) =>
+      name.toLowerCase().includes(value.toLowerCase())
+    );
 
-    if (filteredNFTs.length === 0) {
-      setNfts(nftsCopy);
-    } else {
-      setNfts(filteredNFTs);
-    }
+    setFilteredNFTs(filteredNFTs);
   };
 
   const onClearSearch = () => {
-    if (nfts.length && nftsCopy.length) {
-      setNfts(nftsCopy);
-    }
+    setFilteredNFTs(nfts);
   };
 
   return (
@@ -114,7 +116,13 @@ const searchPage = () => {
         onClearSearch={onClearSearch}
       />
       <Filter />
-      {nfts.length == 0 ? <Loader /> : <NFTCard initialCardArray={nfts} />}
+      {loading ? (
+        <Loader />
+      ) : filteredNFTs.length > 0 ? (
+        <NFTCard initialCardArray={filteredNFTs} />
+      ) : (
+""
+      )}
     </div>
   );
 };

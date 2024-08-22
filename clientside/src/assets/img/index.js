@@ -62,6 +62,7 @@ import NFT_image_6 from "./NFT-Image-6.webp";
 import NFT_image_7 from "./NFT-Image-7.webp";
 import NFT_image_8 from "./NFT-Image-8.webp";
 import NFT_image_9 from "./NFT-Image-9.webp";
+import Error from "./Error.gif";
 
 
 export default {
@@ -69,6 +70,7 @@ export default {
   update,
   upload,
   musicWave,
+  Error,
   NFT_image_1,
   NFT_image_2,
   NFT_image_3,

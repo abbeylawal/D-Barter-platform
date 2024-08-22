@@ -8,7 +8,7 @@ import { CgMenuLeft, CgMenuRight } from 'react-icons/cg';
 
 import Style from './NavBar.module.css';
 import { Discover, HelpCenter, ToggleTheme, Notification, Profile, SideBar } from './index';
-import { Button } from "../componentsIndex";
+import { Button, Error } from "../componentsIndex";
 import images from "../../assets/img";
 
 
@@ -31,7 +31,7 @@ const NavBar = () => {
     };
 
     // Smart Contract Section
-    const { currentAccount, connectWallet } = useContext(NFTMarketplaceContext);
+    const { currentAccount, connectWallet, openError } = useContext(NFTMarketplaceContext);
 
     return (
         <div className={Style.navbar}>
@@ -179,6 +179,8 @@ const NavBar = () => {
                     <SideBar setOpenSideMenu={setOpenSideMenu} />
                 </div>
             )}
+
+            {openError && <Error/> }
         </div>
     );
 };

@@ -33,9 +33,9 @@ const Filter = () => {
                 <div className={Style.filter_box_left}>
                     <button onClick={() => { }}>Fashion</button>
                     <button onClick={() => { }}>Arts</button>
-                    <button onClick={() => { }}>Music</button>
-                    <button onClick={() => { }}>Sports</button>
-                    <button onClick={() => { }}>Photography</button>
+                    <button onClick={() => { }}>Gadgets</button>
+                    <button onClick={() => { }}>Accessories</button>
+                    <button onClick={() => { }}>Electronics</button>
                 </div>
 
                 <div className={Style.filter_box_right}>
@@ -52,7 +52,7 @@ const Filter = () => {
                     <div className={Style.filter_box_items_box}>
                         <div className={Style.filter_box_items_box_item}>
                             <FaWallet />
-                            <span>10 ETH</span>
+                            <span>Popular</span>
                             <AiFillCloseCircle />
                         </div>
                     </div>

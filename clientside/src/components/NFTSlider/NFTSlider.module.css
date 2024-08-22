@@ -1,9 +1,9 @@
 .NFTSlider_box {
     margin: 0 auto;
-    width: 80%;
+    width: 75%;
     padding-block: 3rem;
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(14, 1fr);
     align-items: center;
 }
 

@@ -43,15 +43,20 @@ const ProductDetailsImg = ({ nft }) => {
                         </p>
                     </div>
 
-                    <div className={Style.ProductDetailsImg_box_NFT_img}>
+                    <div className={Style.ProductDetailsImg_box_NFT_img}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '100%',
+                            height: '100%'
+                        }}
+                    >
                         <Image
                             className={Style.ProductDetailsImg_box_NFT_img_img}
-                            // src={nft.image || images.NFT_image_${nft.id}}
                             src={imageSrc}
                             width={600}
                             height={600}
-                            // width={700}
-                            // height={800}
                             objectFit="cover"
                             alt="NFT Image"
                         />

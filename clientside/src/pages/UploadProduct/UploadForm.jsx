@@ -20,6 +20,7 @@ const UploadForm = ({ uploadToIPFS, createNFT }) => {
     const [description, setDescription] = useState("");
     const [fileSize, setFileSize] = useState("");
     const [category, setCategory] = useState("");
+    const [swapCategories, setSwapCategories] = useState([]);
     const [image, setImage] = useState("null");
 
 
@@ -27,30 +28,38 @@ const UploadForm = ({ uploadToIPFS, createNFT }) => {
 
     const categoryArray = [
         {
-            image: images.NFT_image_1,
+            image: images.fashionCategory,
             category: "Fashion",
         },
         {
-            image: images.NFT_image_2,
+            image: images.gadgetsCategory,
             category: "Gadgets",
         },
         {
-            image: images.NFT_image_3,
+            image: images.computerCategory,
             category: "Computers",
         },
         {
-            image: images.NFT_image_4,
+            image: images.mobileCategory,
             category: "Mobile",
         },
         {
-            image: images.NFT_image_5,
+            image: images.electronicsCategory,
             category: "Electronics",
         },
         {
-            image: images.NFT_image_6,
-            category: "Photography",
+            image: images.artCategory,
+            category: "Art",
         },
     ];
+
+    const handleSwapCategoryClick = (category) => {
+        if (swapCategories.includes(category)) {
+            setSwapCategories(swapCategories.filter(cat => cat !== category));
+        } else if (swapCategories.length < 3) {
+            setSwapCategories([...swapCategories, category]);
+        }
+    };
 
     return (
         <div className={Style.upload}>
@@ -62,7 +71,7 @@ const UploadForm = ({ uploadToIPFS, createNFT }) => {
                 description={description}
                 fileSize={fileSize}
                 category={category}
-                swap={category}
+                swapCategories={swapCategories}
                 // image={images.upload}
                 setImage={setImage}
                 uploadToIPFS={uploadToIPFS}
@@ -122,18 +131,46 @@ const UploadForm = ({ uploadToIPFS, createNFT }) => {
                                     />
                                 </div>
                                 <div className={Style.upload_box_slider_box_img_icon}>
-                                    <TiTick />
+                                    {active === i + 1 && <TiTick />}
                                 </div>
                             </div>
                             <p> {el.category}</p>
-                            {/* <img src={el.images} NFT_image_3 className={Style.slider_image} /> */}
+
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className={formStyle.Form_box_input}>
+                <label htmlFor="name"> Select Swap Category</label>
+                <p className={Style.upload_box_input_para}>
+                    Choose two to three preferred swap category
+                </p>
+
+                <div className={Style.upload_box_slider_div}>
+                    {categoryArray.map((el, i) => (
+                        <div
+                            className={`${Style.upload_box_slider} ${swapCategories.includes(el.category) ? Style.active : ""}`}
+                            key={i + 1}
+                            onClick={() => handleSwapCategoryClick(el.category)}
+                        >
+                            <div className={Style.upload_box_slider_box_group}>
+                                <div> {el.category}</div>
+                                <div className={Style.upload_box_slider_box_img_icon}>
+                                    {swapCategories.includes(el.category) && <TiTick />}
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>
             </div>
 
             <div className={Style.upload_box_btn}>
-                <Button btnName="Upload" handleClick={async () => createNFT(name, image, description, router, category)} classStyle={Style.upload_box_btn_style} />
+                <Button btnName="Upload" handleClick={async () =>
+                    createNFT(name, image, description, router, category, swapCategories)
+                }
+                    classStyle={Style.upload_box_btn_style}
+                />
                 <Button btnName="Preview" handleClick={() => { }} classStyle={Style.upload_box_btn_style} />
             </div>
         </div>

@@ -13,7 +13,7 @@ const DropZone = ({
     description,
     fileSize,
     category,
-    swapCategory,
+    swapCategories,
     uploadToIPFS,
     setImage
 }) => {
@@ -68,7 +68,7 @@ const DropZone = ({
                 <aside className={Style.DropZone_box_aside} >
                     <div className={Style.DropZone_box_aside_box}>
                         <Image
-                            className={Style.DropZone_box_input_img_img}
+                            className={Style.DropZone_box_input_item_img}
                             src={fileUrl}
                             alt="uploaded nft"
                             width={200}
@@ -94,12 +94,11 @@ const DropZone = ({
                                     {category || ""}
                                 </p>
                                 <p>
-                                    <span>Swap:</span>
-                                    {swapCategory || ""}
+                                    <span >Swap:</span>
+                                    <span style={{ whiteSpace: 'nowrap', fontWeight: 500 }}>{swapCategories.join(", " || "")}
+                                    </span>
                                 </p>
                             </div>
-
-
                         </div>
                     </div>
                 </aside>

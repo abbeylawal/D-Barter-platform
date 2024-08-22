@@ -24,7 +24,15 @@ const NFTCard = ({ initialCardArray }) => {
             {cardArray.map((card, i) => (
                 <Link href={{ pathname: "/product-details", query: card }} key={i + 1}>
                     <div className={styles.NFTCard_box}>
-                        <div className={styles.NFTCard_box_img}>
+                        <div className={styles.NFTCard_box_img}
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: '100%',
+                                height: '100%'
+                            }}
+                        >
                             <Image
                                 src={card.image}
                                 alt={card.name}
@@ -112,17 +120,21 @@ NFTCard.defaultProps = {
             id: 1,
             image: images.NFT_image_1,
             name: "MacBook",
-            currentBid: "1.000",
+            description: "",
+            creatorName: "",
+            contract_address: "",
+            userId: 2,
             stock: 51,
             likes: 22,
             remainingTime: "3h: 15m",
+            Category: "Computer",
             swapCategory: ["Art"],
             liked: false
         },
         {
             id: 2,
-            image: images.NFT_image_3,
-            name: "Nike Air",
+            image: images.NFT_image_2,
+            name: "Dream Headset",
             currentBid: "0.875",
             stock: 37,
             likes: 18,
@@ -132,8 +144,8 @@ NFTCard.defaultProps = {
         },
         {
             id: 3,
-            image: images.NFT_image_2,
-            name: "Dream Headset",
+            image: images.NFT_image_3,
+            name: "Nike Air",
             currentBid: "1.200",
             stock: 25,
             likes: 30,
@@ -143,7 +155,7 @@ NFTCard.defaultProps = {
         },
         {
             id: 4,
-            image: images.NFT_image_9,
+            image: images.NFT_image_4,
             name: "Digital Art",
             currentBid: "1.200",
             stock: 25,
@@ -154,9 +166,18 @@ NFTCard.defaultProps = {
         },
         {
             id: 5,
+            image: images.NFT_image_5,
+            name: "Hoodies",
+            stock: 25,
+            likes: 30,
+            remainingTime: "4h: 45m",
+            swapCategory: ["Art", "Fashion", "Gadget"],
+            liked: false
+        },
+        {
+            id: 6,
             image: images.NFT_image_6,
             name: "jacket",
-            currentBid: "1.200",
             stock: 25,
             likes: 30,
             remainingTime: "6h: 45m",
@@ -164,13 +185,32 @@ NFTCard.defaultProps = {
             liked: false
         },
         {
-            id: 6,
-            image: images.NFT_image_5,
-            name: "Hoodies",
-            currentBid: "1.200",
+            id: 7,
+            image: images.NFT_image_7,
+            name: "jacket",
             stock: 25,
             likes: 30,
-            remainingTime: "4h: 45m",
+            remainingTime: "6h: 45m",
+            swapCategory: ["Art", "Fashion", "Gadget"],
+            liked: false
+        },
+        {
+            id: 8,
+            image: images.NFT_image_8,
+            name: "jacket",
+            stock: 25,
+            likes: 30,
+            remainingTime: "6h: 45m",
+            swapCategory: ["Art", "Fashion", "Gadget"],
+            liked: false
+        },
+        {
+            id: 9,
+            image: images.NFT_image_9,
+            name: "jacket",
+            stock: 25,
+            likes: 30,
+            remainingTime: "6h: 45m",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },

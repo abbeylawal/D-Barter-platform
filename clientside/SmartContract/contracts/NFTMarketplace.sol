@@ -67,6 +67,7 @@ contract NFTMarketplace is ERC721URIStorage {
             true
         );
 
+        console.log("Barter listing created: ", listingId);
         emit BarterListingCreated(listingId, tokenId, msg.sender, expirationTime);
     }
 
@@ -153,15 +154,29 @@ contract NFTMarketplace is ERC721URIStorage {
 
     function fetchAllListings() public view returns (BarterListing[] memory) {
         uint totalListingCount = _listingIds.current();
-        uint currentIndex = 0;
+        console.log("Total listing count: ", totalListingCount);
+
         BarterListing[] memory listings = new BarterListing[](totalListingCount);
+        uint currentIndex = 0;
 
         for (uint i = 1; i <= totalListingCount; i++) {
             BarterListing storage currentListing = idToBarterListing[i];
-            listings[currentIndex] = currentListing;
-            currentIndex++;
+            console.log("Fetching listing: ", i);
+            console.log("Listing active status: ", currentListing.isActive);
+
+            // Only include active listings
+            if (currentListing.isActive) {
+                listings[currentIndex] = currentListing;
+                currentIndex++;
+            }
         }
 
+        // Resize the array to remove empty slots
+        assembly {
+            mstore(listings, currentIndex)
+        }
+
+        console.log("Number of active listings returned: ", currentIndex);
         return listings;
     }
 

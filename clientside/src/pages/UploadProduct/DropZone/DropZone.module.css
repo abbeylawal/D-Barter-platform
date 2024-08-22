@@ -21,6 +21,10 @@
   filter: invert();
 }
 
+.DropZone_box_input_item_img {
+  border-radius: 1rem;
+}
+
 .DropZone_box_aside {
     margin-top: 2rem;
   padding: 2rem;

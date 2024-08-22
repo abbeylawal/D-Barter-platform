@@ -17,6 +17,7 @@
     "ethers": "^6.13.2",
     "hardhat": "^2.22.8",
     "ipfs-http-client": "^60.0.1",
+    "mocha": "^10.7.3",
     "next": "14.2.5",
     "pinata": "^0.2.0",
     "prop-types": "^15.8.1",

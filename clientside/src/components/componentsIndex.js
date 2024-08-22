@@ -16,12 +16,14 @@ import NFTCardThree from "./NFTCard/NFTCardThree/NFTCardThree";
 import NFTCardMain from "./NFTCard/NFTCardMain/NFTCardMain";
 import Banner from "./Banner/Banner";
 import Loader from "./Loader/Loader";
+import Error from "./Error/Error";
 
 
 export {
     AuthForm,
     Banner,
     Button,
+    Error,
     Loader,
     Footer,
     NavBar,

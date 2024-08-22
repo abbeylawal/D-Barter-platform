@@ -115,6 +115,12 @@
   box-shadow: inset 2.01px -2.01px 20px rgba(214, 214, 214, 0.17),
               inset -3.01333px 3.01333px 3.01333px rgba(255, 255, 255, 0.39),
               var(--box-shadow);
+              cursor: pointer;
+}
+
+.started_items_item:hover {
+  transform: scale(1.2); 
+  background: linear-gradient(93.51deg, #9B51E0 2.84%, #3081ED 99.18%);
 }
 
 @media screen and (max-width: 55em) {

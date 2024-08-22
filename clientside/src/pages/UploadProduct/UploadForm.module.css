@@ -4,11 +4,13 @@
 }
 
 .upload_box_slider_div {
-  /* display: flex; */
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  /* display: grid; */
+  /* grid-template-columns: repeat(3, 1fr); */
   gap: 1rem;
-  /* width: 100%; */
+  justify-content: space-around;
+  width: 100%;
+
 }
 .upload_box_slider {
   border: 1px solid var(--icons-color);
@@ -21,6 +23,11 @@
   display: flex;
   align-items: center;
   gap: 2rem;
+}
+
+.upload_box_slider_box_group {
+ display: flex;
+
 }
 
 .upload_box_slider_box_img_img {
