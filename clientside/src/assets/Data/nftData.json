@@ -1,23 +1,109 @@
 [
     {
         "id": 1,
-        "cardImage": "https://yudiz.com/codepen/nft-store/card-1.svg",
-        "userName": "Wayne Garner",
-        "artName": "Flui oriental art",
-        "userImage": "https://yudiz.com/codepen/nft-store/user-pic3.svg"
+        "image": "NFT_image_1",
+        "name": "MacBook",
+        "description": "MacBook Pro",
+        "creatorId": 2,
+        "stock": 51,
+        "likes": 22,
+        "remainingTime": "3h: 15m",
+        "Category": "Computer",
+        "swapCategory": ["Art"],
+        "liked": false
     },
     {
         "id": 2,
-        "cardImage": "https://yudiz.com/codepen/nft-store/card-2.svg",
-        "userName": "Cody Valdez",
-        "artName": "Human Areology",
-        "userImage": "https://yudiz.com/codepen/nft-store/user-pic4.svg"
+        "image": "NFT_image_2",
+        "name": "Dream Headset",
+        "creatorId": 1,
+        "stock": 37,
+        "likes": 18,
+        "remainingTime": "5h: 30m",
+        "Category": "Fashion",
+        "swapCategory": ["Fashion"],
+        "liked": false
     },
     {
         "id": 3,
-        "cardImage": "https://yudiz.com/codepen/nft-store/card-3.svg",
-        "userName": "Jayden Daniel",
-        "artName": "Inko's Art",
-        "userImage": "https://yudiz.com/codepen/nft-store/user-pic5.svg"
+        "image": "NFT_image_3",
+        "name": "Nike Air",
+        "creatorId": 3,
+        "stock": 25,
+        "likes": 30,
+        "remainingTime": "2h: 45m",
+        "Category": "Fashion",
+        "swapCategory": ["Art", "Fashion", "Gadget"],
+        "liked": false
+    },
+    {
+        "id": 4,
+        "image": "NFT_image_4",
+        "name": "IphoneX",
+        "creatorId": 2,
+        "stock": 25,
+        "likes": 30,
+        "remainingTime": "2h: 45m",
+        "Category": "Mobile",
+        "swapCategory": ["Art", "Fashion", "Gadget"],
+        "liked": false
+    },
+    {
+        "id": 5,
+        "image": "NFT_image_5",
+        "name": "Hoodies",
+        "creatorId": 5,
+        "stock": 25,
+        "likes": 30,
+        "remainingTime": "4h: 45m",
+        "Category": "Fashion",
+        "swapCategory": ["Art", "Fashion", "Gadget"],
+        "liked": false
+    },
+    {
+        "id": 6,
+        "image": "NFT_image_6",
+        "name": "jacket",
+        "creatorId": 4,
+        "stock": 25,
+        "likes": 30,
+        "remainingTime": "6h: 45m",
+        "Category": "Fashion",
+        "swapCategory": ["Art", "Fashion", "Gadget"],
+        "liked": false
+    },
+    {
+        "id": 7,
+        "image": "NFT_image_7",
+        "name": "Classic Hills",
+        "stock": 25,
+        "likes": 30,
+        "remainingTime": "6h: 45m",
+        "Category": "Fashion",
+        "swapCategory": ["Art", "Fashion", "Gadget"],
+        "liked": false
+    },
+    {
+        "id": 8,
+        "image": "NFT_image_8",
+        "name": "Abstract",
+        "creatorId": 1,
+        "stock": 25,
+        "likes": 30,
+        "remainingTime": "6h: 45m",
+        "Category": "Art",
+        "swapCategory": ["Art", "Fashion", "Gadget"],
+        "liked": false
+    },
+    {
+        "id": 9,
+        "image": "NFT_image_9",
+        "name": "Glow Dress",
+        "stock": 25,
+        "likes": 30,
+        "remainingTime": "6h: 45m",
+        "Category": "Art",
+        "swapCategory": ["Art", "Fashion", "Gadget"],
+        "liked": false
     }
 ]
