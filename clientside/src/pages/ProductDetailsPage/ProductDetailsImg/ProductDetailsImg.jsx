@@ -11,7 +11,7 @@ const ProductDetailsImg = ({ nft }) => {
     const [description, setDescription] = useState(false);
     const [details, setDetails] = useState(true);
     const [like, setLike] = useState(false);
-    const imageSrc = nft.image || images[`NFT_image_${nft.id}`];
+    const imageSrc = nft.image || images[`NFT_image_${nft.tokenId}`];
 
     const likeNFT = () => {
         setLike(!like);
@@ -90,11 +90,11 @@ const ProductDetailsImg = ({ nft }) => {
                             <p>
                                 <small>Contact Address</small>
                                 <br />
-                                {nft.seller}
+                                {nft.owner}
                             </p>
                             <p>
                                 <small>Token ID</small>{" "}
-                                {nft.id}
+                                {nft.tokenId}
                             </p>
                         </div>
                     )
