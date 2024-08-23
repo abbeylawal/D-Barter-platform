@@ -5,18 +5,26 @@ import Image from "next/image";
 import styles from './NFTCard.module.css';
 import images from "../../assets/img";
 import Link from "next/link";
+import userData from "../../assets/Data/userData.json";
 
 const NFTCard = ({ initialCardArray }) => {
     const [cardArray, setCardArray] = useState(initialCardArray);
 
-    const likeNft = (id) => {
+    const likeNft = (tokenId) => {
         setCardArray(prevArray =>
             prevArray.map(card =>
-                card.id === id
+                card.id ===tokenId
                     ? { ...card, liked: !card.liked, likes: card.liked ? card.likes - 1 : card.likes + 1 }
                     : card
             )
         );
+    };
+
+
+        // Helper function to get user image by creatorId
+    const getUserImageById = (creatorId) => {
+        const user = userData.find(user => user.userId === creatorId);
+        return user ? user.userImage : images.user2;
     };
 
     return (
@@ -76,14 +84,15 @@ const NFTCard = ({ initialCardArray }) => {
 
                                     <div className={styles.NFTCard_box_update_details_price_box_box}>
                                         <div className={styles.NFTCard_box_update_details_price_box_bid}>
-                                            <small>Swap with</small>
-                                            <ul>
+                                            <small>Category</small>
+                                            <p>{card.Category}</p>
+                                            {/* <ul>
                                                 {card.swapCategory?.map((item, index) => (
                                                     <li key={index}>
                                                         {item}
                                                     </li>
                                                 ))}
-                                            </ul>
+                                            </ul> */}
                                         </div>
                                     </div>
                                 </div>
@@ -91,7 +100,7 @@ const NFTCard = ({ initialCardArray }) => {
 
                             <div className={`${styles.NFTCard_box_update_details_category} hover-scale-image`}>
                                 <Image
-                                    src={images.user1}
+                                    src={getUserImageById(card.creatorId)}
                                     alt="User Image"
                                     width={50}
                                     height={50}
@@ -117,100 +126,110 @@ const NFTCard = ({ initialCardArray }) => {
 NFTCard.defaultProps = {
     initialCardArray: [
         {
-            id: 1,
+           tokenId: 1,
             image: images.NFT_image_1,
             name: "MacBook",
-            description: "",
-            creatorName: "",
-            contract_address: "",
-            userId: 2,
+            description: "MacBook Pro",
+            creatorId: 2,
             stock: 51,
             likes: 22,
             remainingTime: "3h: 15m",
             Category: "Computer",
-            swapCategory: ["Art"],
+            swapCategory: ["Computer"],
             liked: false
         },
         {
-            id: 2,
+           tokenId: 2,
             image: images.NFT_image_2,
             name: "Dream Headset",
-            currentBid: "0.875",
+            creatorId: 1,
             stock: 37,
             likes: 18,
             remainingTime: "5h: 30m",
+            Category: "Fashion",
             swapCategory: ["Fashion"],
             liked: false
         },
         {
-            id: 3,
+           tokenId: 3,
             image: images.NFT_image_3,
             name: "Nike Air",
-            currentBid: "1.200",
+            creatorId: 3,
             stock: 25,
             likes: 30,
             remainingTime: "2h: 45m",
+            Category: "Fashion",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
         {
-            id: 4,
+           tokenId: 4,
             image: images.NFT_image_4,
-            name: "Digital Art",
-            currentBid: "1.200",
+            name: "IphoneX",
+            creatorId: 2,
             stock: 25,
             likes: 30,
             remainingTime: "2h: 45m",
+            Category: "Mobile",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
         {
-            id: 5,
+           tokenId: 5,
             image: images.NFT_image_5,
             name: "Hoodies",
+            creatorId: 5,
             stock: 25,
             likes: 30,
             remainingTime: "4h: 45m",
+            Category: "Fashion",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
         {
-            id: 6,
+           tokenId: 6,
             image: images.NFT_image_6,
             name: "jacket",
+            creatorId: 4,
             stock: 25,
             likes: 30,
             remainingTime: "6h: 45m",
+            Category: "Fashion",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
         {
-            id: 7,
+           tokenId: 7,
             image: images.NFT_image_7,
-            name: "jacket",
+            name: "Classic Hills",
+            // creatorId: 1,
             stock: 25,
             likes: 30,
             remainingTime: "6h: 45m",
+            Category: "Fashion",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
         {
-            id: 8,
+           tokenId: 8,
             image: images.NFT_image_8,
-            name: "jacket",
+            name: "Abstract",
+            creatorId: 1,
             stock: 25,
             likes: 30,
             remainingTime: "6h: 45m",
+            Category: "Art",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
         {
-            id: 9,
+           tokenId: 9,
             image: images.NFT_image_9,
-            name: "jacket",
+            name: "Glow Dress",
             stock: 25,
             likes: 30,
             remainingTime: "6h: 45m",
+            Category: "Art",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
