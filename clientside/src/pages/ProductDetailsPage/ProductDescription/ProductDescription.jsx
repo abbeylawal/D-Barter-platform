@@ -12,6 +12,7 @@ import {
 } from "react-icons/ti";
 import { BiTransferAlt, BiDollar } from "react-icons/bi";
 import Link from "next/link";
+import userData from "../../../assets/Data/userData.json"
 // SMART CONTRACT
 import { NFTMarketplaceContext } from "../../../../SmartContract/Context/NFTMarketplaceContext";
 
@@ -124,12 +125,12 @@ const ProductDescription = ({ nft }) => {
           </div>
         </div>
         <div className={Style.ProductDescription_box_profile}>
-          <h1>{nft.name} #{nft.id}</h1>
+          <h1>{nft.name} #{nft.tokenId}</h1>
           <div className={Style.ProductDescription_box_profile_box}>
             <div className={Style.ProductDescription_box_profile_box_left}>
               <Image
                 className={Style.ProductDescription_box_profile_box_left_img}
-                src={images.user1}
+                src={images.user2}
                 alt='Profile'
                 width={40}
                 height={40}
@@ -174,8 +175,8 @@ const ProductDescription = ({ nft }) => {
                 <small>Swap With</small>
 
                 {/* TODO: using swap with category  */}
-                <p>
-                  1.000 ETH <span>( $3, 221.22)</span>
+                <p style={{ marginTop: "1.5rem" }}>
+                  {Array.isArray(nft.swapCategory) ? nft.swapCategory.join(", ") : nft.swapCategory}
                 </p>
               </div>
             </div>
