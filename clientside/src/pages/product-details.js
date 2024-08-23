@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import {useRouter} from "next/router";
 import Style from "../styles/product-details.module.css";
 import { Button, Category } from "../components/componentsIndex";
-// import { ProductDescription, ProductDetailsImg, ProductTabs } from "./ProductDetailsPage/ProductDetailsIndex";
 import ProductDetailsPage from "./ProductDetailsPage/ProductDetailsPage";
 
 
