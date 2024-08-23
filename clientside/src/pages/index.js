@@ -11,18 +11,17 @@ import {
   Title,
   Category,
   Filter,
-  BackToTopButton,
   Collection,
   NFTCard,
 
 } from '../components/componentsIndex';
-
-// import { NFTMarketplaceContext } from "../../SmartContract/Context/NFTMarketplaceContext";
+import nftData from "../assets/Data/nftData.json"
+import { NFTMarketplaceContext } from "../../SmartContract/Context/NFTMarketplaceContext";
 
 
 
 const Home = () => {
-  // const { checkWalletConnection } = useContext(NFTMarketplaceContext);
+  const { checkWalletConnection } = useContext(NFTMarketplaceContext);
   // useEffect(() => {
   //   checkWalletConnection();
   // }, []);
