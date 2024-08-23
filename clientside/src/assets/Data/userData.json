@@ -1,0 +1,72 @@
+[
+    {
+        "userId": 1,
+        "creatorName": "Muftau Lawal",
+        "gender": "Male",
+        "userName": "muftau_lawal",
+        "email": "muftau@example.com",
+        "bio": "Digital artist and NFT enthusiast.",
+        "Website": "https://muftauart.com",
+        "Facebook": "https://facebook.com/muftaulawal",
+        "Twitter": "https://twitter.com/muftaulawal",
+        "Instagram": "https://instagram.com/muftaulawal",
+        "walletAddress": "0x1234567890abc...",
+        "userImage": "https://yudiz.com/codepen/nft-store/user-pic3.svg"
+    },
+    {
+        "userId": 2,
+        "creatorName": "Aisha Bello",
+        "gender": "Female",
+        "userName": "aisha_bello",
+        "email": "aisha@example.com",
+        "bio": "Digital artist exploring the NFT space.",
+        "Website": "https://aishaart.com",
+        "Facebook": "https://facebook.com/aishabello",
+        "Twitter": "https://twitter.com/aishabello",
+        "Instagram": "https://instagram.com/aishabello",
+        "walletAddress": "0xabcdef1234567...",
+        "userImage": "https://yudiz.com/codepen/nft-store/user-pic1.svg"
+    },
+    {
+        "userId": 3,
+        "creatorName": "Chidera Okafor",
+        "gender": "Female",
+        "userName": "chidera_okafor",
+        "email": "chidera@example.com",
+        "bio": "NFT collector and creator.",
+        "Website": "https://chideraart.com",
+        "Facebook": "https://facebook.com/chideraokafor",
+        "Twitter": "https://twitter.com/chideraokafor",
+        "Instagram": "https://instagram.com/chideraokafor",
+        "walletAddress": "0x7890abcdef123...",
+        "userImage": "https://yudiz.com/codepen/nft-store/user-pic2.svg"
+    },
+    {
+        "userId": 4,
+        "creatorName": "Emeka Johnson",
+        "gender": "Male",
+        "userName": "emeka_johnson",
+        "email": "emeka@example.com",
+        "bio": "Crypto artist specializing in NFTs.",
+        "Website": "https://emekaart.com",
+        "Facebook": "https://facebook.com/emekajohnson",
+        "Twitter": "https://twitter.com/emekajohnson",
+        "Instagram": "https://instagram.com/emekajohnson",
+        "walletAddress": "0x4567890abcdef...",
+        "userImage": "https://yudiz.com/codepen/nft-store/user-pic5.svg"
+    },
+    {
+        "userId": 5,
+        "creatorName": "Ngozi Adichie",
+        "gender": "Female",
+        "userName": "ngozi_adichie",
+        "email": "ngozi@example.com",
+        "bio": "Passionate about digital art and NFTs.",
+        "Website": "https://ngoziart.com",
+        "Facebook": "https://facebook.com/ngoziadichie",
+        "Twitter": "https://twitter.com/ngoziadichie",
+        "Instagram": "https://instagram.com/ngoziadichie",
+        "walletAddress": "0xabcdef7890123...",
+        "userImage": "https://yudiz.com/codepen/nft-store/user-pic4.svg"
+    }
+]
