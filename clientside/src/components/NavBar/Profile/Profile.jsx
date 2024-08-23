@@ -8,22 +8,31 @@ import Link from 'next/link';
 
 import Style from "./Profile.module.css";
 import images from '../../../assets/img';
+import users from '../../../assets/Data/userData.json';
+
 
 const Profile = () => {
+    // const { accountsMappingRef } = useContext(NFTMarketplaceContext);
+
+    // const userId = accountsMappingRef 
+    // const user = user[userId]
+
+    const user = users[3]
+
     return (
         <div className={Style.profile}>
             <div className={Style.profile_account}>
                 <Image
-                    src={images.user1}
-                    alt="user profile"
+                    src={user.userImage}
+                    alt={`${user.creatorName}'s profile`}
                     width={50}
                     height={50}
                     className={Style.profile_account_img}
                 />
 
                 <div className={Style.profile_account_info}>
-                    <p>Muftau</p>
-                    <small>X038499382..</small>
+                    <p>{user.creatorName}</p>
+                    <small>{user.walletAddress}</small>
                 </div>
             </div>
 
@@ -43,13 +52,6 @@ const Profile = () => {
                             <Link href={{ pathname: '/my-items' }}>My Items</Link>
                         </p>
                     </div>
-
-                    {/* <div className={Style.profile_menu_one_item}>
-                        <FaUserEdit />
-                        <p>
-                            <Link href={{ pathname: '/account' }}>Edit Profile</Link>
-                        </p>
-                    </div> */}
                 </div>
 
                 <div className={Style.profile_menu_two}>
@@ -58,7 +60,6 @@ const Profile = () => {
                         <p>
                             <Link href={{ pathname: "/help" }} > Help
                             </Link>
-
                         </p>
                     </div>
                     <div className={Style.profile_menu_one_item}>
