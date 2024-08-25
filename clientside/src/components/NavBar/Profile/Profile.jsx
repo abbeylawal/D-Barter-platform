@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useContext} from 'react';
 import Image from 'next/image';
 import { MdHelpCenter } from 'react-icons/md';
 import { TbDownloadOff, TbDownload } from 'react-icons/tb';
@@ -10,14 +10,16 @@ import Style from "./Profile.module.css";
 import images from '../../../assets/img';
 import users from '../../../assets/Data/userData.json';
 
+import { NFTMarketplaceContext } from "../../../../SmartContract/Context/NFTMarketplaceContext";
 
 const Profile = () => {
-    // const { accountsMappingRef } = useContext(NFTMarketplaceContext);
+    const { currentAccount } = useContext(NFTMarketplaceContext);
 
-    // const userId = accountsMappingRef 
-    // const user = user[userId]
+    const userId = currentAccount ? currentAccount.userId : 1;
+    const user = users[userId]
+    const userAddress = currentAccount ? currentAccount.address : user.walletAddress;
 
-    const user = users[3]
+    const shortenedAddress = `${userAddress.slice(0, 6)}....${userAddress.slice(-3)}`;
 
     return (
         <div className={Style.profile}>
@@ -32,7 +34,7 @@ const Profile = () => {
 
                 <div className={Style.profile_account_info}>
                     <p>{user.creatorName}</p>
-                    <small>{user.walletAddress}</small>
+                    <small>{shortenedAddress}</small>
                 </div>
             </div>
 
@@ -49,7 +51,7 @@ const Profile = () => {
                     <div className={Style.profile_menu_one_item}>
                         <FaRegImage />
                         <p>
-                            <Link href={{ pathname: '/my-items' }}>My Items</Link>
+                            <Link href={{ pathname: '/author', query: { tab: 'owned' } }}>My Items</Link>
                         </p>
                     </div>
                 </div>
