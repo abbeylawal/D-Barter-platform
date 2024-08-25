@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef} from "react";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
-import { create as ipfsHttpClient } from "ipfs-http-client";
 const axios = require("axios");
 const FormData = require("form-data");
 require("dotenv").config();
@@ -29,10 +28,23 @@ export const NFTMarketplaceProvider = ({ children }) => {
   // const [accountsMapping, setAccountsMapping] = useState({});
   const accountsMappingRef = useRef({});
   const [currentAccount, setCurrentAccount] = useState(null);
+  const [userId, setUserId] = useState(null);
   const [error, setError] = useState("");
   const [openError, setOpenError] = useState(false);
 
   const router = useRouter();
+  useEffect(() => {
+    // Load the accounts mapping from localStorage when the component mounts
+    const storedMapping = localStorage.getItem('accountsMapping');
+    if (storedMapping) {
+      accountsMappingRef.current = JSON.parse(storedMapping);
+    }
+  }, []);
+
+  const saveAccountsMapping = () => {
+    localStorage.setItem('accountsMapping', JSON.stringify(accountsMappingRef.current));
+  };
+
 
   const connectSmartContract = async () => {
     try {
@@ -85,65 +97,83 @@ const checkWalletConnection = async () => {
       accounts.forEach((account, index) => {
         const lowerCaseAccount = account.toLowerCase();
         if (!accountsMappingRef.current[lowerCaseAccount]) {
-          // accountsMappingRef.current[lowerCaseAccount] = `user${
-          //   Object.keys(accountsMappingRef.current).length + 1
-          // }`;
           accountsMappingRef.current[lowerCaseAccount] = `${
             Object.keys(accountsMappingRef.current).length + 1
           }`;
         }
       });
 
-      console.log("Current accounts mapping:", accountsMappingRef.current);
+        saveAccountsMapping();  // Save the updated mapping to localStorage
 
-      try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const activeAddress = (await signer.getAddress()).toLowerCase();
+        console.log("Current accounts mapping:", accountsMappingRef.current);
 
-        console.log("Active signer address:", activeAddress);
+        try {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          const activeAddress = (await signer.getAddress()).toLowerCase();
 
-        if (accountsMappingRef.current[activeAddress]) {
-          const newCurrentAccount = {
-            address: activeAddress,
-            userId: accountsMappingRef.current[activeAddress],
-          };
-          setCurrentAccount(newCurrentAccount);
-          console.log("Current account:", newCurrentAccount);
-          return newCurrentAccount
-        } else {
-          const newUserId = `user${
-            Object.keys(accountsMappingRef.current).length + 1
-          }`;
-          accountsMappingRef.current[activeAddress] = newUserId;
-          const newCurrentAccount = {
-            address: activeAddress,
-            userId: newUserId,
-          };
-          setCurrentAccount(newCurrentAccount);
-          console.log("Current account:", newCurrentAccount);
-          return newCurrentAccount
+          console.log("Active signer address:", activeAddress);
+
+          if (accountsMappingRef.current[activeAddress]) {
+            const newCurrentAccount = {
+              address: activeAddress,
+              userId: accountsMappingRef.current[activeAddress],
+            };
+            setCurrentAccount(newCurrentAccount);
+            console.log("Current account:", newCurrentAccount);
+            return newCurrentAccount;
+          } else {
+            const newUserId = `user${
+              Object.keys(accountsMappingRef.current).length + 1
+            }`;
+            accountsMappingRef.current[activeAddress] = newUserId;
+            saveAccountsMapping();  // Save the updated mapping to localStorage
+            const newCurrentAccount = {
+              address: activeAddress,
+              userId: newUserId,
+            };
+            setCurrentAccount(newCurrentAccount);
+            console.log("Current account:", newCurrentAccount);
+            return newCurrentAccount;
+          }
+
+        } catch (error) {
+          console.error("Error fetching active signer:", error);
         }
-
-      } catch (error) {
-        console.error("Error fetching active signer:", error);
+      } else {
+        console.log("No accounts found");
+        setCurrentAccount(null);
+        return null;
       }
-    } else {
-      console.log("No accounts found");
-      setCurrentAccount(null);
+    } catch (error) {
+      setOpenError(true);
+      setError("Error while connecting to wallet");
+      return null;
     }
-  } catch (error) {
-    setOpenError(true);
-    setError("Error while connecting to wallet");
-  }
-};
+  };
 
-useEffect(() => {
-  checkWalletConnection();
+  useEffect(() => {
+    const initializeWallet = async () => {
+      const account = await checkWalletConnection();
+      if (account) {
+        setUserId(account.userId);
+      } else {
+        setUserId(null);
+      }
+    };
+
+    initializeWallet();
 
   // Set up event listener for account changes
   if (window.ethereum) {
-    window.ethereum.on("accountsChanged", checkWalletConnection);
+    window.ethereum.on("accountsChanged", async () => {
+      const account = await checkWalletConnection();
+      if (account) {
+        setUserId(account.userId);
+      } else {
+        setUserId(null);
+      }
+    });
   }
 
   // Cleanup function
@@ -291,6 +321,7 @@ useEffect(() => {
     }
   };
   
+  // ---- FetchNFTs ----
 const fetchNFTs = async () => {
   try {
     const contract = await connectSmartContract();
@@ -303,13 +334,18 @@ const fetchNFTs = async () => {
     }
 
     console.log(`Processing ${data.length} listings...`);
+    const generateRandomLikes = () => {
+      // Generate a random number between 0 and 500 for likes
+      return Math.floor(Math.random() * 501);
+    };
+
     const items = await Promise.all(
       data.map(async (i, index) => {
         try {
           console.log(`Processing listing ${index + 1}/${data.length}`);
           console.log("Listing data:", i);
 
-          // Check if tokenId is a BigNumber and convert it to a regular number
+          // if tokenId is a BigNumber and convert it to a regular number
           const tokenId = i.tokenId.toNumber
             ? i.tokenId.toNumber()
             : Number(i.tokenId);
@@ -319,6 +355,8 @@ const fetchNFTs = async () => {
 
           const meta = await axios.get(tokenURI);
           console.log(`Metadata for tokenId ${tokenId}:`, meta.data);
+
+          const randomLikes = generateRandomLikes();
 
           let item = {
             listingId: i.listingId.toNumber
@@ -331,9 +369,15 @@ const fetchNFTs = async () => {
               : Number(i.expirationTime),
             isActive: i.isActive,
             name: meta.data.name,
+            contractOwner: contract.target,
+            // itemOwner: i.itemOwner,
+            itemOwner: i.owner,
+            userId: currentAccount.userId ? currentAccount.userId: 1,
+            likes: randomLikes,
             description: meta.data.description,
             image: meta.data.image,
-            Category: meta.data.Category,
+
+            Category: meta.data.category,
             swapCategory: meta.data.swapCategories,
           };
           console.log("Processed NFT:", item);
@@ -371,6 +415,8 @@ const fetchNFTs = async () => {
             name: meta.data.name,
             description: meta.data.description,
             image: meta.data.image,
+            Category: meta.data.Category,
+            swapCategory: meta.data.swapCategories,
           };
           return item;
         })
@@ -381,29 +427,42 @@ const fetchNFTs = async () => {
     }
   };
 
-  const fetchMyNFTs = async () => {
-    try {
-      const contract = await connectSmartContract();
-      const data = await contract.fetchMyNFTs();
-      const items = await Promise.all(
-        data.map(async (tokenId) => {
+const fetchMyNFTs = async () => {
+  try {
+    const contract = await connectSmartContract();
+    const data = await contract.fetchMyNFTs();
+    console.log("Raw data from fetchMyNFTs:", data);
+
+    if (!Array.isArray(data)) {
+      console.error("Data returned is not an array:", data);
+      return [];
+    }
+
+    const items = await Promise.all(
+      data.map(async (tokenId) => {
+        try {
           const tokenURI = await contract.tokenURI(tokenId);
           const meta = await axios.get(tokenURI);
-          let item = {
-            tokenId: tokenId.toNumber(),
+          return {
+            tokenId: tokenId.toString(),
             owner: await contract.ownerOf(tokenId),
             name: meta.data.name,
             description: meta.data.description,
             image: meta.data.image,
           };
-          return item;
-        })
-      );
-      return items;
-    } catch (error) {
-      setOpenError(true), setError("Error fetching my NFTs !!!");
-    }
-  };
+        } catch (error) {
+          console.error(`Error processing token ${tokenId}:`, error);
+          return null;
+        }
+      })
+    );
+
+    return items.filter((item) => item !== null);
+  } catch (error) {
+    console.error("Error in fetchMyNFTs:", error);
+    throw error;
+  }
+};
 
   const getBarterOffers = async (listingId) => {
     try {
@@ -429,13 +488,106 @@ const fetchNFTs = async () => {
     }
   };
 
+    const createBarterOffer = async (listingId, offerTokenId) => {
+      try {
+        const contract = await connectSmartContract();
+        const transaction = await contract.createBarterOffer(
+          listingId,
+          offerTokenId
+        );
+        await transaction.wait();
+        console.log("Barter offer created successfully");
+      } catch (error) {
+        console.error("Error creating barter offer:", error);
+        setOpenError(true);
+        setError("Error creating barter offer");
+      }
+    };
+
+    const acceptBarterOffer = async (listingId, offerId) => {
+      try {
+        const contract = await connectSmartContract();
+        const transaction = await contract.acceptBarterOffer(
+          listingId,
+          offerId
+        );
+        await transaction.wait();
+        console.log("Barter offer accepted successfully");
+      } catch (error) {
+        console.error("Error accepting barter offer:", error);
+        setOpenError(true);
+        setError("Error accepting barter offer");
+      }
+    };
+
+    const confirmBarterTransaction = async (transactionId) => {
+      try {
+        const contract = await connectSmartContract();
+        const transaction = await contract.confirmBarterTransaction(
+          transactionId
+        );
+        await transaction.wait();
+        console.log("Barter transaction confirmed successfully");
+      } catch (error) {
+        console.error("Error confirming barter transaction:", error);
+        setOpenError(true);
+        setError("Error confirming barter transaction");
+      }
+    };
+
+    const cancelBarterTransaction = async (transactionId) => {
+      try {
+        const contract = await connectSmartContract();
+        const transaction = await contract.cancelBarterTransaction(
+          transactionId
+        );
+        await transaction.wait();
+        console.log("Barter transaction cancelled successfully");
+      } catch (error) {
+        console.error("Error cancelling barter transaction:", error);
+        setOpenError(true);
+        setError("Error cancelling barter transaction");
+      }
+    };
+
+    const fetchMyTransactions = async () => {
+      try {
+        const contract = await connectSmartContract();
+        const transactions = await contract.fetchMyTransactions();
+        const items = await Promise.all(
+          transactions.map(async (t) => {
+            return {
+              transactionId: t.transactionId.toNumber(),
+              listingId: t.listingId.toNumber(),
+              offerId: t.offerId.toNumber(),
+              lister: t.lister,
+              offerer: t.offerer,
+              listerTokenId: t.listerTokenId.toNumber(),
+              offererTokenId: t.offererTokenId.toNumber(),
+              timestamp: new Date(
+                t.timestamp.toNumber() * 1000
+              ).toLocaleString(),
+              status: ["Pending", "Accepted", "Completed", "Cancelled"][
+                t.status
+              ],
+            };
+          })
+        );
+        return items;
+      } catch (error) {
+        console.error("Error fetching my transactions:", error);
+        setOpenError(true);
+        setError("Error fetching my transactions");
+      }
+    };
+
   return (
     <NFTMarketplaceContext.Provider
       value={{
         titleData,
         titleCover,
+        accountsMappingRef,
         currentAccount,
-        // accountsMappingRef,
         error,
         openError,
         setOpenError,
@@ -447,6 +599,11 @@ const fetchNFTs = async () => {
         fetchMyListings,
         fetchMyNFTs,
         getBarterOffers,
+        createBarterOffer,
+        acceptBarterOffer,
+        confirmBarterTransaction,
+        cancelBarterTransaction,
+        fetchMyTransactions,
       }}
     >
       {children}
