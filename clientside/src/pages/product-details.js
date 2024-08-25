@@ -15,8 +15,8 @@ const product_details = () => {
     image: "",
     tokenId: "",
     name: "",
-    owner: "",
-    seller: "",
+    contractOwner: "",
+    itemOwner: "",
   });
   
   const router = useRouter();
