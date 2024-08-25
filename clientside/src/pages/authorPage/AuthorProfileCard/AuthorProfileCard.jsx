@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Image from "next/image";
 import { MdVerified, MdCloudUpload, MdOutlineReportProblem } from "react-icons/md";
 import { FiCopy } from "react-icons/fi";
@@ -8,8 +8,19 @@ import Style from "./AuthorProfileCard.module.css";
 import images from "../../../assets/img";
 import { Button } from "../../../components/componentsIndex";
 import { TiSocialFacebook, TiSocialInstagram, TiSocialLinkedin, TiSocialTwitter } from 'react-icons/ti';
+import users from "../../../assets/Data/userData.json";
+
+import { NFTMarketplaceContext } from "../../../../SmartContract/Context/NFTMarketplaceContext";
 
 const AuthorProfileCard = () => {
+
+    const { currentAccount } = useContext(NFTMarketplaceContext);
+
+    const userId = currentAccount ? currentAccount.userId : 1;
+    const user = users[userId]
+    const userAddress = currentAccount ? currentAccount.address : user.walletAddress;
+
+    const shortenedAddress = `${userAddress.slice(0, 6)}....${userAddress.slice(-3)}`;
     const [share, setShare] = useState(false);
     const [report, setReport] = useState(false);
 
@@ -28,6 +39,7 @@ const AuthorProfileCard = () => {
         setReport(!report);
     };
 
+
     return (
         <div className={Style.AuthorProfileCard}>
             <div className={Style.AuthorProfileCard_box}>
@@ -35,7 +47,7 @@ const AuthorProfileCard = () => {
                     <Image
                         className={Style.AuthorProfileCard_box_img_img}
                         // src={images.nft_image_1}
-                        src={images.user1}
+                        src={user.userImage}
                         alt='NFT Image'
                         width={220}
                         height={220}
@@ -43,7 +55,7 @@ const AuthorProfileCard = () => {
                 </div>
 
                 <div className={Style.AuthorProfileCard_box_info}>
-                    <h2>Muftau Lawal {""}{" "}
+                    <h2>{user.creatorName} {""}{" "}
                         <span>
                             <MdVerified />
                         </span>{" "}
@@ -52,7 +64,7 @@ const AuthorProfileCard = () => {
                     <div className={Style.AuthorProfileCard_box_info_address}>
                         <input
                             type="text"
-                            value="0x845FD823G0....A902"
+                            value={userAddress}
                             id='AddressInput'
                             readOnly
                         />
@@ -61,7 +73,7 @@ const AuthorProfileCard = () => {
                             className={Style.copy_icon}
                         />
                     </div>
-                    <p>Author Description</p>
+                    <p>Author Bio Description</p>
 
                     <div className={Style.AuthorProfileCard_box_info_social}>
                         <a href="#">
