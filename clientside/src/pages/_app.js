@@ -4,6 +4,8 @@ import { NavBar } from "../components/componentsIndex";
 import { Footer } from "../components/componentsIndex";
 import { BackToTopButton } from "../components/componentsIndex";
 import { NFTMarketplaceProvider } from "../../SmartContract/Context/NFTMarketplaceContext";
+import { useContext } from "react";
+
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
