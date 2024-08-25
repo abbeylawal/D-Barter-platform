@@ -10,7 +10,6 @@ const AuthorTabs = ({ activeTab, setActiveTab }) => {
         "Most Recent",
         "Curated",
         "Most Appreciated",
-        "Most Discussed",
         "Most Viewed"
     ];
 
@@ -32,7 +31,7 @@ const AuthorTabs = ({ activeTab, setActiveTab }) => {
             <div className={Style.AuthorTabs_box}>
                 <div className={Style.AuthorTabs_box_left}>
                     <div className={Style.AuthorTabs_box_left_btn}>
-                        {['Collectables', 'Created', 'Listed', 'Liked'].map((tab, index) => (
+                        {['Collectables', 'Owned', 'Listed', 'Liked'].map((tab, index) => (
                             <button
                                 key={index}
                                 className={activeTab === tab.toLowerCase() ? Style.active : ""}
