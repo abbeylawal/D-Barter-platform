@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useContext} from 'react';
 import Image from 'next/image';
 import { MdHelpCenter } from 'react-icons/md';
 import { TbDownloadOff, TbDownload } from 'react-icons/tb';
@@ -8,22 +8,33 @@ import Link from 'next/link';
 
 import Style from "./Profile.module.css";
 import images from '../../../assets/img';
+import users from '../../../assets/Data/userData.json';
+
+import { NFTMarketplaceContext } from "../../../../SmartContract/Context/NFTMarketplaceContext";
 
 const Profile = () => {
+    const { currentAccount } = useContext(NFTMarketplaceContext);
+
+    const userId = currentAccount ? currentAccount.userId : 1;
+    const user = users[userId]
+    const userAddress = currentAccount ? currentAccount.address : user.walletAddress;
+
+    const shortenedAddress = `${userAddress.slice(0, 6)}....${userAddress.slice(-3)}`;
+
     return (
         <div className={Style.profile}>
             <div className={Style.profile_account}>
                 <Image
-                    src={images.user1}
-                    alt="user profile"
+                    src={user.userImage}
+                    alt={`${user.creatorName}'s profile`}
                     width={50}
                     height={50}
                     className={Style.profile_account_img}
                 />
 
                 <div className={Style.profile_account_info}>
-                    <p>Muftau</p>
-                    <small>X038499382..</small>
+                    <p>{user.creatorName}</p>
+                    <small>{shortenedAddress}</small>
                 </div>
             </div>
 
@@ -40,16 +51,9 @@ const Profile = () => {
                     <div className={Style.profile_menu_one_item}>
                         <FaRegImage />
                         <p>
-                            <Link href={{ pathname: '/my-items' }}>My Items</Link>
+                            <Link href={{ pathname: '/author', query: { tab: 'owned' } }}>My Items</Link>
                         </p>
                     </div>
-
-                    {/* <div className={Style.profile_menu_one_item}>
-                        <FaUserEdit />
-                        <p>
-                            <Link href={{ pathname: '/account' }}>Edit Profile</Link>
-                        </p>
-                    </div> */}
                 </div>
 
                 <div className={Style.profile_menu_two}>
@@ -58,7 +62,6 @@ const Profile = () => {
                         <p>
                             <Link href={{ pathname: "/help" }} > Help
                             </Link>
-
                         </p>
                     </div>
                     <div className={Style.profile_menu_one_item}>

@@ -12,6 +12,7 @@ import {
 } from "react-icons/ti";
 import { BiTransferAlt, BiDollar } from "react-icons/bi";
 import Link from "next/link";
+import userData from "../../../assets/Data/userData.json"
 // SMART CONTRACT
 import { NFTMarketplaceContext } from "../../../../SmartContract/Context/NFTMarketplaceContext";
 
@@ -21,7 +22,11 @@ import { Button } from "../../../components/componentsIndex";
 import { ProductTabs } from "../ProductDetailsIndex"
 
 const ProductDescription = ({ nft }) => {
-  const { currentAccount } = useContext(NFTMarketplaceContext);
+  const { currentAccount, accountMappingRef } = useContext(NFTMarketplaceContext);
+  console.log("All Connected accounts: ", accountMappingRef)
+  const userId = currentAccount ? currentAccount.userId : 1;
+  const user = userData[userId];
+  const userAddress = currentAccount ? currentAccount.address : user.walletAddress;
   const [social, setSocial] = useState(false);
   const [productMenu, setProductMenu] = useState(false);
   const [history, setHistory] = useState(false);
@@ -30,19 +35,20 @@ const ProductDescription = ({ nft }) => {
   const [activeTab, setActiveTab] = useState('creators history');
 
   const historyArray = [
-    images.user1,
-    images.user10,
-    images.user4,
-    images.user5
-  ]
+    { image: images.user3, name: 'John Doe', date: 'Jun 14 - 4:12 PM' },
+    { image: images.user10, name: 'Alice Smith', date: 'Jun 15 - 3:10 PM' },
+    { image: images.user4, name: 'Michael Brown', date: 'Jun 16 - 2:08 PM' },
+    { image: images.user5, name: 'Eva Green', date: 'Jun 17 - 1:06 PM' }
+  ];
+
   const provenanceArray = [
-    images.user6,
-    images.user7,
-    images.user3,
-    images.user2
-  ]
+    { image: images.user6, name: 'William Black', date: 'Jun 18 - 12:04 PM' },
+    { image: images.user7, name: 'Sophia White', date: 'Jun 19 - 11:02 AM' },
+    { image: images.user3, name: 'John Doe', date: 'Jun 20 - 10:00 AM' },
+    { image: images.user2, name: 'Emma Stone', date: 'Jun 21 - 9:58 AM' }
+  ];
   const OwnerArray = [
-    images.user1,
+    {image: images.user1,}
   ]
 
 
@@ -62,15 +68,18 @@ const ProductDescription = ({ nft }) => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'creators history':
-        return <ProductTabs dataTab={historyArray} />;
+        return <ProductTabs dataTab={historyArray} activeTab={activeTab} />;
       case 'provenance':
-        return <ProductTabs dataTab={provenanceArray} />;
+        return <ProductTabs dataTab={provenanceArray} activeTab={activeTab} />;
       case 'owner':
-        return <ProductTabs dataTab={OwnerArray} />;
+        return <ProductTabs dataTab={OwnerArray} activeTab={activeTab} />;
       default:
         return null;
     }
   }
+
+  // Smart Contract Data
+  // const { makeOffer, currentAccount } = useContext(NFTMarkplaceContext);
 
   return (
     <div className={Style.ProductDescription}>
@@ -124,12 +133,12 @@ const ProductDescription = ({ nft }) => {
           </div>
         </div>
         <div className={Style.ProductDescription_box_profile}>
-          <h1>{nft.name} #{nft.id}</h1>
+          <h1>{nft.name} #{nft.tokenId}</h1>
           <div className={Style.ProductDescription_box_profile_box}>
             <div className={Style.ProductDescription_box_profile_box_left}>
               <Image
                 className={Style.ProductDescription_box_profile_box_left_img}
-                src={images.user1}
+                src={images.user2}
                 alt='Profile'
                 width={40}
                 height={40}
@@ -174,38 +183,56 @@ const ProductDescription = ({ nft }) => {
                 <small>Swap With</small>
 
                 {/* TODO: using swap with category  */}
-                <p>
-                  1.000 ETH <span>( $3, 221.22)</span>
+                <p style={{ marginTop: "1.5rem" }}>
+                  {Array.isArray(nft.swapCategory) ? nft.swapCategory.join(", ") : nft.swapCategory}
                 </p>
               </div>
             </div>
 
             <div className={Style.ProductDescription_box_profile_bidding_box_button}>
-              {/* {currentAccount == nft.seller.toLowerCase() ? (
-                <p>
-                  Accept Offer
-                </p>
-              ) : currentAccount == nft.owner.toLowerCase() ? (
+              {currentAccount && currentAccount.address.toLowerCase() === nft.contractOwner.toLowerCase() ? (
+                <p>Item Listed on MarketPlace</p>
+              ) : currentAccount && currentAccount.address.toLowerCase() === nft.itemOwner.toLowerCase() ? (
                 <Button
                   icon={<FaWallet />}
                   btnName="List on Marketplace"
                   handleClick={() => { }}
                   classStyle={Style.button}
                 />
-              ) : (<Button
-                icon={<FaWallet />}
-                btnName="Buy NFT"
-                handleClick={() => { }}
-                classStyle={Style.button}
-              />)
-              } */}
+              ) : (
+                <Button
+                  icon={<FaWallet />}
+                  btnName="Make Offer"
+                  handleClick={() => makeOffer(nft)}
+                  classStyle={Style.button}
+                />
+              )}
+              {currentAccount && currentAccount.address.toLowerCase() === nft.contractOwner.toLowerCase() ? (
+                <p>Item Listed on MarketPlace</p>
+              ) : currentAccount && currentAccount.address.toLowerCase() === nft.itemOwner.toLowerCase() ? (
+                <Button
+                  icon={<FaWallet />}
+                  btnName="List on Marketplace"
+                  handleClick={() => { }}
+                  classStyle={Style.button}
+                />
+              ) : (
+                <Button
+                  icon={<FaWallet />}
+                  btnName="Make Offer"
+                  handleClick={() => makeOffer(nft)}
+                  classStyle={Style.button}
+                />
+              )}
 
-              <Button
+
+              {/* <Button
                 icon={<FaPercentage />}
                 btnName="Make Offer"
                 handleClick={() => { }}
                 classStyle={Style.button}
-              />
+              /> */}
+
             </div>
 
             <div className={Style.ProductDescription_box_profile_bidding_box_tabs}>

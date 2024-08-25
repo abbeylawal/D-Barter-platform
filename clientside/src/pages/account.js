@@ -7,8 +7,14 @@ import { useDropzone } from "react-dropzone";
 import images from "../assets/img";
 
 import ProfileForm from "./AccountPage/ProfileForm/ProfileForm";
+import userData from "../assets/Data/userData.json"
+import { NFTMarketplaceContext } from "../../SmartContract/Context/NFTMarketplaceContext";
+
 
 const account = () => {
+    const { currentAccount } = useContext(NFTMarketplaceContext);
+    const userId = currentAccount ? currentAccount.userId : 1;
+    const user = userData[userId];
   const [fileUrl, setFileUrl] = useState(null);
 
   const onDrop = useCallback(async (acceptedFile) => {
@@ -31,7 +37,7 @@ const account = () => {
         <div className={Style.account_box_img} {...getRootProps()}>
           <input {...getInputProps()} />
           <Image
-            src={images.user1}
+            src={user.userImage}
             alt="account upload"
             width={150}
             height={150}

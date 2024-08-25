@@ -82,6 +82,7 @@ const AuthForm = ({ isLogin }) => {
                     <button type="submit" className={Style.registerButton}>Register</button>
                 )}
                 {isLogin && <button className={Style.forgotPassword}>Forgot password</button>}
+                <br/>
             </div>
         </form>
     );

@@ -5,7 +5,11 @@
 /.pnp
 .pnp.js
 .idea/
-
+/issues/
+backend/
+frontend/
+artifacts/
+cache/
 
 
 
