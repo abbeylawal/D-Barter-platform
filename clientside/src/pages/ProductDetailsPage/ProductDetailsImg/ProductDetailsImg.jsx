@@ -11,10 +11,12 @@ const ProductDetailsImg = ({ nft }) => {
     const [description, setDescription] = useState(false);
     const [details, setDetails] = useState(true);
     const [like, setLike] = useState(false);
+    const [likes, setLikes] = useState(nft.likes || Math.floor(Math.random() * 501) + 1);
     const imageSrc = nft.image || images[`NFT_image_${nft.tokenId}`];
 
     const likeNFT = () => {
         setLike(!like);
+        setLikes(prevLikes => like ? prevLikes - 1 : prevLikes + 1);
     };
 
     const openDescription = () => {
@@ -31,15 +33,15 @@ const ProductDetailsImg = ({ nft }) => {
                 <div className={Style.ProductDetailsImg_box_NFT}>
                     <div className={Style.ProductDetailsImg_box_NFT_like}>
                         <BsImages className={Style.like_icon} />
-                        <p onClick={likeNFT}>
+                        <p onClick={likeNFT} style={{ cursor: 'pointer' }}>
                             {
                                 like ? (
-                                    <AiFillHeart className={Style.like_icon} />
+                                    <AiFillHeart className={Style.like_icon} style={{ color: 'red' }} />
                                 ) : (
                                     <AiOutlineHeart className={Style.like_icon} />
                                 )
                             }
-                            <span>23</span>
+                            <span> {likes} </span>
                         </p>
                     </div>
 
