@@ -3,6 +3,7 @@ import Style from './MainSection.module.css';
 import Image from 'next/image';
 import { Button } from "../componentsIndex";
 import images from "../../assets/img";
+import Link  from "next/link";
 import { NFTMarketplaceContext } from "../../../SmartContract/Context/NFTMarketplaceContext";
 
 const MainContent = () => {
@@ -35,7 +36,9 @@ const MainContent = () => {
                     {/* A button to start search or any other primary action */}
                     <div className={Style.mainsection_box_left_btn_box} >
                     <Button btnName="Explore" handleClick={changeImage} />
-                    <Button btnName="Start your search" handleClick={changeImage} />
+                    <Link href="/searchPage">
+                      <Button btnName="Start your search" handleClick={() => {}} />
+                    </Link>
                     </div>
                 </div>
                 <div className={Style.mainsection_box_right}>
