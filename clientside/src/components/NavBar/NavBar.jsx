@@ -10,6 +10,7 @@ import Style from './NavBar.module.css';
 import { Discover, HelpCenter, ToggleTheme, Notification, Profile, SideBar } from './index';
 import { Button, Error } from "../componentsIndex";
 import images from "../../assets/img";
+import users from "../../assets/Data/userData.json"
 
 
 import { NFTMarketplaceContext } from "../../../SmartContract/Context/NFTMarketplaceContext";
@@ -32,6 +33,10 @@ const NavBar = () => {
 
     // Smart Contract Section
     const { currentAccount, connectWallet, openError } = useContext(NFTMarketplaceContext);
+
+   // Ensure currentAccount exists and has userId
+    const userId = currentAccount ? currentAccount.userId : 1;
+    const user = users[userId]
 
     return (
         <div className={Style.navbar}>
@@ -121,7 +126,8 @@ const NavBar = () => {
                     >
                         <div className={Style.navbar_container_right_profile}>
                             <Image
-                                src={images.user1}
+                                // src={images[`user${userId}`]}
+                                src={user.userImage}
                                 alt="Profile"
                                 width={40}
                                 height={40}
