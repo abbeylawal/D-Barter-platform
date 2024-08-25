@@ -1,20 +1,6 @@
 [
     {
         "userId": 1,
-        "creatorName": "Muftau Lawal",
-        "gender": "Male",
-        "userName": "muftau_lawal",
-        "email": "muftau@example.com",
-        "bio": "Digital artist and NFT enthusiast.",
-        "Website": "https://muftauart.com",
-        "Facebook": "https://facebook.com/muftaulawal",
-        "Twitter": "https://twitter.com/muftaulawal",
-        "Instagram": "https://instagram.com/muftaulawal",
-        "walletAddress": "0x1234567890abc...",
-        "userImage": "https://yudiz.com/codepen/nft-store/user-pic3.svg"
-    },
-    {
-        "userId": 2,
         "creatorName": "Aisha Bello",
         "gender": "Female",
         "userName": "aisha_bello",
@@ -26,6 +12,20 @@
         "Instagram": "https://instagram.com/aishabello",
         "walletAddress": "0xabcdef1234567...",
         "userImage": "https://yudiz.com/codepen/nft-store/user-pic1.svg"
+    },
+    {
+        "userId": 2,
+        "creatorName": "Muftau Lawal",
+        "gender": "Male",
+        "userName": "muftau_lawal",
+        "email": "muftau@example.com",
+        "bio": "Digital artist and NFT enthusiast.",
+        "Website": "https://muftauart.com",
+        "Facebook": "https://facebook.com/muftaulawal",
+        "Twitter": "https://twitter.com/muftaulawal",
+        "Instagram": "https://instagram.com/muftaulawal",
+        "walletAddress": "0x1234567890abc...",
+        "userImage": "https://yudiz.com/codepen/nft-store/user-pic3.svg"
     },
     {
         "userId": 3,
