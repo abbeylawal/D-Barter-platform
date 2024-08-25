@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { HiOutlineMail } from "react-icons/hi";
 import { MdOutlineHttp, MdOutlineContentCopy } from 'react-icons/md';
 import { TiSocialFacebook, TiSocialTwitter, TiSocialInstagram } from "react-icons/ti";
 import { Button } from "../../../components/componentsIndex";
 
 import Style from "./ProfileForm.module.css";
+import userData from "../../../assets/Data/userData.json";
+import { NFTMarketplaceContext } from "../../../../SmartContract/Context/NFTMarketplaceContext";
 
 const ProfileForm = () => {
+    const { currentAccount } = useContext(NFTMarketplaceContext);
+    const userId = currentAccount ? currentAccount.userId : 1;
+
     const [formData, setFormData] = useState({
-        username: 'Mofijoe',
-        email: 'mofijoe@mymail.com',
-        bio: 'Product Creator and eth',
+        username: '',
+        email: '',
+        bio: '',
         website: '',
         facebook: '',
         twitter: '',
@@ -19,6 +24,21 @@ const ProfileForm = () => {
     });
 
     const [isEditable, setIsEditable] = useState(false);
+
+    // Dynamically update formData when userId changes
+    useEffect(() => {
+        const user = userData[userId];
+        setFormData({
+            username: user.userName,
+            email: user.email,
+            bio: user.bio,
+            website: user.Website || '',
+            facebook: user.Facebook || '',
+            twitter: user.Twitter || '',
+            instagram: user.Instagram || '',
+            wallet: currentAccount ? currentAccount.address : ''
+        });
+    }, [userId, currentAccount]);
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -32,7 +52,7 @@ const ProfileForm = () => {
         if (isEditable) {
             // Save the form data to a JSON file
             const filePath = '/assets/Data/nft-profile.json';
-            fs.writeFileSync(filePath, JSON.stringify(formData, null, 2));
+            // fs.writeFileSync(filePath, JSON.stringify(formData, null, 2));
             console.log("Profile data saved:", formData);
 
             // Show a success message (optional)
