@@ -85,14 +85,7 @@ const NFTCard = ({ initialCardArray }) => {
                                     <div className={styles.NFTCard_box_update_details_price_box_box}>
                                         <div className={styles.NFTCard_box_update_details_price_box_bid}>
                                             <small>Category</small>
-                                            <p>{card.Category}</p>
-                                            {/* <ul>
-                                                {card.swapCategory?.map((item, index) => (
-                                                    <li key={index}>
-                                                        {item}
-                                                    </li>
-                                                ))}
-                                            </ul> */}
+                                            <p>{card.category || card.Category}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -134,7 +127,7 @@ NFTCard.defaultProps = {
             stock: 51,
             likes: 22,
             remainingTime: "3h: 15m",
-            Category: "Computer",
+           category: "Computer",
             swapCategory: ["Computer"],
             liked: false
         },
@@ -146,7 +139,7 @@ NFTCard.defaultProps = {
             stock: 37,
             likes: 18,
             remainingTime: "5h: 30m",
-            Category: "Fashion",
+           category: "Fashion",
             swapCategory: ["Fashion"],
             liked: false
         },
@@ -158,7 +151,7 @@ NFTCard.defaultProps = {
             stock: 25,
             likes: 30,
             remainingTime: "2h: 45m",
-            Category: "Fashion",
+           category: "Fashion",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
@@ -170,7 +163,7 @@ NFTCard.defaultProps = {
             stock: 25,
             likes: 30,
             remainingTime: "2h: 45m",
-            Category: "Mobile",
+           category: "Mobile",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
@@ -182,7 +175,7 @@ NFTCard.defaultProps = {
             stock: 25,
             likes: 30,
             remainingTime: "4h: 45m",
-            Category: "Fashion",
+           category: "Fashion",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
@@ -194,7 +187,7 @@ NFTCard.defaultProps = {
             stock: 25,
             likes: 30,
             remainingTime: "6h: 45m",
-            Category: "Fashion",
+           category: "Fashion",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
@@ -206,7 +199,7 @@ NFTCard.defaultProps = {
             stock: 25,
             likes: 30,
             remainingTime: "6h: 45m",
-            Category: "Fashion",
+           category: "Fashion",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
@@ -218,7 +211,7 @@ NFTCard.defaultProps = {
             stock: 25,
             likes: 30,
             remainingTime: "6h: 45m",
-            Category: "Art",
+           category: "Art",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
@@ -229,7 +222,7 @@ NFTCard.defaultProps = {
             stock: 25,
             likes: 30,
             remainingTime: "6h: 45m",
-            Category: "Art",
+           category: "Art",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
