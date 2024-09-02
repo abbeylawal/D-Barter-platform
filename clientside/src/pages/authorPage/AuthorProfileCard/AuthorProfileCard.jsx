@@ -12,13 +12,13 @@ import users from "../../../assets/Data/userData.json";
 
 import { NFTMarketplaceContext } from "../../../../SmartContract/Context/NFTMarketplaceContext";
 
-const AuthorProfileCard = () => {
+const AuthorProfileCard = ({ walletAddress, creatorId }) => {
 
     const { currentAccount } = useContext(NFTMarketplaceContext);
 
-    const userId = currentAccount ? currentAccount.userId : 1;
-    const user = users[userId]
-    const userAddress = currentAccount ? currentAccount.address : user.walletAddress;
+    const userId = creatorId || (currentAccount ? currentAccount.userId : 1);
+    const user = users[userId];
+    const userAddress = walletAddress || (currentAccount ? currentAccount.address : user.walletAddress);
 
     const shortenedAddress = `${userAddress.slice(0, 6)}....${userAddress.slice(-3)}`;
     const [share, setShare] = useState(false);
@@ -55,8 +55,8 @@ const AuthorProfileCard = () => {
                 </div>
 
                 <div className={Style.AuthorProfileCard_box_info}>
-                    <h2>{user.creatorName} {""}{" "}
-                        <span>
+                    <h2>{user.creatorName} {" "}{" "}
+                        <span>{" "}
                             <MdVerified />
                         </span>{" "}
                     </h2>
