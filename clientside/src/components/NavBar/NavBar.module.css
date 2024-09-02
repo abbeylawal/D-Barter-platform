@@ -118,6 +118,13 @@
     margin-right: 20px;
 }
 
+.notification_box_new{
+    width: .5rem;
+    height: .5rem;
+    border-radius: 50%;
+    background-color: aqua;
+}
+
 .navbar_container_right_toggle {
     position: relative;
     cursor: pointer;
