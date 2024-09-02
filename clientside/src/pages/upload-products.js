@@ -18,10 +18,9 @@ const upload_products = () => {
             </p>
         </div>
         <div className={Style.uploadProducts_box_title}>
-          {/* <h2>Image, Video, Audio, or 3D Model </h2> */}
           <p> 
-            File types supported: JPG, PNG, GIF
-            Max size: 100 MB
+            File types supported: JPG, PNG, WEBP, GIF
+            Max size: 20 MB
           </p>
         </div>
         <div className={Style.uploadProducts_box_form}>
