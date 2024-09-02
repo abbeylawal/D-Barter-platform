@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { BsImages } from 'react-icons/bs';
 import Image from "next/image";
@@ -7,29 +7,56 @@ import images from "../../assets/img";
 import Link from "next/link";
 import userData from "../../assets/Data/userData.json";
 
-const NFTCard = ({ initialCardArray }) => {
+const NFTCard = ({ initialCardArray, activeCategory }) => {
     const [cardArray, setCardArray] = useState(initialCardArray);
+    const [filteredCards, setFilteredCards] = useState([]);
+
+    useEffect(() => {
+        if (activeCategory === "All") {
+            setFilteredCards(cardArray);
+        } else {
+            const filtered = cardArray.filter(card =>
+                (card.category === activeCategory || card.Category === activeCategory) ||
+                (card.swapCategory && card.swapCategory.includes(activeCategory))
+            );
+            setFilteredCards(filtered);
+        }
+    }, [activeCategory, cardArray]);
+    
 
     const likeNft = (tokenId) => {
-        setCardArray(prevArray =>
-            prevArray.map(card =>
-                card.id ===tokenId
-                    ? { ...card, liked: !card.liked, likes: card.liked ? card.likes - 1 : card.likes + 1 }
+        setCardArray((prevArray) =>
+            prevArray.map((card) =>
+                card.tokenId === tokenId
+                    ? {
+                        ...card,
+                        liked: !card.liked,
+                        likes: card.liked ? card.likes - 1 : card.likes + 1,
+                    }
                     : card
             )
         );
     };
 
 
-        // Helper function to get user image by creatorId
-    const getUserImageById = (creatorId) => {
-        const user = userData.find(user => user.userId === creatorId);
+    const getUserImageById = (card) => {
+        let userId = 0;
+        if (card.creatorId) {
+            if (card.itemOwner) {
+                userId = card.creatorId;
+            } else {
+                userId = card.creatorId - 1;
+            }
+        } else if (card.userId) {
+            userId = card.userId;
+        }
+        const user = userData[userId] ? userData[userId] : null;
         return user ? user.userImage : images.user2;
     };
 
     return (
         <div className={styles.NFTCard}>
-            {cardArray.map((card, i) => (
+            {filteredCards.map((card, i) => (
                 <Link href={{ pathname: "/product-details", query: card }} key={i + 1}>
                     <div className={styles.NFTCard_box}>
                         <div className={styles.NFTCard_box_img}
@@ -57,7 +84,7 @@ const NFTCard = ({ initialCardArray }) => {
                                     className={styles.NFTCard_box_update_left_like}
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        likeNft(card.id);
+                                        likeNft(card.tokenId);
                                     }}
                                 >
                                     {card.liked ? (
@@ -69,18 +96,21 @@ const NFTCard = ({ initialCardArray }) => {
                                 </div>
                             </div>
 
-                            <div className={styles.NFTCard_box_update_right}>
-                                <div className={styles.NFTCard_box_update_right_info}>
-                                    <small>Duration</small>
-                                    <p>{card.remainingTime}</p>
+                            {card.remainingTime && (
+                                <div className={styles.NFTCard_box_update_right}>
+                                    <div className={styles.NFTCard_box_update_right_info}>
+                                        <small>Duration</small>
+                                        <p>{card.remainingTime}</p>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
 
                         <div className={styles.NFTCard_box_update_details}>
                             <div className={styles.NFTCard_box_update_details_price}>
                                 <div className={styles.NFTCard_box_update_details_price_box}>
-                                    <h4>{card.name}</h4>
+                                    <h4>{card.name.length > 10 ? `${card.name.slice(0, 10)}...` : card.name}</h4>
+
 
                                     <div className={styles.NFTCard_box_update_details_price_box_box}>
                                         <div className={styles.NFTCard_box_update_details_price_box_bid}>
@@ -93,7 +123,7 @@ const NFTCard = ({ initialCardArray }) => {
 
                             <div className={`${styles.NFTCard_box_update_details_category} hover-scale-image`}>
                                 <Image
-                                    src={getUserImageById(card.creatorId)}
+                                    src={getUserImageById(card)}
                                     alt="User Image"
                                     width={50}
                                     height={50}
@@ -119,110 +149,120 @@ const NFTCard = ({ initialCardArray }) => {
 NFTCard.defaultProps = {
     initialCardArray: [
         {
-           tokenId: 1,
+            tokenId: 1,
             image: images.NFT_image_1,
             name: "MacBook",
             description: "MacBook Pro",
             creatorId: 2,
+            creatorWallet: "0x1234567890abc...",
             stock: 51,
             likes: 22,
             remainingTime: "3h: 15m",
-           category: "Computer",
+            category: "Computer",
             swapCategory: ["Computer"],
             liked: false
         },
         {
-           tokenId: 2,
+            tokenId: 2,
             image: images.NFT_image_2,
             name: "Dream Headset",
             creatorId: 1,
+            creatorWallet: "0x1234567890abc...",
             stock: 37,
             likes: 18,
             remainingTime: "5h: 30m",
-           category: "Fashion",
+            category: "Fashion",
             swapCategory: ["Fashion"],
             liked: false
         },
         {
-           tokenId: 3,
+            tokenId: 3,
             image: images.NFT_image_3,
             name: "Nike Air",
             creatorId: 3,
+            creatorWallet: "0x1234567890abc...",
             stock: 25,
             likes: 30,
             remainingTime: "2h: 45m",
-           category: "Fashion",
+            category: "Fashion",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
         {
-           tokenId: 4,
+            tokenId: 4,
             image: images.NFT_image_4,
             name: "IphoneX",
             creatorId: 2,
+            creatorWallet: "0x1234567890abc...",
             stock: 25,
             likes: 30,
             remainingTime: "2h: 45m",
-           category: "Mobile",
+            category: "Mobile",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
         {
-           tokenId: 5,
+            tokenId: 5,
             image: images.NFT_image_5,
             name: "Hoodies",
             creatorId: 5,
+            creatorWallet: "0x1234567890abc...",
             stock: 25,
             likes: 30,
             remainingTime: "4h: 45m",
-           category: "Fashion",
+            category: "Fashion",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
         {
-           tokenId: 6,
+            tokenId: 6,
             image: images.NFT_image_6,
             name: "jacket",
             creatorId: 4,
+            creatorWallet: "0x1234567890abc...",
             stock: 25,
             likes: 30,
             remainingTime: "6h: 45m",
-           category: "Fashion",
+            category: "Fashion",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
         {
-           tokenId: 7,
+            tokenId: 7,
             image: images.NFT_image_7,
             name: "Classic Hills",
             // creatorId: 1,
+            creatorWallet: "0x1234567890abc...",
             stock: 25,
-            likes: 30,
+            likes: 45,
             remainingTime: "6h: 45m",
-           category: "Fashion",
+            category: "Fashion",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
         {
-           tokenId: 8,
+            tokenId: 8,
             image: images.NFT_image_8,
             name: "Abstract",
-            creatorId: 1,
+            creatorId: 4,
+            creatorWallet: "0x1234567890abc...",
             stock: 25,
-            likes: 30,
+            likes: 28,
             remainingTime: "6h: 45m",
-           category: "Art",
+            category: "Art",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
         {
-           tokenId: 9,
+            tokenId: 9,
             image: images.NFT_image_9,
             name: "Glow Dress",
+            creatorId: 1,
+            creatorWallet: "0x1234567890abc...",
             stock: 25,
-            likes: 30,
+            likes: 12,
             remainingTime: "6h: 45m",
-           category: "Art",
+            category: "Art",
             swapCategory: ["Art", "Fashion", "Gadget"],
             liked: false
         },
