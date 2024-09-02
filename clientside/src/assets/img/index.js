@@ -42,6 +42,7 @@ import vector from "./VectorHIW.svg";
 import zgcmq from "./zgcmq.svg";
 // import hero from "./hero.png";
 import hero from "./hero2.webp";
+import no_profile from "./no_profile.png";
 import nft_1 from "./nft_1.png";
 import getAble from "./getable.png";
 import nft_image_1 from "./nft-image-1.png";
@@ -109,6 +110,7 @@ export default {
   creatorbackground9,
   creatorbackground10,
   creatorbackground11,
+  no_profile,
   user1,
   user2,
   user3,
