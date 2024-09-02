@@ -92,7 +92,7 @@ const ProductDetailsImg = ({ nft }) => {
                             <p>
                                 <small>Contact Address</small>
                                 <br />
-                                {nft.owner}
+                                {nft.itemOwner || nft.creatorWallet}
                             </p>
                             <p>
                                 <small>Token ID</small>{" "}
