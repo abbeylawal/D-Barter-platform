@@ -14,6 +14,7 @@ const product_details = () => {
   const [nft, setNft] = useState({
     image: "",
     tokenId: "",
+    listingId: "",
     name: "",
     contractOwner: "",
     itemOwner: "",
