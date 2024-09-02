@@ -22,7 +22,7 @@
 .upload_box_slider_box {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .upload_box_slider_box_group {

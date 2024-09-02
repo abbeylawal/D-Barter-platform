@@ -8,7 +8,6 @@ const ProductDetailsPage = ({nft}) => {
             <div className={Style.ProductDetailsPage_box}>
                 <ProductDetailsImg nft={nft} />
                 <ProductDescription nft={nft} />
-
             </div>
         </div>
     )

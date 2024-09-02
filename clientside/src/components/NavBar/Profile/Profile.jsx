@@ -1,4 +1,4 @@
-import React , {useContext} from 'react';
+import React, { useContext } from 'react';
 import Image from 'next/image';
 import { MdHelpCenter } from 'react-icons/md';
 import { TbDownloadOff, TbDownload } from 'react-icons/tb';
@@ -13,13 +13,19 @@ import users from '../../../assets/Data/userData.json';
 import { NFTMarketplaceContext } from "../../../../SmartContract/Context/NFTMarketplaceContext";
 
 const Profile = () => {
-    const { currentAccount } = useContext(NFTMarketplaceContext);
+    const { currentAccount, disconnectWallet } = useContext(NFTMarketplaceContext);
 
     const userId = currentAccount ? currentAccount.userId : 1;
     const user = users[userId]
     const userAddress = currentAccount ? currentAccount.address : user.walletAddress;
 
     const shortenedAddress = `${userAddress.slice(0, 6)}....${userAddress.slice(-3)}`;
+
+    const handleDisconnect = (e) => {
+        e.preventDefault();
+        disconnectWallet();
+    };
+
 
     return (
         <div className={Style.profile}>
@@ -51,7 +57,13 @@ const Profile = () => {
                     <div className={Style.profile_menu_one_item}>
                         <FaRegImage />
                         <p>
-                            <Link href={{ pathname: '/author', query: { tab: 'owned' } }}>My Items</Link>
+                            <Link href={{
+                                pathname: '/author',
+                                query: {
+                                    tab: 'owned',
+                                    walletAddress: userAddress,
+                                }
+                            }}>My Items</Link>
                         </p>
                     </div>
                 </div>
@@ -67,7 +79,8 @@ const Profile = () => {
                     <div className={Style.profile_menu_one_item}>
                         <TbDownload />
                         <p>
-                            <Link href={{ pathname: "/disconnect" }} > Disconnect</Link>
+                            {/* <Link href={{ pathname: "/disconnect" }} > Disconnect</Link> */}
+                            <a href="#" onClick={handleDisconnect}>Disconnect</a>
                         </p>
                     </div>
                 </div>

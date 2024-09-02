@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
@@ -25,7 +25,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
   const titleCover =
     "Barter Easy is a platform that simplifies bartering through smart contracts. By using blockchain, it ensures secure, transparent, and automated trades without intermediaries. Whether for digital or physical items, Barter Easy offers a user-friendly interface for seamless and trustworthy transactions.";
 
-  // const [accountsMapping, setAccountsMapping] = useState({});
   const accountsMappingRef = useRef({});
   const [currentAccount, setCurrentAccount] = useState(null);
   const [userId, setUserId] = useState(null);
@@ -34,17 +33,23 @@ export const NFTMarketplaceProvider = ({ children }) => {
 
   const router = useRouter();
   useEffect(() => {
-    // Load the accounts mapping from localStorage when the component mounts
-    const storedMapping = localStorage.getItem('accountsMapping');
+    // Load accounts mapping from localStorage when component mounts
+    const storedMapping = localStorage.getItem("accountsMapping");
     if (storedMapping) {
       accountsMappingRef.current = JSON.parse(storedMapping);
     }
+
+    // // Uncomment the following line to reset accountsMapping in localStorage to an empty object
+    // accountsMappingRef.current = {};
+    // localStorage.setItem('accountsMapping', JSON.stringify(accountsMappingRef.current));
   }, []);
 
   const saveAccountsMapping = () => {
-    localStorage.setItem('accountsMapping', JSON.stringify(accountsMappingRef.current));
+    localStorage.setItem(
+      "accountsMapping",
+      JSON.stringify(accountsMappingRef.current)
+    );
   };
-
 
   const connectSmartContract = async () => {
     try {
@@ -78,32 +83,33 @@ export const NFTMarketplaceProvider = ({ children }) => {
     }
   };
 
-const checkWalletConnection = async () => {
-  try {
-    if (!window.ethereum) {
-      setOpenError(true);
-      setError("Please install MetaMask");
-      return;
-    }
+  const checkWalletConnection = async () => {
+    try {
+      if (!window.ethereum) {
+        setError("Please install MetaMask to connect your wallet.");
+        setOpenError(true);
+        window.open("https://metamask.io/download.html", "_blank");
+        return;
+      }
 
-    const accounts = await window.ethereum.request({
-      method: "eth_accounts",
-    });
-
-    console.log("Connected accounts:", accounts);
-
-    if (accounts.length > 0) {
-      // Update accountsMapping only for new accounts
-      accounts.forEach((account, index) => {
-        const lowerCaseAccount = account.toLowerCase();
-        if (!accountsMappingRef.current[lowerCaseAccount]) {
-          accountsMappingRef.current[lowerCaseAccount] = `${
-            Object.keys(accountsMappingRef.current).length + 1
-          }`;
-        }
+      const accounts = await window.ethereum.request({
+        method: "eth_accounts",
       });
 
-        saveAccountsMapping();  // Save the updated mapping to localStorage
+      console.log("Connected accounts:", accounts);
+
+      if (accounts.length > 0) {
+        // Update accountsMapping only for new accounts
+        accounts.forEach((account, index) => {
+          const lowerCaseAccount = account.toLowerCase();
+          if (!accountsMappingRef.current[lowerCaseAccount]) {
+            accountsMappingRef.current[lowerCaseAccount] = `${
+              Object.keys(accountsMappingRef.current).length + 1
+            }`;
+          }
+        });
+
+        saveAccountsMapping(); // Save the updated mapping to localStorage
 
         console.log("Current accounts mapping:", accountsMappingRef.current);
 
@@ -120,6 +126,7 @@ const checkWalletConnection = async () => {
               userId: accountsMappingRef.current[activeAddress],
             };
             setCurrentAccount(newCurrentAccount);
+            setUserId(newCurrentAccount.userId);
             console.log("Current account:", newCurrentAccount);
             return newCurrentAccount;
           } else {
@@ -127,7 +134,7 @@ const checkWalletConnection = async () => {
               Object.keys(accountsMappingRef.current).length + 1
             }`;
             accountsMappingRef.current[activeAddress] = newUserId;
-            saveAccountsMapping();  // Save the updated mapping to localStorage
+            saveAccountsMapping(); // Save the updated mapping to localStorage
             const newCurrentAccount = {
               address: activeAddress,
               userId: newUserId,
@@ -136,7 +143,6 @@ const checkWalletConnection = async () => {
             console.log("Current account:", newCurrentAccount);
             return newCurrentAccount;
           }
-
         } catch (error) {
           console.error("Error fetching active signer:", error);
         }
@@ -164,41 +170,54 @@ const checkWalletConnection = async () => {
 
     initializeWallet();
 
-  // Set up event listener for account changes
-  if (window.ethereum) {
-    window.ethereum.on("accountsChanged", async () => {
-      const account = await checkWalletConnection();
-      if (account) {
-        setUserId(account.userId);
-      } else {
-        setUserId(null);
-      }
-    });
-  }
-
-  // Cleanup function
-  return () => {
+    // Set up event listener for account changes
     if (window.ethereum) {
-      window.ethereum.removeListener("accountsChanged", checkWalletConnection);
-    }
-  };
-}, []);
-
-
-  const connectWallet = async () => {
-    try {
-      if (!window.ethereum) return console.log("Please install MetaMask");
-
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
+      window.ethereum.on("accountsChanged", async () => {
+        const account = await checkWalletConnection();
+        if (account) {
+          setUserId(account.userId);
+        } else {
+          setUserId(null);
+        }
       });
-      setCurrentAccount(accounts[0]);
-    } catch (error) {
-      setOpenError(true), setError("Error while connecting to wallet!!!");
     }
-  };
 
-  
+    // Cleanup function
+    return () => {
+      if (window.ethereum) {
+        window.ethereum.removeListener(
+          "accountsChanged",
+          checkWalletConnection
+        );
+      }
+    };
+  }, []);
+
+const connectWallet = async () => {
+  try {
+    if (!window.ethereum) {
+      window.open("https://metamask.io/download.html", "_blank");
+      return console.log("Please install MetaMask");
+    }
+
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    setCurrentAccount(accounts[0]);
+  } catch (error) {
+    setOpenError(true);
+    setError("Error while connecting to wallet!!!");
+  }
+};
+
+  const disconnectWallet = async () => {
+    setCurrentAccount("");
+    
+    console.log("logoff successfully");
+    
+    // Redirect to home page or login page
+    router.push("/");
+  };
 
   const uploadToIPFS = async (file) => {
     if (!file) {
@@ -320,83 +339,80 @@ const checkWalletConnection = async () => {
       setOpenError(true);
     }
   };
-  
+
   // ---- FetchNFTs ----
-const fetchNFTs = async () => {
-  try {
-    const contract = await connectSmartContract();
-    console.log("Contract connected successfully");
-    const data = await contract.fetchAllListings();
-    console.log("Fetched listings data:", data);
-    if (!Array.isArray(data) || data.length === 0) {
-      console.log("No listings found or data is not in expected format");
-      return [];
+  const fetchNFTs = async () => {
+    try {
+      const contract = await connectSmartContract();
+      console.log("Contract connected successfully");
+      const data = await contract.fetchAllListings();
+      console.log("Fetched listings data:", data);
+      if (!Array.isArray(data) || data.length === 0) {
+        console.log("No listings found or data is not in expected format");
+        return [];
+      }
+
+      console.log(`Processing ${data.length} listings...`);
+      const items = await Promise.all(
+        data.map(async (i, index) => {
+          try {
+            console.log(`Processing listing ${index + 1}/${data.length}`);
+            console.log("Listing data:", i);
+
+            // if tokenId is a BigNumber and convert it to a regular number
+            const tokenId = i.tokenId.toNumber
+              ? i.tokenId.toNumber()
+              : Number(i.tokenId);
+
+            const tokenURI = await contract.tokenURI(tokenId);
+            console.log(`TokenURI for tokenId ${tokenId}:`, tokenURI);
+
+            const meta = await axios.get(tokenURI);
+            console.log(`Metadata for tokenId ${tokenId}:`, meta.data);
+
+            // Retrieve the creatorId from the accountsMappingRef based on the itemOwner
+            const normalizedOwner = i.itemOwner.toLowerCase();
+            const creatorId = accountsMappingRef.current[normalizedOwner] || 0;
+
+            const randomLikes = Math.floor(Math.random() * 501);
+
+            let item = {
+              listingId: i.listingId.toNumber
+                ? i.listingId.toNumber()
+                : Number(i.listingId),
+              tokenId: tokenId,
+              expirationTime: i.expirationTime.toNumber
+                ? i.expirationTime.toNumber()
+                : Number(i.expirationTime),
+              isActive: i.isActive,
+              name: meta.data.name,
+              creatorId: creatorId,
+              contractOwner: contract.target,
+              // userId: currentAccount.userId ? currentAccount.userId : 1,
+              itemOwner: i.itemOwner,
+              likes: randomLikes,
+              description: meta.data.description,
+              image: meta.data.image,
+              Category: meta.data.category,
+              swapCategory: meta.data.swapCategories,
+            };
+            console.log("Processed NFT:", item);
+            return item;
+          } catch (error) {
+            console.error(`Error processing listing ${index + 1}:`, error);
+            return null;
+          }
+        })
+      );
+
+      const validItems = items.filter((item) => item !== null);
+      console.log("Total valid NFTs processed:", validItems.length);
+      return validItems;
+    } catch (error) {
+      console.error("Error in fetchNFTs:", error);
+      throw error;
     }
-
-    console.log(`Processing ${data.length} listings...`);
-    const generateRandomLikes = () => {
-      // Generate a random number between 0 and 500 for likes
-      return Math.floor(Math.random() * 501);
-    };
-
-    const items = await Promise.all(
-      data.map(async (i, index) => {
-        try {
-          console.log(`Processing listing ${index + 1}/${data.length}`);
-          console.log("Listing data:", i);
-
-          // if tokenId is a BigNumber and convert it to a regular number
-          const tokenId = i.tokenId.toNumber
-            ? i.tokenId.toNumber()
-            : Number(i.tokenId);
-
-          const tokenURI = await contract.tokenURI(tokenId);
-          console.log(`TokenURI for tokenId ${tokenId}:`, tokenURI);
-
-          const meta = await axios.get(tokenURI);
-          console.log(`Metadata for tokenId ${tokenId}:`, meta.data);
-
-          const randomLikes = generateRandomLikes();
-
-          let item = {
-            listingId: i.listingId.toNumber
-              ? i.listingId.toNumber()
-              : Number(i.listingId),
-            tokenId: tokenId,
-            owner: i.owner,
-            expirationTime: i.expirationTime.toNumber
-              ? i.expirationTime.toNumber()
-              : Number(i.expirationTime),
-            isActive: i.isActive,
-            name: meta.data.name,
-            contractOwner: contract.target,
-            // itemOwner: i.itemOwner,
-            itemOwner: i.owner,
-            userId: currentAccount.userId ? currentAccount.userId: 1,
-            likes: randomLikes,
-            description: meta.data.description,
-            image: meta.data.image,
-
-            Category: meta.data.category,
-            swapCategory: meta.data.swapCategories,
-          };
-          console.log("Processed NFT:", item);
-          return item;
-        } catch (error) {
-          console.error(`Error processing listing ${index + 1}:`, error);
-          return null;
-        }
-      })
-    );
-
-    const validItems = items.filter((item) => item !== null);
-    console.log("Total valid NFTs processed:", validItems.length);
-    return validItems;
-  } catch (error) {
-    console.error("Error in fetchNFTs:", error);
-    throw error;
-  }
-};
+  };
 
   const fetchMyListings = async () => {
     try {
@@ -406,14 +422,22 @@ const fetchNFTs = async () => {
         data.map(async (i) => {
           const tokenURI = await contract.tokenURI(i.tokenId);
           const meta = await axios.get(tokenURI);
+
+          // Retrieve the creatorId from the accountsMappingRef based on the itemOwner
+          const normalizedOwner = i.itemOwner.toLowerCase();
+          const creatorId = accountsMappingRef.current[normalizedOwner] || 0;
+
           let item = {
             listingId: i.listingId.toNumber(),
             tokenId: i.tokenId.toNumber(),
-            owner: i.owner,
+            creatorId: creatorId,
+            owner: i.itemOwner,
+            itemOwner: i.itemOwner,
             expirationTime: i.expirationTime.toNumber(),
             isActive: i.isActive,
             name: meta.data.name,
             description: meta.data.description,
+            likes: randomLikes,
             image: meta.data.image,
             Category: meta.data.Category,
             swapCategory: meta.data.swapCategories,
@@ -427,42 +451,183 @@ const fetchNFTs = async () => {
     }
   };
 
-const fetchMyNFTs = async () => {
+  const fetchMyNFTs = async (walletAddress) => {
+    try {
+      const contract = await connectSmartContract();
+      console.log("Contract connected successfully");
+      const data = await contract.fetchMyNFTs(walletAddress);
+      console.log("Fetched MyNFTs data:", data);
+
+      if (!Array.isArray(data) || data.length === 0) {
+        console.log("No NFTs found or data is not in expected format");
+        return [];
+      }
+
+      console.log(`Processing ${data.length} NFTs...`);
+      const items = await Promise.all(
+        data.map(async (tokenId, index) => {
+          try {
+            console.log(`Processing NFT ${index + 1}/${data.length}`);
+            console.log("Token ID:", tokenId);
+
+            // Convert tokenId to a regular number if it's a BigNumber
+            const normalizedTokenId = tokenId.toNumber
+              ? tokenId.toNumber()
+              : Number(tokenId);
+
+            const tokenURI = await contract.tokenURI(normalizedTokenId);
+            console.log(`TokenURI for tokenId ${normalizedTokenId}:`, tokenURI);
+
+            const meta = await axios.get(tokenURI);
+            console.log(`Metadata for tokenId ${normalizedTokenId}:`, meta.data);
+
+            const itemOwner = await contract.ownerOf(normalizedTokenId);
+            const normalizedOwner = itemOwner.toLowerCase();
+            const normalizedWalletAddress = walletAddress.toLowerCase();
+
+            // Filter out NFTs that do not match the passed walletAddress
+            if (normalizedOwner !== normalizedWalletAddress) {
+              console.log(`Skipping NFT ${normalizedTokenId} as it does not belong to the wallet address ${walletAddress}`);
+              return null;
+            }
+
+            const creatorId =
+              accountsMappingRef.current[normalizedOwner] || 0;
+
+            const randomLikes = Math.floor(Math.random() * 501);
+
+            let item = {
+              tokenId: normalizedTokenId,
+              owner: itemOwner,
+              creatorId: creatorId,
+              contractOwner: contract.target,
+              itemOwner: itemOwner,
+              likes: randomLikes,
+              name: meta.data.name,
+              description: meta.data.description,
+              image: meta.data.image,
+              image: meta.data.image,
+              Category: meta.data.category,
+              swapCategory: meta.data.swapCategories,
+            };
+            console.log("MY NFTs:", item);
+            return item;
+          } catch (error) {
+            console.error(`Error processing NFT ${index + 1}:`, error);
+            return null;
+          }
+        })
+      );
+      
+      const validItems = items.filter((item) => item !== null);
+      console.log("Total valid NFTs processed:", validItems.length);
+      return validItems;
+    } catch (error) {
+      console.error("Error in fetchMyNFTs:", error);
+      throw error;
+    }
+  };
+  
+const fetchNFTByListingId = async (listingId) => {
   try {
     const contract = await connectSmartContract();
-    const data = await contract.fetchMyNFTs();
-    console.log("Raw data from fetchMyNFTs:", data);
+    console.log("Contract connected successfully");
 
-    if (!Array.isArray(data)) {
-      console.error("Data returned is not an array:", data);
-      return [];
+    if (!listingId) {
+      throw new Error("Invalid listing ID");
     }
 
-    const items = await Promise.all(
-      data.map(async (tokenId) => {
-        try {
-          const tokenURI = await contract.tokenURI(tokenId);
-          const meta = await axios.get(tokenURI);
-          return {
-            tokenId: tokenId.toString(),
-            owner: await contract.ownerOf(tokenId),
-            name: meta.data.name,
-            description: meta.data.description,
-            image: meta.data.image,
-          };
-        } catch (error) {
-          console.error(`Error processing token ${tokenId}:`, error);
-          return null;
-        }
-      })
-    );
+    // Ensure listingId is a number
+    const parsedListingId = BigInt(listingId); // Convert to BigInt for blockchain calls
+    const data = await contract.fetchNFTByListingId(parsedListingId);
+    console.log("Fetched NFT by ListingId:", data);
 
-    return items.filter((item) => item !== null);
+    if (!data) {
+      console.log("No data found for the given listing ID");
+      return null;
+    }
+
+    const [listing, tokenURI, owner] = data;
+    const meta = await axios.get(tokenURI);
+    console.log(`Metadata for listing ID ${listingId}:`, meta.data);
+
+    const creatorId = accountsMappingRef.current[owner.toLowerCase()] || 0;
+    const randomLikes = Math.floor(Math.random() * 501);
+
+    const item = {
+      tokenId: listing.tokenId,
+      owner: owner,
+      creatorId: creatorId,
+      contractOwner: contract.target,
+      itemOwner: owner,
+      likes: randomLikes,
+      name: meta.data.name,
+      description: meta.data.description,
+      image: meta.data.image,
+      category: meta.data.category,
+      swapCategory: meta.data.swapCategories,
+    };
+
+    console.log("NFT Details:", item);
+    return item;
   } catch (error) {
-    console.error("Error in fetchMyNFTs:", error);
-    throw error;
+    console.error("Error fetching NFT by Listing ID:", error);
+    return null;
   }
 };
+
+const fetchNFTByOfferId = async (offerId) => {
+  try {
+    const contract = await connectSmartContract();
+    console.log("Contract connected successfully");
+
+    if (!offerId) {
+      throw new Error("Invalid offer ID");
+    }
+
+    // Ensure offerId is a number
+    const parsedOfferId = BigInt(offerId); // Convert to BigInt for blockchain calls
+    const data = await contract.fetchNFTByOfferId(parsedOfferId);
+    console.log("Fetched NFT by OfferId:", data);
+
+    if (!data) {
+      console.log("No data found for the given offer ID");
+      return null;
+    }
+
+    const [offer, tokenURI, owner] = data;
+    const meta = await axios.get(tokenURI);
+    console.log(`Metadata for offer ID ${offerId}:`, meta.data);
+
+    const creatorId = accountsMappingRef.current[owner.toLowerCase()] || 0;
+    const randomLikes = Math.floor(Math.random() * 501);
+
+    const item = {
+      tokenId: offer.offerTokenId,
+      owner: owner,
+      creatorId: creatorId,
+      contractOwner: contract.target,
+      itemOwner: owner,
+      likes: randomLikes,
+      name: meta.data.name,
+      description: meta.data.description,
+      image: meta.data.image,
+      category: meta.data.category,
+      swapCategory: meta.data.swapCategories,
+    };
+
+    console.log("NFT Details:", item);
+    return item;
+  } catch (error) {
+    console.error("Error fetching NFT by Offer ID:", error);
+    return null;
+  }
+};
+
+
+//  const fetchAvailableNFTsForBarter = async (walletAddress) => {
+
+//  };
 
   const getBarterOffers = async (listingId) => {
     try {
@@ -488,98 +653,110 @@ const fetchMyNFTs = async () => {
     }
   };
 
-    const createBarterOffer = async (listingId, offerTokenId) => {
-      try {
-        const contract = await connectSmartContract();
-        const transaction = await contract.createBarterOffer(
-          listingId,
-          offerTokenId
-        );
-        await transaction.wait();
-        console.log("Barter offer created successfully");
-      } catch (error) {
-        console.error("Error creating barter offer:", error);
-        setOpenError(true);
-        setError("Error creating barter offer");
-      }
-    };
+const createBarterOffer = async (listingId) => {
+  try {
+    const contract = await connectSmartContract();
 
-    const acceptBarterOffer = async (listingId, offerId) => {
-      try {
-        const contract = await connectSmartContract();
-        const transaction = await contract.acceptBarterOffer(
-          listingId,
-          offerId
-        );
-        await transaction.wait();
-        console.log("Barter offer accepted successfully");
-      } catch (error) {
-        console.error("Error accepting barter offer:", error);
-        setOpenError(true);
-        setError("Error accepting barter offer");
-      }
-    };
+    // Create the barter offer on the contract
+    const transaction = await contract.createBarterOffer(listingId);
+    const receipt = await transaction.wait(); // Wait for the transaction to be mined
 
-    const confirmBarterTransaction = async (transactionId) => {
-      try {
-        const contract = await connectSmartContract();
-        const transaction = await contract.confirmBarterTransaction(
-          transactionId
-        );
-        await transaction.wait();
-        console.log("Barter transaction confirmed successfully");
-      } catch (error) {
-        console.error("Error confirming barter transaction:", error);
-        setOpenError(true);
-        setError("Error confirming barter transaction");
-      }
-    };
+    // Check if receipt and events are defined
+    if (!receipt || !receipt.events) {
+      throw new Error("No events found in the transaction receipt");
+    }
 
-    const cancelBarterTransaction = async (transactionId) => {
-      try {
-        const contract = await connectSmartContract();
-        const transaction = await contract.cancelBarterTransaction(
-          transactionId
-        );
-        await transaction.wait();
-        console.log("Barter transaction cancelled successfully");
-      } catch (error) {
-        console.error("Error cancelling barter transaction:", error);
-        setOpenError(true);
-        setError("Error cancelling barter transaction");
-      }
-    };
+    // Extract the offerId from the emitted event
+    const offerCreatedEvent = receipt.events.find(
+      (event) => event.event === "BarterOfferCreated"
+    );
 
-    const fetchMyTransactions = async () => {
-      try {
-        const contract = await connectSmartContract();
-        const transactions = await contract.fetchMyTransactions();
-        const items = await Promise.all(
-          transactions.map(async (t) => {
-            return {
-              transactionId: t.transactionId.toNumber(),
-              listingId: t.listingId.toNumber(),
-              offerId: t.offerId.toNumber(),
-              lister: t.lister,
-              offerer: t.offerer,
-              listerTokenId: t.listerTokenId.toNumber(),
-              offererTokenId: t.offererTokenId.toNumber(),
-              timestamp: new Date(
-                t.timestamp.toNumber() * 1000
-              ).toLocaleString(),
-              status: ["Pending", "Accepted", "Completed", "Cancelled"][
-                t.status
-              ],
-            };
-          })
-        );
-        return items;
-      } catch (error) {
-        console.error("Error fetching my transactions:", error);
-        setOpenError(true);
-        setError("Error fetching my transactions");
-      }
-    };
+    if (!offerCreatedEvent) {
+      throw new Error(
+        "BarterOfferCreated event not found in the transaction receipt"
+      );
+    }
+
+    const offerId = offerCreatedEvent.args.offerId;
+
+    console.log("Barter offer created successfully with offerId:", offerId);
+    return offerId; // Return the offerId
+  } catch (error) {
+    console.error("Error creating barter offer:", error);
+    setOpenError(true);
+    setError("Error creating barter offer");
+    return null;
+  }
+};
+
+
+  const acceptBarterOffer = async (listingId, offerId) => {
+    try {
+      const contract = await connectSmartContract();
+      const transaction = await contract.acceptBarterOffer(listingId, offerId);
+      await transaction.wait();
+      console.log("Barter offer accepted successfully");
+    } catch (error) {
+      console.error("Error accepting barter offer:", error);
+      setOpenError(true);
+      setError("Error accepting barter offer");
+    }
+  };
+
+  const confirmBarterTransaction = async (transactionId) => {
+    try {
+      const contract = await connectSmartContract();
+      const transaction = await contract.confirmBarterTransaction(
+        transactionId
+      );
+      await transaction.wait();
+      console.log("Barter transaction confirmed successfully");
+    } catch (error) {
+      console.error("Error confirming barter transaction:", error);
+      setOpenError(true);
+      setError("Error confirming barter transaction");
+    }
+  };
+
+  const cancelBarterTransaction = async (transactionId) => {
+    try {
+      const contract = await connectSmartContract();
+      const transaction = await contract.cancelBarterTransaction(transactionId);
+      await transaction.wait();
+      console.log("Barter transaction cancelled successfully");
+    } catch (error) {
+      console.error("Error cancelling barter transaction:", error);
+      setOpenError(true);
+      setError("Error cancelling barter transaction");
+    }
+  };
+
+  const fetchMyTransactions = async () => {
+    try {
+      const contract = await connectSmartContract();
+      const transactions = await contract.fetchMyTransactions();
+      const items = await Promise.all(
+        transactions.map(async (t) => {
+          return {
+            transactionId: t.transactionId.toNumber(),
+            listingId: t.listingId.toNumber(),
+            offerId: t.offerId.toNumber(),
+            lister: t.lister,
+            offerer: t.offerer,
+            listerTokenId: t.listerTokenId.toNumber(),
+            offererTokenId: t.offererTokenId.toNumber(),
+            timestamp: new Date(t.timestamp.toNumber() * 1000).toLocaleString(),
+            status: ["Pending", "Accepted", "Completed", "Cancelled"][t.status],
+          };
+        })
+      );
+      return items;
+    } catch (error) {
+      console.error("Error fetching my transactions:", error);
+      setOpenError(true);
+      setError("Error fetching my transactions");
+    }
+  };
 
   return (
     <NFTMarketplaceContext.Provider
@@ -593,11 +770,15 @@ const fetchMyNFTs = async () => {
         setOpenError,
         checkWalletConnection,
         connectWallet,
+        disconnectWallet,
         uploadToIPFS,
         createNFT,
         fetchNFTs,
         fetchMyListings,
+        fetchNFTByListingId,
+        fetchNFTByOfferId,
         fetchMyNFTs,
+        // fetchAvailableNFTsForBarter,
         getBarterOffers,
         createBarterOffer,
         acceptBarterOffer,

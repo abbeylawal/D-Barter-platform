@@ -1,0 +1,97 @@
+.offer-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+}
+
+.nft-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.nft-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nft-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.nft-name {
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.submitButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 3rem;
+    gap: 1rem;
+}
+
+
+.Form_box {
+
+    display: grid;
+    align-items: center;
+    background-color: var(--main-bg-color);
+    /* width: 100%; */
+    /* max-width: 600px; */
+    background: var(--main-bg-color);
+    /* border-radius: 10px; */
+    /* box-shadow: var(--box-shadow); */
+    padding: 20px;
+    justify-items: center;
+    justify-content: center;
+}
+
+.Form_box_input {
+    margin-top: 1rem;
+    /* display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px; */
+}
+
+.Form_box_input label {
+    display: block;
+    width: 100%;
+    font-weight: 700;
+    margin-left: 1rem;
+    font-size: 1.3rem;
+    /* color: var(--icons-color);
+    margin-bottom: 5px; */
+}
+
+.inputField {
+    position: relative;
+    display: flex;
+    outline: auto;
+    align-items: center;
+}
+
+
+@media (max-width: 640px) {
+  .nft-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}

@@ -8,13 +8,9 @@ module.exports = {
     hardhat: {
       chainId: 1337,
     },
-    // goerli: {
-    //   url: process.env.ALCHEMY_TESTNET_RPC_URL,
-    //   accounts: [process.env.TESTNET_PRIVATE_KEY]
-    // },
-    // sepolia: {
-    //   url: process.env.ALCHEMY_TESTNET_RPC_URL,
-    //   accounts: [process.env.TESTNET_PRIVATE_KEY],
-    // },
+    ganache: {
+      url: process.env.GANACHE_TESTNET_RPC_URL,
+      accounts: [process.env.GANACHE_PRIVATE_KEY]
+    },
   },
 };

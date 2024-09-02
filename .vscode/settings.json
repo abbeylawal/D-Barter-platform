@@ -1,5 +1,12 @@
 {
-  "cSpell.words": ["ipfs", "mainsection"],
+  "cSpell.words": [
+    "htlc",
+    "HTLC",
+    "ipfs",
+    "mainsection",
+    "nomicfoundation",
+    "sepolia"
+  ],
   "conventionalCommits.scopes": ["Smart contract"],
   "cSpell.ignoreWords": ["Lawal", "Muftau"]
 }

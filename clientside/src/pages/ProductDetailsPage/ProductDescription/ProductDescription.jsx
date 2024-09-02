@@ -7,12 +7,12 @@ import {
   TiSocialFacebook,
   TiSocialLinkedin,
   TiSocialTwitter,
-  TiSocialYoutube,
   TiSocialInstagram,
 } from "react-icons/ti";
 import { BiTransferAlt, BiDollar } from "react-icons/bi";
 import Link from "next/link";
-import userData from "../../../assets/Data/userData.json"
+import userData from "../../../assets/Data/userData.json";
+import {useRouter} from "next/router";
 // SMART CONTRACT
 import { NFTMarketplaceContext } from "../../../../SmartContract/Context/NFTMarketplaceContext";
 
@@ -22,10 +22,23 @@ import { Button } from "../../../components/componentsIndex";
 import { ProductTabs } from "../ProductDetailsIndex"
 
 const ProductDescription = ({ nft }) => {
-  const { currentAccount, accountMappingRef } = useContext(NFTMarketplaceContext);
-  console.log("All Connected accounts: ", accountMappingRef)
-  const userId = currentAccount ? currentAccount.userId : 1;
-  const user = userData[userId];
+  const { currentAccount, getBarterOffers, fetchAvailableNFTsForBarter } = useContext(NFTMarketplaceContext);
+
+  const router = useRouter();
+  let userId = 0;
+
+  if (nft.creatorId) {
+    if (nft.itemOwner) {
+      userId = nft.creatorId;
+    } else {
+      userId = nft.creatorId - 1;
+    }
+  } else if (nft.userId) {
+    userId = nft.userId;
+  }
+
+
+  const user = userData[userId] ? userData[userId] : null;
   const userAddress = currentAccount ? currentAccount.address : user.walletAddress;
   const [social, setSocial] = useState(false);
   const [productMenu, setProductMenu] = useState(false);
@@ -33,6 +46,25 @@ const ProductDescription = ({ nft }) => {
   const [provenance, setProvenance] = useState(false);
   const [owner, setOwner] = useState(false);
   const [activeTab, setActiveTab] = useState('creators history');
+  const [offerStatus, setOfferStatus] = useState(null);
+  const [countdown, setCountdown] = useState(null);
+  const [isAccepted, setIsAccepted] = useState(false);
+
+
+  const makeOffer = (nft) => {
+    const offerAddress = currentAccount.address;
+    const itemCreator = userId;
+
+    router.push({
+      pathname: "/offer_page",
+      query: {
+        offerAddress: offerAddress,
+        itemCreatorId: nft.CreatorId,
+        listingId: nft.listingId,
+        nftName: nft.name,
+      },
+    });
+  };
 
   const historyArray = [
     { image: images.user3, name: 'John Doe', date: 'Jun 14 - 4:12 PM' },
@@ -42,14 +74,19 @@ const ProductDescription = ({ nft }) => {
   ];
 
   const provenanceArray = [
-    { image: images.user6, name: 'William Black', date: 'Jun 18 - 12:04 PM' },
-    { image: images.user7, name: 'Sophia White', date: 'Jun 19 - 11:02 AM' },
-    { image: images.user3, name: 'John Doe', date: 'Jun 20 - 10:00 AM' },
-    { image: images.user2, name: 'Emma Stone', date: 'Jun 21 - 9:58 AM' }
+    {
+      image: user ? user.userImage : images.user2,
+      name: user ? user.userName : "Default User",
+      date: 'Aug 21 - 1:09 PM'
+    },
+    { image: images.user6, name: 'William Black', date: 'July 25 - 12:04 PM' },
+    { image: images.user7, name: 'Sophia White', date: 'July 13 - 11:02 AM' },
+    { image: images.user3, name: 'John Doe', date: 'Jun 28 - 10:00 AM' },
   ];
-  const OwnerArray = [
-    {image: images.user1,}
-  ]
+
+  const OwnerArray = user
+    ? [{ image: user.userImage }]
+    : [{ image: images.user2 }];
 
 
   const openSocial = () => {
@@ -78,8 +115,61 @@ const ProductDescription = ({ nft }) => {
     }
   }
 
-  // Smart Contract Data
-  // const { makeOffer, currentAccount } = useContext(NFTMarkplaceContext);
+  // useEffect(() => {
+  //   const fetchOfferStatus = async () => {
+  //     try {
+  //       console.log("---- fetch Offer Status ---")
+  //       const offers = await getBarterOffers(nft.tokenId);
+
+  //       console.log(offers)
+  //       if (offers.length > 0) {
+  //         const latestOffer = offers[offers.length - 1];
+  //         setOfferStatus(latestOffer);
+  //         setIsAccepted(latestOffer.isAccepted);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching barter offers:", error);
+  //     }
+  //   };
+
+  //   fetchOfferStatus();
+  // }, [nft.tokenId]);
+
+
+  const isOwner = currentAccount && nft.itemOwner &&
+    currentAccount.address.toLowerCase() === nft.itemOwner.toLowerCase();
+
+  const isContractOwner = currentAccount && nft.contractOwner &&
+    currentAccount.address.toLowerCase() === nft.contractOwner.toLowerCase();
+
+
+  const renderOfferButton = () => {
+    if (isContractOwner) {
+      return <p>Item Listed on MarketPlace</p>;
+    } else if (isOwner) {
+      return (
+        <>
+          <p style={{ lineHeight: 1, color: 'yellow' }}>Item Listed on MarketPlace!</p>
+          <Button
+            icon={<FaWallet />}
+            btnName="Awaiting Offer"
+            handleClick={() => { }}
+            classStyle={Style.button}
+          />
+        </>
+      );
+    } else {
+      return (
+        <Button
+          icon={<FaWallet />}
+          btnName="Make Offer"
+          handleClick={() => makeOffer(nft)}
+          classStyle={Style.button}
+        />
+      );
+    }
+  };
+
 
   return (
     <div className={Style.ProductDescription}>
@@ -138,17 +228,34 @@ const ProductDescription = ({ nft }) => {
             <div className={Style.ProductDescription_box_profile_box_left}>
               <Image
                 className={Style.ProductDescription_box_profile_box_left_img}
-                src={images.user2}
+                src={user.userImage}
                 alt='Profile'
                 width={40}
                 height={40}
               />
               <div className={Style.ProductDescription_box_profile_box_left_info}>
                 <small>Creator</small><br />
-                <Link href={{ pathname: "/author", query: `${nft.seller}` }} >
-                  <span> Muftau Lawal <MdVerified />
+                {currentAccount && currentAccount !== "" ? (
+                  <Link
+                    href={{
+                      pathname: "/author",
+                      query: {
+                        tab: "owned",
+                        walletAddress: nft.itemOwner || nft.walletAddress,
+                        creatorId: userId
+                      }
+                    }}
+                  >
+                    <span>
+                      {user.userName} <MdVerified />
+                    </span>
+                  </Link>
+                ) : (
+                  <span>
+                    {user.userName} <MdVerified />
                   </span>
-                </Link>
+                )}
+
               </div>
             </div>
           </div>
@@ -190,16 +297,23 @@ const ProductDescription = ({ nft }) => {
             </div>
 
             <div className={Style.ProductDescription_box_profile_bidding_box_button}>
-              {currentAccount && currentAccount.address.toLowerCase() === nft.contractOwner.toLowerCase() ? (
+              {renderOfferButton()}
+              {/* {currentAccount && currentAccount.address && nft.contractOwner &&
+                currentAccount.address.toLowerCase() === nft.contractOwner.toLowerCase() ? (
                 <p>Item Listed on MarketPlace</p>
-              ) : currentAccount && currentAccount.address.toLowerCase() === nft.itemOwner.toLowerCase() ? (
-                <Button
-                  icon={<FaWallet />}
-                  btnName="List on Marketplace"
-                  handleClick={() => { }}
-                  classStyle={Style.button}
-                />
+              ) : currentAccount && currentAccount.address && nft.itemOwner &&
+                currentAccount.address.toLowerCase() === nft.itemOwner.toLowerCase() ? (
+                <p style={{ "lineHeight": 1, "color": 'yellow' }}>Item Listed on MarketPlace !!</p>
+
+                    // TODO: if there is an offer on the current product then a disabled button showing pending offer 
+                // <Button
+                //   icon={<FaWallet />}
+                //   btnName="List on Marketplace"
+                //   handleClick={() => { }}
+                //   classStyle={Style.button}
+                // />
               ) : (
+                    // TODO: if the current userB as made and offer to the itemOwner then this should be a 2 day count down stimulating a open product time lock  and graded out
                 <Button
                   icon={<FaWallet />}
                   btnName="Make Offer"
@@ -207,23 +321,32 @@ const ProductDescription = ({ nft }) => {
                   classStyle={Style.button}
                 />
               )}
-              {currentAccount && currentAccount.address.toLowerCase() === nft.contractOwner.toLowerCase() ? (
+
+
+              {currentAccount && currentAccount.address && nft.contractOwner &&
+                currentAccount.address.toLowerCase() === nft.contractOwner.toLowerCase() ? (
                 <p>Item Listed on MarketPlace</p>
-              ) : currentAccount && currentAccount.address.toLowerCase() === nft.itemOwner.toLowerCase() ? (
+              ) : currentAccount && currentAccount.address && nft.itemOwner &&
+                currentAccount.address.toLowerCase() === nft.itemOwner.toLowerCase() ? (
+                
+                // TODO: if there is an offer on the current product then button to view offer 
                 <Button
                   icon={<FaWallet />}
-                  btnName="List on Marketplace"
+                  btnName="Awaiting Offer"
                   handleClick={() => { }}
                   classStyle={Style.button}
                 />
-              ) : (
+                ) : (
+                    
+                    // TODO: if ther current userB as made and offer to the itemOwner then this should be a cancel offer and in red 
                 <Button
                   icon={<FaWallet />}
                   btnName="Make Offer"
                   handleClick={() => makeOffer(nft)}
                   classStyle={Style.button}
                 />
-              )}
+              )} */}
+
 
 
               {/* <Button
