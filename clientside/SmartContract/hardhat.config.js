@@ -8,6 +8,7 @@ module.exports = {
     hardhat: {
       chainId: 1337,
     },
+    //  ganache test net
     ganache: {
       url: process.env.GANACHE_TESTNET_RPC_URL,
       accounts: [process.env.GANACHE_PRIVATE_KEY]
