@@ -32,11 +32,11 @@ const NavBar = () => {
     };
 
     // Smart Contract Section
-    const { currentAccount, connectWallet, openError } = useContext(NFTMarketplaceContext);
+    const { currentAccount, connectWallet, openError, checkWalletConnection } = useContext(NFTMarketplaceContext);
 
    // Ensure currentAccount exists and has userId
     const userId = currentAccount ? currentAccount.userId : 1;
-    const user = users[userId]
+    const user = users[userId] || {};
 
     return (
         <div className={Style.navbar}>
@@ -70,11 +70,15 @@ const NavBar = () => {
                         onMouseEnter={() => handleMenuEnter('discover')}
                         onMouseLeave={handleMenuLeave}
                     >
-                        <p>Discover</p>
-                        {activeMenu === 'discover' && (
-                            <div className={Style.navbar_container_right_discover_box}>
-                                <Discover />
-                            </div>
+                        {currentAccount && (
+                            <>
+                                <p>Discover</p>
+                                {activeMenu === 'discover' && (
+                                    <div className={Style.navbar_container_right_discover_box}>
+                                        <Discover />
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
 
@@ -104,18 +108,20 @@ const NavBar = () => {
                         onMouseLeave={handleMenuLeave}
                     >
                         <MdNotifications className={Style.notify} />
-                        {activeMenu === 'notification' && <Notification />}
+                        <span className={Style.notification_box_new}/>
+                        {currentAccount && activeMenu === 'notification' && <Notification />}
                     </div>
 
                     {/* Create Button */}
                     <div className={Style.navbar_container_right_button}>
-                        {currentAccount == "" ?
-                            (<Button btnName="Connect" handleClick={() => connectWallet()} />) :
-                            (
-                                <Link href={{ pathname: "/upload-products" }} >
-                                    <Button btnName="Create" handleClick={() => { }} />
-                                </Link>
-                            )}
+                        {currentAccount === "" || !currentAccount ? (
+                            // <Button btnName="Connect" handleClick={() => connectWallet()} />
+                            <Button btnName="Connect" handleClick={() => checkWalletConnection()} />
+                        ) : (
+                            <Link href={{ pathname: "/upload-products" }}>
+                                <Button btnName="Create" handleClick={() => { }} />
+                            </Link>
+                        )}
                     </div>
 
                     {/* User Profile */}
@@ -127,13 +133,15 @@ const NavBar = () => {
                         <div className={Style.navbar_container_right_profile}>
                             <Image
                                 // src={images[`user${userId}`]}
-                                src={user.userImage}
+                                // src={user.userImage || images.no_profile}
+                                src={currentAccount ? user.userImage : images.no_profile}
+                                // src={user.userImage || images.no_profile}
                                 alt="Profile"
                                 width={40}
                                 height={40}
                                 className={Style.navbar_container_right_profile}
                             />
-                            {activeMenu === 'profile' && <Profile />}
+                            {currentAccount && activeMenu === 'profile' && <Profile />}
                         </div>
                     </div>
 
