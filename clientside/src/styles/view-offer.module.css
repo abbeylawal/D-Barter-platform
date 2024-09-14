@@ -1,0 +1,170 @@
+.view_offer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: var(--main-bg-color);
+  margin-bottom: 8rem;
+  margin-left: 5rem;
+  width: 90%;
+  max-width: 1200px;
+  margin: 4rem auto;
+}
+
+.nft_side {
+  flex: 1;
+  min-width: 300px;
+  text-align: center;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background-color: var(--main-bg-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.nft_offer_container {
+  flex: 1.5;
+  min-width: 300px;
+  position: relative;
+}
+
+.swiper_container {
+  width: 100%;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: cover;
+  /* width: 300px; */
+  /* height: 300px; */
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background-color: var(--main-bg-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+}
+
+.slider-controller {
+  position: relative;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-controller .slider-arrow {
+  background: var(--main-bg-color);
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  left: 42%;
+  transform: translateX(-42%);
+  filter: drop-shadow(0px 8px 24px rgba(18, 28, 53, 0.1));
+}
+
+.slider-controller .slider-arrow ion-icon {
+  font-size: 2rem;
+  color: #222224;
+}
+
+.slider-controller .slider-arrow::after {
+  content: '';
+}
+
+.swiper-pagination {
+  position: relative;
+  width: 15rem !important;
+  bottom: 1rem;
+  color: var(--icons-color);
+}
+
+.swiper-pagination .swiper-pagination-bullet {
+  background-color: var(--icons-color);
+  filter: drop-shadow(0px 8px 24px var(--icons-color));
+}
+
+.swiper-pagination .swiper-pagination-bullet-active {
+  background: var(--primary);
+}
+
+.box_tabs {
+  display: flex;
+  justify-content: center;
+  margin: 2rem;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .view_offer {
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0;
+  }
+
+  .nft_side,
+  .nft_offer_container {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .slider-controller .slider-arrow {
+    left: 35%;
+    transform: translateX(-35%);
+  }
+}
+
+.decline_button {
+  background-color: var(--button-decline-bg);
+  color: var(--button-decline-color);
+  border: 2px solid var(--button-decline-border);
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.decline_button:hover {
+  background-color: var(--button-decline-hover-bg);
+  border-color: var(--button-decline-hover-bg);
+  font-weight: 600;
+}
+
+.accept_button {
+  background-color: var(--button-accept-bg);
+  color: var(--button-accept-color);
+  border: 2px solid var(--button-accept-border);
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.accept_button:hover {
+  background-color: var(--button-accept-hover-bg);
+  border-color: var(--button-accept-hover-bg);
+  font-weight: 600;
+}
+
+/* Custom Swiper pagination styles */
+.swiper-pagination-bullet {
+  background-color: var(--icons-color);
+  opacity: 0.6;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: var(--active-color); /* Active bullet color */
+  opacity: 1; /* Ensure active bullet is fully opaque */
+}
