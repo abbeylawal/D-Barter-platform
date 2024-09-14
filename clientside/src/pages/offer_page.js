@@ -96,6 +96,7 @@ const OfferPage = ({
       }
 
       if (offerIds.length > 0) {
+        setLoading(true);
         router.push(
           `/view_offer?listingId=${listingId}&offerId=${offerIds[0]}`
         );
