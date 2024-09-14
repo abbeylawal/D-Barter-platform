@@ -33,6 +33,7 @@ contract NFTMarketplace is ERC721URIStorage {
         address offerer;
         bool isActive;
         bool isAccepted;
+        uint256 expirationTime;
     }
 
     enum TransactionStatus { Accepted, Completed, Cancelled } 
@@ -208,6 +209,9 @@ contract NFTMarketplace is ERC721URIStorage {
         // Check that the offer is active
         require(offer.isActive, "Offer is not active");
 
+        // Check that the offer has not expired
+        require(block.timestamp < offer.expirationTime, "Offer has expired");
+
         // Fetch the token URI for the offer token
         tokenURI = tokenURI(offer.offerTokenId);
         
@@ -215,50 +219,66 @@ contract NFTMarketplace is ERC721URIStorage {
         currentOwner = ownerOf(offer.offerTokenId);
 
         return (offer, tokenURI, currentOwner);
-}
+    }
 
 
 
 
     // Function to create a barter offer for a specific listing
-    function createBarterOffer(uint256 listingId, uint256 durationInHours) public returns (uint256) {
-            require(idToBarterListing[listingId].isActive, "Listing is not active");
-            // require(ownerOf(offerTokenId) == msg.sender, "You don't own this token");
-            // require(!tokenInActiveOffer[offerTokenId], "This token is already in an active offer");
+    function createBarterOffer(
+        uint256 listingId,
+        uint256 durationInHours,
+        string memory offerTokenURI
+    )
+        public
+        returns (uint256)
+    {
+        require(idToBarterListing[listingId].isActive, "Listing is not active");
+        // Additional checks can be uncommented or modified as needed
+        // require(ownerOf(offerTokenId) == msg.sender, "You don't own this token");
+        // require(!tokenInActiveOffer[offerTokenId], "This token is already in an active offer");
 
-            // Set default duration to 24 hours if not provided
-            if (durationInHours == 0) {
-                durationInHours = 24;
-            }
+        // Set default duration to 24 hours if not provided
+        if (durationInHours == 0) {
+            durationInHours = 24;
+        }
 
-            uint256 expirationTime = block.timestamp + (durationInHours * 1 hours);
+        uint256 expirationTime = block.timestamp + (durationInHours * 1 hours);
 
-            // Generate new offerId
-            _offerIds.increment();
-            uint256 offerId = _offerIds.current();
+        // Generate new offerId
+        _offerIds.increment();
+        uint256 offerId = _offerIds.current();
 
-            // Generate offerTokenId based on custom logic or current token count
-            _tokenIds.increment();
-            uint256 offerTokenId = _tokenIds.current();
+        // Generate offerTokenId based on custom logic or current token count
+        _tokenIds.increment();
+        uint256 offerTokenId = _tokenIds.current();
 
-            idToBarterOffer[offerId] = BarterOffer(
-                offerId,
-                listingId,
-                offerTokenId,
-                msg.sender,
-                true,
-                false 
-            );
+        // Mint the offer token to the offerer
+        _mint(msg.sender, offerTokenId);
 
-            offerToTokenId[offerId] = offerTokenId;
+        // Set the token URI for the offer token
+        _setTokenURI(offerTokenId, offerTokenURI);
 
-            listingToOffers[listingId].push(offerId);
-            tokenInActiveOffer[offerTokenId] = true;
+        idToBarterOffer[offerId] = BarterOffer(
+            offerId,
+            listingId,
+            offerTokenId,
+            msg.sender,
+            true,
+            false,
+            expirationTime,
+        );
 
-            emit BarterOfferCreated(offerId, listingId, offerTokenId, msg.sender, expirationTime);
+        offerToTokenId[offerId] = offerTokenId;
 
-            return offerId;
+        listingToOffers[listingId].push(offerId);
+        tokenInActiveOffer[offerTokenId] = true;
+
+        emit BarterOfferCreated(offerId, listingId, offerTokenId, msg.sender, expirationTime);
+
+        return offerId;
     }
+
 
 
     function getBarterListing(uint256 listingId) public view returns (BarterListing memory) {
