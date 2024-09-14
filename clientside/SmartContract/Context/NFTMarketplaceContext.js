@@ -627,10 +627,9 @@ const fetchNFTByOfferId = async (offerId) => {
     }
 
     // Ensure offerId is a number
-    const parsedOfferId = parseInt(offerId);
+    const parsedOfferId = parseInt(offerId, 10);
     console.log("parsedOfferId: ", parsedOfferId);
-    // const data = await contract.fetchNFTByOfferId(parsedOfferId);
-    // const data = await contract.fetchNFTByOfferId("19n");
+
     if (isNaN(parsedOfferId)) {
       throw new Error("Offer ID must be a valid number");
     }
@@ -654,7 +653,7 @@ const fetchNFTByOfferId = async (offerId) => {
     const randomLikes = Math.floor(Math.random() * 501);
 
     const item = {
-      tokenId: offer.offerTokenId,
+      tokenId: offer.offerTokenId.toNumber(),
       owner: owner,
       creatorId: creatorId,
       contractOwner: contract.target,
