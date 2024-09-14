@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState, useRef } from "react";
 import Style from "../styles/searchPage.module.css";
 import {
   NFTSlider,
@@ -10,17 +10,20 @@ import { SearchBar } from "./SearchPage/searchPageIndex";
 import { NFTCard } from "../components/componentsIndex";
 import { Category } from "../components/componentsIndex";
 import images from "../assets/img/";
+import { useRouter } from "next/router";
 
 // SMART CONTRACT
 import { NFTMarketplaceContext } from "../../SmartContract/Context/NFTMarketplaceContext";
 
 const SearchPage = () => {
+  const router = useRouter();
   const { fetchNFTs } = useContext(NFTMarketplaceContext);
   const [nfts, setNfts] = useState([]);
   const [filteredNFTs, setFilteredNFTs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState("All");
+  const filterRef = useRef(null);
 
   useEffect(() => {
     const fetchAllNFTs = async () => {
@@ -41,6 +44,16 @@ const SearchPage = () => {
 
     fetchAllNFTs();
   }, [fetchNFTs]);
+
+  useEffect(() => {
+    const { category, scroll } = router.query;
+    if (category) {
+      setActiveCategory(category);
+    }
+    if (scroll === "filter" && filterRef.current) {
+      filterRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [router.query, nfts]);
 
   const onHandleSearch = (value) => {
     const searchQuery = value.trim().toLowerCase();
@@ -63,11 +76,13 @@ const SearchPage = () => {
     <div className={Style.searchPage}>
       <Banner bannerImage={images.creatorbackground3} />
       <Category onCategoryChange={setActiveCategory} />
+      <div ref={filterRef}>
       <SearchBar
         onHandleSearch={onHandleSearch}
         onClearSearch={onClearSearch}
       />
-      <Filter onCategoryChange={setActiveCategory} />
+        <Filter onCategoryChange={setActiveCategory} />
+      </div>
       {loading ? (
         <Loader />
       ) : error ? (
