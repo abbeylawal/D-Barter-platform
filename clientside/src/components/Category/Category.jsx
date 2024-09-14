@@ -1,25 +1,44 @@
-import React from 'react';
+import React, {useEffect, useContext} from 'react';
 import { BsCircleFill } from "react-icons/bs";
 import Image from "next/image";
+import { useRouter } from 'next/router';
 import Style from "./Category.module.css";
 import images from "../../assets/img/";
+// SMART CONTRACT
+import { NFTMarketplaceContext } from "../../../SmartContract/Context/NFTMarketplaceContext";
 
 const Category = () => {
-    const categories = [
+    const router = useRouter();
+    const categories =  [
         { image: images.fashionCategory, name: 'Fashion', count: '1995 NFTS' },
         { image: images.electronicsCategory, name: 'Electronics', count: '320 NFTS' },
         { image: images.computerCategory, name: 'Computers', count: '1780 NFTS' },
         { image: images.gadgetsCategory, name: 'Gadgets', count: '250 NFTS' },
-        { image: images.mobileCategory, name: 'Mobiles', count: '500 NFTS' },
-        { image: images.artCategory, name: 'Arts', count: '1340 NFTS' }
+        { image: images.mobileCategory, name: 'Mobile', count: '500 NFTS' },
+        { image: images.artCategory, name: 'Art', count: '1340 NFTS' }
     ];
+
+    const { currentAccount } = useContext(NFTMarketplaceContext);
+    
+
+    // Only redirect if currentAccount exists
+    const handleCategoryClick = (categoryName) => {
+        if (currentAccount) { // Check if currentAccount is present
+            router.push({
+                pathname: '/searchPage',
+                query: { category: categoryName, scroll: 'filter' },
+            });
+        }
+    };
 
     return (
         <div className={Style.box_category}>
             <div className={Style.category}>
                 {categories.map((category, i) => (
-                    <div className={Style.category_box} key={i}
-                    
+                    <div
+                        className={Style.category_box}
+                        key={i}
+                        onClick={() => handleCategoryClick(category.name)}
                     >
                         <Image
                             src={category.image}
