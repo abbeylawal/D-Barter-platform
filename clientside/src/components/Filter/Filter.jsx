@@ -12,11 +12,13 @@ import {
 import { AiFillCloseCircle } from "react-icons/ai";
 import { MdVerified } from "react-icons/md";
 import { TiTick } from 'react-icons/ti';
+import { useRouter } from "next/router";
 
 
 import Style from "./Filter.module.css";
 
 const Filter = ({ onCategoryChange }) => {
+    const router = useRouter();
     const [filter, setFilter] = useState(false);
     const [image, setImage] = useState(true);
     const [video, setVideo] = useState(true);
@@ -33,27 +35,25 @@ const Filter = ({ onCategoryChange }) => {
         if (typeof onCategoryChange === 'function') {
             onCategoryChange(category);
         }
+        router.push({
+            pathname: router.pathname,
+            query: { ...router.query, category: category },
+        }, undefined, { shallow: true });
     };
 
-    const categories = ["All", "Fashion", "Art", "Computer", "Gadgets", "Mobile", "Electronics"];
+    const categories = ["All", "Fashion", "Art", "Computers", "Gadgets", "Mobile", "Electronics"];
 
 
     return (
         <div className={Style.filter}>
             <div className={Style.filter_box}>
                 <div className={Style.filter_box_left}>
-                    {/* <button onClick={() => { }}>All</button>
-                    <button onClick={() => { }}>Fashion</button>
-                    <button onClick={() => { }}>Arts</button>
-                    <button onClick={() => { }}>Gadgets</button>
-                    <button onClick={() => { }}>Accessories</button>
-                    <button onClick={() => { }}>Electronics</button>
-                </div> */}
                     {categories.map((category) => (
                         <button
                             key={category}
                             onClick={() => handleCategoryClick(category)}
-                            className={activeCategory === category ? Style.active : ""}
+                            // className={activeCategory === category ? Style.active : ""}
+                            className={`${Style.category_button} ${activeCategory === category ? Style.active_category : ''}`}
                         >
                             {category}
                         </button>
