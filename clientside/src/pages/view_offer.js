@@ -102,7 +102,7 @@ const ViewOffer = () => {
     if (!router.isReady) return;
     // Use dummy data for testing
     setListingNFT(dummyListingNFT);
-    // setOfferNFTs(dummyOfferNFTs);
+    setOfferNFTs(dummyOfferNFTs);
 
     // Parse query parameters
     const { listingId, offerId } = router.query;
@@ -111,6 +111,7 @@ const ViewOffer = () => {
 
     if (isNaN(parsedListingId) || isNaN(parsedOfferId)) {
       setError("Invalid listingId or offerId");
+      setLoading(false);
       return;
     }
 
@@ -118,15 +119,16 @@ const ViewOffer = () => {
     const fetchNFTs = async () => {
       try {
         const fetchedListingNFT = await fetchNFTByListingId(parsedListingId);
-        const fetchedOfferNFT = await fetchNFTByOfferId(parsedOfferId);
+        // const fetchedOfferNFT = await fetchNFTByOfferId(parsedOfferId);
 
-        setListingNFT(fetchedListingNFT);
+        // setListingNFT(fetchedListingNFT);
 
         
-        setOfferNFT(fetchedOfferNFT);
+        // setOfferNFTs(fetchedOfferNFT);
       } catch (err) {
         console.error("Error fetching NFTs:", err);
         setError("Error fetching NFTs. Please try again.");
+        setLoading(false);
       }
     };
 
