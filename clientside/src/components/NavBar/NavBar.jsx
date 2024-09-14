@@ -116,7 +116,7 @@ const NavBar = () => {
                     <div className={Style.navbar_container_right_button}>
                         {currentAccount === "" || !currentAccount ? (
                             // <Button btnName="Connect" handleClick={() => connectWallet()} />
-                            <Button btnName="Connect" handleClick={() => checkWalletConnection()} />
+                            <Button btnName="Connect" handleClick={() => checkWalletConnection(true)} />
                         ) : (
                             <Link href={{ pathname: "/upload-products" }}>
                                 <Button btnName="Create" handleClick={() => { }} />
