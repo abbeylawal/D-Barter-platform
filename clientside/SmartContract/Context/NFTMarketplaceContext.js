@@ -83,115 +83,155 @@ export const NFTMarketplaceProvider = ({ children }) => {
     }
   };
 
-  const checkWalletConnection = async () => {
-    try {
-      if (!window.ethereum) {
-        setError("Please install MetaMask to connect your wallet.");
-        setOpenError(true);
-        window.open("https://metamask.io/download.html", "_blank");
-        return;
-      }
+const checkWalletConnection = async (forceOpen = false) => {
+  try {
+    if (!window.ethereum) {
+      setError("Please install MetaMask to connect your wallet.");
+      setOpenError(true);
+      window.open("https://metamask.io/download.html", "_blank");
+      return;
+    }
 
-      const accounts = await window.ethereum.request({
-        method: "eth_accounts",
+    const accounts = await window.ethereum.request({
+      method: "eth_accounts",
+    });
+
+    console.log("Connected accounts:", accounts);
+
+    if (accounts.length > 0) {
+      // Update accountsMapping only for new accounts
+      accounts.forEach((account, index) => {
+        const lowerCaseAccount = account.toLowerCase();
+        if (!accountsMappingRef.current[lowerCaseAccount]) {
+          accountsMappingRef.current[lowerCaseAccount] = `${
+            Object.keys(accountsMappingRef.current).length + 1
+          }`;
+        }
       });
 
-      console.log("Connected accounts:", accounts);
+      saveAccountsMapping(); // Save the updated mapping to localStorage
 
-      if (accounts.length > 0) {
-        // Update accountsMapping only for new accounts
-        accounts.forEach((account, index) => {
-          const lowerCaseAccount = account.toLowerCase();
-          if (!accountsMappingRef.current[lowerCaseAccount]) {
-            accountsMappingRef.current[lowerCaseAccount] = `${
-              Object.keys(accountsMappingRef.current).length + 1
-            }`;
-          }
-        });
+      console.log("Current accounts mapping:", accountsMappingRef.current);
 
-        saveAccountsMapping(); // Save the updated mapping to localStorage
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const activeAddress = (await signer.getAddress()).toLowerCase();
 
-        console.log("Current accounts mapping:", accountsMappingRef.current);
+        console.log("Active signer address:", activeAddress);
 
-        try {
-          const provider = new ethers.BrowserProvider(window.ethereum);
-          const signer = await provider.getSigner();
-          const activeAddress = (await signer.getAddress()).toLowerCase();
-
-          console.log("Active signer address:", activeAddress);
-
-          if (accountsMappingRef.current[activeAddress]) {
-            const newCurrentAccount = {
-              address: activeAddress,
-              userId: accountsMappingRef.current[activeAddress],
-            };
-            setCurrentAccount(newCurrentAccount);
-            setUserId(newCurrentAccount.userId);
-            console.log("Current account:", newCurrentAccount);
-            return newCurrentAccount;
-          } else {
-            const newUserId = `user${
-              Object.keys(accountsMappingRef.current).length + 1
-            }`;
-            accountsMappingRef.current[activeAddress] = newUserId;
-            saveAccountsMapping(); // Save the updated mapping to localStorage
-            const newCurrentAccount = {
-              address: activeAddress,
-              userId: newUserId,
-            };
-            setCurrentAccount(newCurrentAccount);
-            console.log("Current account:", newCurrentAccount);
-            return newCurrentAccount;
-          }
-        } catch (error) {
-          console.error("Error fetching active signer:", error);
+        if (accountsMappingRef.current[activeAddress]) {
+          const newCurrentAccount = {
+            address: activeAddress,
+            userId: accountsMappingRef.current[activeAddress],
+          };
+          setCurrentAccount(newCurrentAccount);
+          setUserId(newCurrentAccount.userId);
+          console.log("Current account:", newCurrentAccount);
+          return newCurrentAccount;
+        } else {
+          const newUserId = `user${
+            Object.keys(accountsMappingRef.current).length + 1
+          }`;
+          accountsMappingRef.current[activeAddress] = newUserId;
+          saveAccountsMapping(); // Save the updated mapping to localStorage
+          const newCurrentAccount = {
+            address: activeAddress,
+            userId: newUserId,
+          };
+          setCurrentAccount(newCurrentAccount);
+          console.log("Current account:", newCurrentAccount);
+          return newCurrentAccount;
         }
-      } else {
-        console.log("No accounts found");
+      } catch (error) {
+        console.error("Error fetching active signer:", error);
+      }
+    } else if (forceOpen) {
+      console.log("No accounts found. Attempting to open MetaMask for login.");
+      try {
+        // Attempt to request account access
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        // If successful, recursively call checkWalletConnection
+        return checkWalletConnection(false);
+      } catch (error) {
+        if (error.code === 4001) {
+          // User rejected the request
+          console.log("User rejected the connect request");
+          setError("Connection request was rejected. Please try again.");
+        } else if (error.code === -32002) {
+          // MetaMask is already processing a connect request
+          console.log(
+            "MetaMask is already open. Attempting to focus the MetaMask window."
+          );
+
+          // Attempt to focus the MetaMask popup
+          if (window.ethereum.isMetaMask) {
+            window.ethereum
+              .request({
+                method: "wallet_requestPermissions",
+                params: [{ eth_accounts: {} }],
+              })
+              .catch(console.log); // This might bring MetaMask to the foreground
+          }
+
+          setError(
+            "MetaMask is already open. Please check your MetaMask extension and approve the connection."
+          );
+        } else {
+          console.error("Error requesting accounts:", error);
+          setError("An error occurred while connecting. Please try again.");
+        }
+        setOpenError(true);
         setCurrentAccount(null);
         return null;
       }
-    } catch (error) {
-      setOpenError(true);
-      setError("Error while connecting to wallet");
+    } else {
+      console.log("No accounts found and not forcing open.");
+      setCurrentAccount(null);
       return null;
+    }
+  } catch (error) {
+    console.error("Error in checkWalletConnection:", error);
+    setOpenError(true);
+    setError("Error while connecting to wallet. Please try again.");
+    return null;
+  }
+};
+
+useEffect(() => {
+  const initializeWallet = async () => {
+    const account = await checkWalletConnection();
+    if (account) {
+      setUserId(account.userId);
+    } else {
+      setUserId(null);
     }
   };
 
-  useEffect(() => {
-    const initializeWallet = async () => {
+  initializeWallet();
+
+  // Set up event listener for account changes
+  if (window.ethereum) {
+    window.ethereum.on("accountsChanged", async () => {
       const account = await checkWalletConnection();
       if (account) {
         setUserId(account.userId);
       } else {
         setUserId(null);
       }
-    };
+    });
+  }
 
-    initializeWallet();
-
-    // Set up event listener for account changes
+  // Cleanup function
+  return () => {
     if (window.ethereum) {
-      window.ethereum.on("accountsChanged", async () => {
-        const account = await checkWalletConnection();
-        if (account) {
-          setUserId(account.userId);
-        } else {
-          setUserId(null);
-        }
-      });
+      window.ethereum.removeListener(
+        "accountsChanged",
+        checkWalletConnection
+      );
     }
-
-    // Cleanup function
-    return () => {
-      if (window.ethereum) {
-        window.ethereum.removeListener(
-          "accountsChanged",
-          checkWalletConnection
-        );
-      }
-    };
-  }, []);
+  };
+}, []);
 
 const connectWallet = async () => {
   try {
@@ -538,7 +578,8 @@ const fetchNFTByListingId = async (listingId) => {
     }
 
     // Ensure listingId is a number
-    const parsedListingId = BigInt(listingId); // Convert to BigInt for blockchain calls
+    const parsedListingId = parseInt(listingId);
+    console.log("parsedListingId: ", parsedListingId);
     const data = await contract.fetchNFTByListingId(parsedListingId);
     console.log("Fetched NFT by ListingId:", data);
 
@@ -586,9 +627,19 @@ const fetchNFTByOfferId = async (offerId) => {
     }
 
     // Ensure offerId is a number
-    const parsedOfferId = BigInt(offerId); // Convert to BigInt for blockchain calls
+    const parsedOfferId = parseInt(offerId);
+    console.log("parsedOfferId: ", parsedOfferId);
+    // const data = await contract.fetchNFTByOfferId(parsedOfferId);
+    // const data = await contract.fetchNFTByOfferId("19n");
+    if (isNaN(parsedOfferId)) {
+      throw new Error("Offer ID must be a valid number");
+    }
+    console.log("Parsed Offer ID:", parsedOfferId);
+
+    // Fetch data from the smart contract
     const data = await contract.fetchNFTByOfferId(parsedOfferId);
     console.log("Fetched NFT by OfferId:", data);
+
 
     if (!data) {
       console.log("No data found for the given offer ID");
@@ -659,17 +710,25 @@ const createBarterOffer = async (listingId) => {
 
     // Create the barter offer on the contract
     const transaction = await contract.createBarterOffer(listingId);
-    const receipt = await transaction.wait(); // Wait for the transaction to be mined
+    console.log("Transaction hash:", transaction.hash);
+    
+    const receipt = await transaction.wait();
+    console.log("Transaction receipt:", receipt);
 
-    // Check if receipt and events are defined
-    if (!receipt || !receipt.events) {
-      throw new Error("No events found in the transaction receipt");
+    if (receipt.status === 0) {
+      throw new Error("Transaction failed");
     }
 
-    // Extract the offerId from the emitted event
-    const offerCreatedEvent = receipt.events.find(
+    // Check for events in both receipt.events and receipt.logs
+    let offerCreatedEvent = receipt.events?.find(
       (event) => event.event === "BarterOfferCreated"
     );
+
+    if (!offerCreatedEvent) {
+      offerCreatedEvent = receipt.logs?.find(
+        (log) => log.eventName === "BarterOfferCreated"
+      );
+    }
 
     if (!offerCreatedEvent) {
       throw new Error(
@@ -677,14 +736,20 @@ const createBarterOffer = async (listingId) => {
       );
     }
 
-    const offerId = offerCreatedEvent.args.offerId;
+    // const offerId = offerCreatedEvent.args.offerId;
+
+    // Extract the offerId from the event arguments
+    const offerIdBigInt = offerCreatedEvent.args.offerId;
+
+    // Convert BigInt to a string for safe display or further usage
+    const offerId = offerIdBigInt.toString();
 
     console.log("Barter offer created successfully with offerId:", offerId);
-    return offerId; // Return the offerId
+    return offerId;
   } catch (error) {
     console.error("Error creating barter offer:", error);
     setOpenError(true);
-    setError("Error creating barter offer");
+    setError(`Error creating barter offer: ${error.message}`);
     return null;
   }
 };
