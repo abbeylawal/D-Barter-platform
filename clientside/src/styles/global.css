@@ -8,6 +8,14 @@
     --shadow-dark-color: #d3dae7;
     --shadow-light-color: #fff;
     --main-bg-color: #ecf0f3;
+      --button-decline-bg: #ff4d4d;  /* Red background */
+  --button-decline-hover-bg: #e60000;  /* Darker red on hover */
+  --button-decline-color: white; /* Text color */
+  --button-decline-border: #ff4d4d; /* Border color */
+  --button-accept-bg: #28a745;  /* Green background */
+  --button-accept-hover-bg: #218838;  /* Darker green on hover */
+  --button-accept-color: white; /* Text color */
+  --button-accept-border: #28a745;
 
     --box-shadow: 1rem 1rem 1rem var(--shadow-dark-color),
     -1rem -1rem 1rem var(--shadow-light-color);
@@ -25,6 +33,14 @@
     --shadow-dark-color: #000000;
     --shadow-light-color: #333333;
     --main-bg-color: #1e1e1e;
+      --button-decline-bg: #ff4d4d;
+  --button-decline-hover-bg: #cc0000;
+  --button-decline-color: #ffffff;
+  --button-decline-border: #ff6666;
+    --button-accept-bg: #28a745;
+  --button-accept-hover-bg: #1e7e34;
+  --button-accept-color: #ffffff;
+  --button-accept-border: #34d058;
 }
 
 [data-theme='light'] {
@@ -34,6 +50,14 @@
     --shadow-dark-color: #d3dae7;
     --shadow-light-color: #fff;
     --main-bg-color: #ecf0f3;
+      --button-decline-bg: #ff6666;
+  --button-decline-hover-bg: #ff0000;
+  --button-decline-color: #ffffff;
+  --button-decline-border: #ff4d4d;
+    --button-accept-bg: #34d058;
+  --button-accept-hover-bg: #28a745;
+  --button-accept-color: #ffffff;
+  --button-accept-border: #28a745;
 }
 
 @media (prefers-color-scheme: dark) {
