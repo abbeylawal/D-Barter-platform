@@ -428,7 +428,6 @@ const connectWallet = async () => {
               name: meta.data.name,
               creatorId: creatorId,
               contractOwner: contract.target,
-              // userId: currentAccount.userId ? currentAccount.userId : 1,
               itemOwner: i.itemOwner,
               likes: randomLikes,
               description: meta.data.description,
@@ -491,83 +490,290 @@ const connectWallet = async () => {
     }
   };
 
-  const fetchMyNFTs = async (walletAddress) => {
-    try {
-      const contract = await connectSmartContract();
-      console.log("Contract connected successfully");
-      const data = await contract.fetchMyNFTs(walletAddress);
-      console.log("Fetched MyNFTs data:", data);
+// const fetchMyNFTs = async (walletAddress) => {
+//   try {
+//     const contract = await connectSmartContract();
+//     console.log("Contract connected successfully");
 
-      if (!Array.isArray(data) || data.length === 0) {
-        console.log("No NFTs found or data is not in expected format");
-        return [];
-      }
+//     // Fetch both NFT IDs and their lock statuses
+//     const [nftIds, isLocked] = await contract.fetchMyNFTs(walletAddress);
+//     // const nftIds = await contract.fetchMyNFTs(walletAddress);
+//     console.log("Fetched MyNFTs data:", nftIds, isLocked);
 
-      console.log(`Processing ${data.length} NFTs...`);
-      const items = await Promise.all(
-        data.map(async (tokenId, index) => {
-          try {
-            console.log(`Processing NFT ${index + 1}/${data.length}`);
-            console.log("Token ID:", tokenId);
+//     // Check if both arrays are valid
 
-            // Convert tokenId to a regular number if it's a BigNumber
-            const normalizedTokenId = tokenId.toNumber
-              ? tokenId.toNumber()
-              : Number(tokenId);
 
-            const tokenURI = await contract.tokenURI(normalizedTokenId);
-            console.log(`TokenURI for tokenId ${normalizedTokenId}:`, tokenURI);
+//     console.log(`Processing ${nftIds.length} NFTs...`);
+//     const items = await Promise.all(
+//       nftIds.map(async (tokenId, index) => {
+//         try {
+//           console.log(`Processing NFT ${index + 1}/${nftIds.length}`);
+//           console.log("Token ID:", tokenId);
 
-            const meta = await axios.get(tokenURI);
-            console.log(`Metadata for tokenId ${normalizedTokenId}:`, meta.data);
+//           // Convert tokenId to a regular number if it's a BigNumber
+//           const normalizedTokenId = tokenId.toNumber
+//             ? tokenId.toNumber()
+//             : Number(tokenId);
 
-            const itemOwner = await contract.ownerOf(normalizedTokenId);
-            const normalizedOwner = itemOwner.toLowerCase();
-            const normalizedWalletAddress = walletAddress.toLowerCase();
+//           const tokenURI = await contract.tokenURI(normalizedTokenId);
+//           console.log(`TokenURI for tokenId ${normalizedTokenId}:`, tokenURI);
 
-            // Filter out NFTs that do not match the passed walletAddress
-            if (normalizedOwner !== normalizedWalletAddress) {
-              console.log(`Skipping NFT ${normalizedTokenId} as it does not belong to the wallet address ${walletAddress}`);
+//           const meta = await axios.get(tokenURI);
+//           console.log(`Metadata for tokenId ${normalizedTokenId}:`, meta.data);
+
+//           const itemOwner = await contract.ownerOf(normalizedTokenId);
+//           const normalizedOwner = itemOwner.toLowerCase();
+//           const normalizedWalletAddress = walletAddress.toLowerCase();
+
+//           // Filter out NFTs that do not match the passed walletAddress
+//           if (normalizedOwner !== normalizedWalletAddress) {
+//             console.log(
+//               `Skipping NFT ${normalizedTokenId} as it does not belong to the wallet address ${walletAddress}`
+//             );
+//             return null;
+//           }
+
+//           const creatorId = accountsMappingRef.current[normalizedOwner] || 0;
+//           const randomLikes = Math.floor(Math.random() * 501);
+
+//           // Include the lock status from the corresponding index in isLocked array
+//           const lockStatus = isLocked[index];
+
+//           let item = {
+//             tokenId: normalizedTokenId,
+//             owner: itemOwner,
+//             creatorId: creatorId,
+//             contractOwner: contract.target,
+//             itemOwner: itemOwner,
+//             likes: randomLikes,
+//             name: meta.data.name,
+//             description: meta.data.description,
+//             image: meta.data.image,
+//             category: meta.data.category,
+//             swapCategory: meta.data.swapCategories,
+//             isLocked: lockStatus,
+//           };
+//           console.log("MY NFTs:", item);
+//           return item;
+//         } catch (error) {
+//           console.error(`Error processing NFT ${index + 1}:`, error);
+//           return null;
+//         }
+//       })
+//     );
+
+//     const validItems = items.filter((item) => item !== null);
+//     console.log("Total valid NFTs processed:", validItems.length);
+//     return validItems;
+//   } catch (error) {
+//     console.error("Error in fetchMyNFTs:", error);
+//     throw error;
+//   }
+  // };
+  
+
+    // const fetchMyNFTs = async (walletAddress) => {
+    //   try {
+    //       const contract = await connectSmartContract();
+    //       console.log("Contract connected successfully");
+    //       const data = await contract.fetchMyNFTs(walletAddress);
+    //       console.log("Fetched MyNFTs data:", data);
+
+    //       if (!Array.isArray(data) || data.length === 0) {
+    //         console.log("No NFTs found or data is not in expected format");
+    //         return [];
+    //       }
+
+    //       console.log(`Processing ${data.length} NFTs...`);
+    //       const items = await Promise.all(
+    //         data.map(async (tokenId, index) => {
+    //           try {
+    //             console.log(`Processing NFT ${index + 1}/${data.length}`);
+    //             console.log("Token ID:", tokenId);
+
+    //             // Convert tokenId to a regular number if it's a BigNumber
+    //             const normalizedTokenId = tokenId.toNumber
+    //               ? tokenId.toNumber()
+    //               : Number(tokenId);
+
+    //             const tokenURI = await contract.tokenURI(normalizedTokenId);
+    //             console.log(
+    //               `TokenURI for tokenId ${normalizedTokenId}:`,
+    //               tokenURI
+    //             );
+
+    //             const meta = await axios.get(tokenURI);
+    //             console.log(
+    //               `Metadata for tokenId ${normalizedTokenId}:`,
+    //               meta.data
+    //             );
+
+    //             const itemOwner = await contract.ownerOf(normalizedTokenId);
+    //             const normalizedOwner = itemOwner.toLowerCase();
+    //             const normalizedWalletAddress = walletAddress.toLowerCase();
+
+    //             // Filter out NFTs that do not match the passed walletAddress
+    //             if (normalizedOwner !== normalizedWalletAddress) {
+    //               console.log(
+    //                 `Skipping NFT ${normalizedTokenId} as it does not belong to the wallet address ${walletAddress}`
+    //               );
+    //               return null;
+    //             }
+
+    //             const creatorId =
+    //               accountsMappingRef.current[normalizedOwner] || 0;
+
+    //             const randomLikes = Math.floor(Math.random() * 501);
+
+    //             let item = {
+    //               tokenId: normalizedTokenId,
+    //               owner: itemOwner,
+    //               creatorId: creatorId,
+    //               contractOwner: contract.target,
+    //               itemOwner: itemOwner,
+    //               likes: randomLikes,
+    //               name: meta.data.name,
+    //               description: meta.data.description,
+    //               image: meta.data.image,
+    //               image: meta.data.image,
+    //               Category: meta.data.category,
+    //               swapCategory: meta.data.swapCategories,
+    //             };
+    //             console.log("MY NFTs:", item);
+    //             return item;
+    //           } catch (error) {
+    //             console.error(`Error processing NFT ${index + 1}:`, error);
+    //             return null;
+    //           }
+    //         })
+    //       );
+
+    //       const validItems = items.filter((item) => item !== null);
+    //       console.log("Total valid NFTs processed:", validItems.length);
+    //       return validItems;
+    //     } catch (error) {
+    //       console.error("Error in fetchMyNFTs:", error);
+    //       throw error;
+    //     }
+    //   };
+  
+    const fetchMyNFTs = async (walletAddress) => {
+      try {
+        const contract = await connectSmartContract();
+        console.log("Contract connected successfully");
+
+        // Fetch all listings from the smart contract
+        const allListings = await contract.fetchAllListings();
+        console.log("Fetched all listings:", allListings);
+
+        if (!Array.isArray(allListings) || allListings.length === 0) {
+          console.log("No listings found or data is not in expected format");
+          return [];
+        }
+
+        console.log(
+          `Processing ${allListings.length} listings for wallet address ${walletAddress}...`
+        );
+
+        // Filter listings that belong to the specified wallet address
+        const myNFTs = allListings.filter(
+          (listing) =>
+            listing.itemOwner.toLowerCase() === walletAddress.toLowerCase()
+        );
+
+        // Process each NFT belonging to the specified wallet address
+        const items = await Promise.all(
+          myNFTs.map(async (i, index) => {
+            try {
+              console.log(`Processing NFT ${index + 1}/${myNFTs.length}`);
+              console.log("Listing data:", i);
+
+              // Convert tokenId to a regular number
+              const tokenId = i.tokenId.toNumber
+                ? i.tokenId.toNumber()
+                : Number(i.tokenId);
+
+              // Fetch the token URI for the NFT
+              const tokenURI = await contract.tokenURI(tokenId);
+              console.log(`TokenURI for tokenId ${tokenId}:`, tokenURI);
+
+              // Fetch metadata from the token URI
+              const meta = await axios.get(tokenURI);
+              console.log(`Metadata for tokenId ${tokenId}:`, meta.data);
+
+              // Retrieve the creatorId from the accountsMappingRef based on the itemOwner
+              const normalizedOwner = i.itemOwner.toLowerCase();
+              const creatorId =
+                accountsMappingRef.current[normalizedOwner] || 0;
+
+              // Determine expiration time based on whether the listing is offered
+              let expirationTime = i.expirationTime.toNumber
+                ? i.expirationTime.toNumber()
+                : Number(i.expirationTime);
+
+              if (i.isOffered) {
+                // Fetch the corresponding BarterOffer for the listing
+                const offerData = await contract.getBarterOfferByListingId(
+                  i.listingId
+                );
+                console.log(
+                  `Fetched BarterOffer data for listingId ${i.listingId}:`,
+                  offerData
+                );
+
+                // Use the expiration time from the BarterOffer
+                expirationTime = offerData.expirationTime.toNumber
+                  ? offerData.expirationTime.toNumber()
+                  : Number(offerData.expirationTime);
+              }
+
+              // Generate random likes for UI display
+              const randomLikes = Math.floor(Math.random() * 501);
+
+              // Construct the item object with necessary details
+              let item = {
+                listingId: i.listingId.toNumber
+                  ? i.listingId.toNumber()
+                  : Number(i.listingId),
+                tokenId: tokenId,
+                expirationTime: expirationTime,
+                isActive: i.isActive,
+                isOffered: i.isOffered,
+                name: meta.data.name,
+                creatorId: creatorId,
+                contractOwner: contract.target,
+                itemOwner: i.itemOwner,
+                likes: randomLikes,
+                description: meta.data.description,
+                image: meta.data.image,
+                Category: meta.data.category,
+                swapCategory: meta.data.swapCategories,
+                lockStatus: i.isOffered ? "Locked" : "Unlocked",
+              };
+              console.log("Processed NFT:", item);
+              return item;
+            } catch (error) {
+              console.error(`Error processing NFT ${index + 1}:`, error);
               return null;
             }
+          })
+        );
 
-            const creatorId =
-              accountsMappingRef.current[normalizedOwner] || 0;
+        // Filter out any null items resulting from processing errors
+        const validItems = items.filter((item) => item !== null);
+        console.log(
+          "Total valid NFTs processed for wallet address:",
+          validItems.length
+        );
+        return validItems;
+      } catch (error) {
+        console.error("Error in fetchMyNFTs:", error);
+        throw error;
+      }
+    };
 
-            const randomLikes = Math.floor(Math.random() * 501);
 
-            let item = {
-              tokenId: normalizedTokenId,
-              owner: itemOwner,
-              creatorId: creatorId,
-              contractOwner: contract.target,
-              itemOwner: itemOwner,
-              likes: randomLikes,
-              name: meta.data.name,
-              description: meta.data.description,
-              image: meta.data.image,
-              image: meta.data.image,
-              Category: meta.data.category,
-              swapCategory: meta.data.swapCategories,
-            };
-            console.log("MY NFTs:", item);
-            return item;
-          } catch (error) {
-            console.error(`Error processing NFT ${index + 1}:`, error);
-            return null;
-          }
-        })
-      );
-      
-      const validItems = items.filter((item) => item !== null);
-      console.log("Total valid NFTs processed:", validItems.length);
-      return validItems;
-    } catch (error) {
-      console.error("Error in fetchMyNFTs:", error);
-      throw error;
-    }
-  };
-  
+
 const fetchNFTByListingId = async (listingId) => {
   try {
     const contract = await connectSmartContract();
@@ -627,7 +833,7 @@ const fetchNFTByOfferId = async (offerId) => {
     }
 
     // Ensure offerId is a number
-    const parsedOfferId = parseInt(offerId, 10);
+    const parsedOfferId = parseInt(offerId);
     console.log("parsedOfferId: ", parsedOfferId);
 
     if (isNaN(parsedOfferId)) {
@@ -639,31 +845,48 @@ const fetchNFTByOfferId = async (offerId) => {
     const data = await contract.fetchNFTByOfferId(parsedOfferId);
     console.log("Fetched NFT by OfferId:", data);
 
-
     if (!data) {
       console.log("No data found for the given offer ID");
       return null;
     }
 
+    // Destructure the data returned from the contract call
     const [offer, tokenURI, owner] = data;
+    // Extract the offerer (itemOwner) from the returned data
+    const offerDetails = data[0];
+    const itemOwner = offerDetails[3];
+    const expirationTime = offerDetails[6];
+    console.log("owner:", owner);
+    console.log(`Item Owner for offer ID ${offerId}:`, itemOwner);
+    console.log(`Expiration Time for offer ID ${offerId}:`, expirationTime);
+
+    // Convert the expiration time from Unix timestamp to a human-readable format
+    const expirationDateTime = new Date(
+      Number(expirationTime) * 1000
+    ).toLocaleString();
+    console.log(`Formatted Expiration Time: ${expirationDateTime}`);
+
     const meta = await axios.get(tokenURI);
     console.log(`Metadata for offer ID ${offerId}:`, meta.data);
 
-    const creatorId = accountsMappingRef.current[owner.toLowerCase()] || 0;
+    // Use itemOwner to get creatorId
+    const creatorId = accountsMappingRef.current[itemOwner.toLowerCase()] || 0;
     const randomLikes = Math.floor(Math.random() * 501);
 
     const item = {
-      tokenId: offer.offerTokenId.toNumber(),
+      tokenId: offer.offerTokenId,
       owner: owner,
       creatorId: creatorId,
       contractOwner: contract.target,
-      itemOwner: owner,
+      itemOwner: itemOwner,
       likes: randomLikes,
       name: meta.data.name,
       description: meta.data.description,
       image: meta.data.image,
       category: meta.data.category,
       swapCategory: meta.data.swapCategories,
+      offerExpire: expirationTime,
+      offerExpireDateTime: expirationDateTime
     };
 
     console.log("NFT Details:", item);
@@ -675,42 +898,84 @@ const fetchNFTByOfferId = async (offerId) => {
 };
 
 
-//  const fetchAvailableNFTsForBarter = async (walletAddress) => {
-
-//  };
-
   const getBarterOffers = async (listingId) => {
     try {
       const contract = await connectSmartContract();
-      const offers = await contract.getBarterOffers(listingId);
-      const items = await Promise.all(
-        offers.map(async (offer) => {
-          const tokenURI = await contract.tokenURI(offer.offeredTokenId);
-          const meta = await axios.get(tokenURI);
-          return {
-            offeredTokenId: offer.offeredTokenId.toNumber(),
-            offerer: offer.offerer,
-            isAccepted: offer.isAccepted,
-            name: meta.data.name,
-            description: meta.data.description,
-            image: meta.data.image,
-          };
-        })
-      );
-      return items;
-    } catch (error) {
-      setOpenError(true), setError("Error fetching barter offers !!!");
-    }
-  };
 
-const createBarterOffer = async (listingId) => {
+    // Fetch all offers for a given listing ID from the smart contract
+    const offers = await contract.getBarterOffers(listingId);
+    console.log(`Fetched Offers for Listing ID ${listingId}:`, offers);
+
+      const items = await Promise.all(
+      offers.map(async (offer) => {
+        // Destructure offer details from the smart contract call
+        const { offeredTokenId, offerer, isAccepted, tokenURI, offerExpire } =
+          offer;
+
+        // Convert BigInt values to numbers
+        const offeredTokenIdNumber = offeredTokenId;
+        // Ensure offerExpire is a number or BigInt and handle accordingly
+        const expirationTimeNumber =
+          typeof offerExpire === "bigint" ? Number(offerExpire) : offerExpire;
+
+        // Convert expiration time to a human-readable format
+        const expirationDateTime = expirationTimeNumber
+          ? new Date(expirationTimeNumber * 1000).toLocaleString()
+          : "Invalid Date";
+
+        // Fetch metadata from the token URI
+        const meta = await axios.get(tokenURI);
+
+        // Fetch creator ID from the account mapping
+        const creatorId =
+          accountsMappingRef.current[offerer.toLowerCase()] || 0;
+
+        // Generate random likes for the offer (or use actual data if available)
+        const randomLikes = Math.floor(Math.random() * 501);
+
+        return {
+          tokenId: offeredTokenIdNumber,
+          offerer: offerer,
+          creatorId: creatorId,
+          isAccepted: isAccepted,
+          name: meta.data.name,
+          description: meta.data.description,
+          image: meta.data.image,
+          category: meta.data.category,
+          swapCategory: meta.data.swapCategories,
+          likes: randomLikes,
+          offerExpire: expirationTimeNumber,
+          offerExpireDateTime: expirationDateTime,
+        };
+      })
+    );
+
+    return items;
+  } catch (error) {
+    console.error("Error fetching barter offers:", error);
+    setOpenError(true);
+    setError("Error fetching barter offers!!!");
+    return [];
+  }
+};
+
+  
+const createBarterOffer = async (
+  listingId,
+  offerTokenId,
+  durationInHours = 24
+) => {
   try {
     const contract = await connectSmartContract();
 
     // Create the barter offer on the contract
-    const transaction = await contract.createBarterOffer(listingId);
+    const transaction = await contract.createBarterOffer(
+      listingId,
+      offerTokenId,
+      durationInHours
+    );
     console.log("Transaction hash:", transaction.hash);
-    
+
     const receipt = await transaction.wait();
     console.log("Transaction receipt:", receipt);
 
@@ -718,7 +983,11 @@ const createBarterOffer = async (listingId) => {
       throw new Error("Transaction failed");
     }
 
-    // Check for events in both receipt.events and receipt.logs
+    // Debugging: Log all events to see what's available
+    console.log("receipt:", receipt)
+    console.log("All events:", receipt.events);
+
+    // Extract the BarterOfferCreated event
     let offerCreatedEvent = receipt.events?.find(
       (event) => event.event === "BarterOfferCreated"
     );
@@ -729,26 +998,25 @@ const createBarterOffer = async (listingId) => {
       );
     }
 
+
     if (!offerCreatedEvent) {
       throw new Error(
         "BarterOfferCreated event not found in the transaction receipt"
       );
     }
 
-    // const offerId = offerCreatedEvent.args.offerId;
-
     // Extract the offerId from the event arguments
     const offerIdBigInt = offerCreatedEvent.args.offerId;
-
-    // Convert BigInt to a string for safe display or further usage
+    const offererAddress = offerCreatedEvent.args.offerer.toString();
     const offerId = offerIdBigInt.toString();
 
     console.log("Barter offer created successfully with offerId:", offerId);
+    console.log("Barter offer created successfully with offerAddress:", offererAddress);
     return offerId;
   } catch (error) {
     console.error("Error creating barter offer:", error);
-    setOpenError(true);
     setError(`Error creating barter offer: ${error.message}`);
+    setOpenError(true);
     return null;
   }
 };
