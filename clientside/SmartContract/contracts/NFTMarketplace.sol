@@ -237,8 +237,7 @@ contract NFTMarketplace is ERC721URIStorage {
         tokenInActiveOffer[offerTokenId] = true;
 
         // Update the BarterListing to indicate it has an active offer
-        idToBarterListing[offerTokenId].isOffered = true;
-        // idToBarterListing[offerTokenId].expirationTime = expirationTime;
+        idToBarterListing[listingId].isOffered = true;
 
         // Emit the BarterOfferCreated event
         emit BarterOfferCreated(offerId, listingId, offerTokenId, msg.sender, expirationTime);
@@ -263,6 +262,34 @@ contract NFTMarketplace is ERC721URIStorage {
     revert("No active offer found for the given listing");
 }
 
+function fetchActiveOffersByAddress(address walletAddress) public view returns (BarterOffer[] memory) {
+    require(walletAddress != address(0), "Invalid wallet address");
+    uint256 totalOffersCount = _offerIds.current();
+    uint256 activeOffersCount = 0;
+
+    // First loop: Count the number of active offers by the given wallet address
+    for (uint256 i = 1; i <= totalOffersCount; i++) {
+        if (idToBarterOffer[i].offerer == walletAddress && idToBarterOffer[i].isActive) {
+            activeOffersCount++;
+        }
+    }
+
+    // Always return an array, even if it's empty
+    BarterOffer[] memory activeOffers = new BarterOffer[](activeOffersCount);
+    
+    if (activeOffersCount > 0) {
+        uint256 currentIndex = 0;
+        // Second loop: Collect all active offers by the given wallet address
+        for (uint256 i = 1; i <= totalOffersCount; i++) {
+            if (idToBarterOffer[i].offerer == walletAddress && idToBarterOffer[i].isActive) {
+                activeOffers[currentIndex] = idToBarterOffer[i];
+                currentIndex++;
+            }
+        }
+    }
+
+    return activeOffers;
+}
 
     function getBarterOffers(uint256 listingId) public view returns (BarterOfferDetails[] memory) {
         uint256[] memory offerIds = listingToOffers[listingId];
