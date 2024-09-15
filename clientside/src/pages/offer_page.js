@@ -28,6 +28,7 @@ const OfferPage = ({
 
   const [userNFTs, setUserNFTs] = useState([]);
   const [selectedNFTs, setSelectedNFTs] = useState([]);
+  const [durationInHours, setDurationInHours] = useState(24);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState("");
@@ -59,12 +60,12 @@ const OfferPage = ({
     fetchUserNFTs();
   }, [fetchMyNFTs, offerAddress]);
 
-  const handleNFTSelection = (nftId) => {
+  const handleNFTSelection = (tokenId ) => {
     setSelectedNFTs((prevSelectedNFTs) => {
-      if (prevSelectedNFTs.includes(nftId)) {
-        return prevSelectedNFTs.filter((id) => id !== nftId);
+      if (prevSelectedNFTs.includes(tokenId )) {
+        return prevSelectedNFTs.filter((id) => id !== tokenId );
       } else if (prevSelectedNFTs.length < 2) {
-        return [...prevSelectedNFTs, nftId];
+        return [...prevSelectedNFTs, tokenId ];
       } else {
         return prevSelectedNFTs;
       }
@@ -86,9 +87,11 @@ const OfferPage = ({
 
     try {
       const offerIds = [];
-
-      for (const nftId of selectedNFTs) {
-        const offerId = await createBarterOffer(listingId, nftId, message);
+      console.log("selectedNft: ", selectedNFTs)
+      
+      for (const tokenId  of selectedNFTs) {
+        console.log("selectedNft ID: ", tokenId )
+        const offerId = await createBarterOffer(listingId, tokenId , durationInHours);
         console.log("offerId:", offerId)
         if (offerId) {
           offerIds.push(offerId);
@@ -167,6 +170,22 @@ const OfferPage = ({
             />
           </div>
         </div>
+
+        <div className={Styles.Form_box_input}>
+          <label htmlFor="duration">Offer Duration (Hours)</label>
+          <div className={Styles.inputField}>
+            <input
+              type="number"
+              id="duration"
+              min="1"
+              max="168" // Up to one week
+              value={durationInHours}
+              onChange={(e) => setDurationInHours(parseInt(e.target.value, 10))}
+              placeholder="24"
+            />
+          </div>
+        </div>
+        
         <div
           className={Styles.submitButton}
           style={{
