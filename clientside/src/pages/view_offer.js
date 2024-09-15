@@ -1,16 +1,22 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { FaWallet, FaPercentage } from "react-icons/fa";
-import { MdVerified, MdTimer, MdCancel } from 'react-icons/md';
+import { MdVerified, MdTimer, MdCancel } from "react-icons/md";
 import Style from "../styles/view-offer.module.css";
 import ProductStyle from "./ProductDetailsPage/ProductDescription/ProductDescription.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
-import 'swiper/css';
-import 'swiper/css/effect-coverflow';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { Button, Category, Title, Loader, Error } from "../components/componentsIndex";
+import "swiper/css";
+import "swiper/css/effect-coverflow";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import {
+  Button,
+  Category,
+  Title,
+  Loader,
+  Error,
+} from "../components/componentsIndex";
 import images from "../assets/img";
 import userData from "../assets/Data/userData.json";
 
@@ -19,7 +25,6 @@ import { NFTMarketplaceContext } from "../../SmartContract/Context/NFTMarketplac
 import Image from "next/image";
 import Link from "next/link";
 
-
 const ViewOffer = () => {
   const {
     fetchNFTByListingId,
@@ -27,6 +32,11 @@ const ViewOffer = () => {
     getBarterOffers,
     currentAccount,
     checkWalletConnection,
+    acceptBarterOffer,
+    confirmBarterTransaction,
+    cancelBarterTransaction,
+    declineBarterOffer,
+    handleExpiredOffers,
   } = useContext(NFTMarketplaceContext);
 
   const [listingNFT, setListingNFT] = useState(null);
@@ -76,18 +86,10 @@ const ViewOffer = () => {
         const userAddress = currentAccount?.address?.toLowerCase();
         const listingOwnerAddress = fetchedListingNFT.itemOwner?.toLowerCase();
 
-        // Log the addresses for debugging
-        console.log("User Address:", userAddress);
-        console.log("Listing Owner Address:", listingOwnerAddress);
-
         if (parsedOfferId) {
           const fetchedOfferNFT = await fetchNFTByOfferId(parsedOfferId);
           const offerOwnerAddress = fetchedOfferNFT.itemOwner?.toLowerCase();
 
-          // Log the offer owner address for debugging
-          console.log("Offer Owner Address:", offerOwnerAddress);
-
-          // Check if the viewer is the offer owner
           if (userAddress === offerOwnerAddress) {
             setOfferNFTs(
               Array.isArray(fetchedOfferNFT)
@@ -95,21 +97,22 @@ const ViewOffer = () => {
                 : [fetchedOfferNFT]
             );
           } else {
-            console.log("User is not the offer owner.");
             setError("You are not authorized to view this offer.");
             setLoading(false);
             return;
           }
         } else if (userAddress === listingOwnerAddress) {
-          // If the viewer is the listed NFT owner
-          console.log("User is the listing owner.");
           const allOffers = await getBarterOffers(parsedListingId);
           setOfferNFTs(allOffers);
         } else {
-          console.log("User is neither the listing owner nor the offer owner.");
           setError("You are not authorized to view this listing.");
           setLoading(false);
-          return;
+
+          const timer = setTimeout(() => {
+            router.back();
+          }, 3000);
+
+          return () => clearTimeout(timer);
         }
 
         setLoading(false);
@@ -159,12 +162,12 @@ const ViewOffer = () => {
   }, [offerNFTs]);
 
   if (loading) {
-    return <Loader />; // Display loading component while fetching data
+    return <Loader />;
   }
 
-if (error) {
-  return <Error message={error} />;
-}
+  if (error) {
+    return <Error message={error} />;
+  }
 
   if (!listingNFT) {
     setError("No NFT data available.");
@@ -250,7 +253,6 @@ if (error) {
         {/* offer NFT Section */}
         <div className={Style.nft_offer_container}>
           {offerNFTs.length === 0 ? (
-            // No Offers Available
             <div
               style={{ textAlign: "center", padding: "20px", margin: "14rem" }}
             >
@@ -279,7 +281,6 @@ if (error) {
               </button>
             </div>
           ) : (
-            // Display Offers
             <>
               <Swiper
                 effect="coverflow"
@@ -346,7 +347,6 @@ if (error) {
               </div>
 
               <div className={Style.box_tabs}>
-                {/* Check if the user is the offerer */}
                 {offerNFTs.some(
                   (offerNFT) =>
                     offerNFT.itemOwner?.toLowerCase() ===
@@ -357,28 +357,39 @@ if (error) {
                       icon={<MdTimer />}
                       btnName="Pending Offer"
                       classStyle={Style.pending_button}
-                      disabled 
+                      disabled
                     />
                     <Button
                       icon={<MdCancel />}
                       btnName="Cancel Offer"
-                      handleClick={() => {}}
+                      handleClick={() =>
+                        cancelBarterTransaction(offerNFTs[0].transactionId)
+                      }
                       classStyle={Style.decline_button}
                     />
                   </>
                 ) : (
                   <>
-                    {/* If the user is the listing owner */}
                     <Button
                       icon={<FaWallet />}
                       btnName="Accept Offer"
-                      handleClick={() => {}}
+                      handleClick={() =>
+                        acceptBarterOffer(
+                          listingNFT.listingId,
+                          offerNFTs[0].offerId
+                        )
+                      } // Call accept offer function
                       classStyle={Style.accept_button}
                     />
                     <Button
                       icon={<MdCancel />}
                       btnName="Reject Offer"
-                      handleClick={() => {}}
+                      handleClick={() =>
+                        declineBarterOffer(
+                          listingNFT.listingId,
+                          offerNFTs[0].offerId
+                        )
+                      } // Call decline offer function
                       classStyle={Style.decline_button}
                     />
                   </>
