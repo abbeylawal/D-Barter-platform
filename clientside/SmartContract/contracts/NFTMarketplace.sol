@@ -21,6 +21,7 @@ contract NFTMarketplace is ERC721URIStorage {
         uint256 listingId;
         uint256 tokenId;
         address itemOwner;
+        uint256 mintTime;
         uint256 expirationTime;
         bool isActive;
         bool isOffered;
@@ -55,6 +56,7 @@ contract NFTMarketplace is ERC721URIStorage {
         address offerer;
         bool isAccepted;
         string tokenURI;
+        uint256 expirationTime;
     }
 
     mapping(uint256 => BarterListing) private idToBarterListing;
@@ -69,9 +71,10 @@ contract NFTMarketplace is ERC721URIStorage {
     event BarterOfferCreated(uint256 indexed offerId, uint256 indexed listingId, uint256 offerTokenId, address offerer, uint256 expirationTime);
     event HTLCSwapInitiated(bytes32 indexed swapId, uint256 indexed listingId, uint256 indexed offerId);
     event BarterOfferAccepted(uint256 indexed transactionId, uint256 indexed listingId, uint256 indexed offerId);    
-    event BarterOfferDeclined(uint256 indexed transactionId, uint256 indexed listingId, uint256 indexed offerId);
+    event BarterOfferDeclined(uint256 indexed listingId, uint256 indexed offerId);
     event BarterTransactionCompleted(uint256 indexed transactionId);
     event BarterTransactionCancelled(uint256 indexed transactionId);
+    event BarterOfferExpired(uint256 indexed listingId, uint256 indexed offerId);
 
     constructor(address _htlcAddress) ERC721("Barter NFT", "BNFT") {
         contractOwner = msg.sender;
@@ -79,7 +82,7 @@ contract NFTMarketplace is ERC721URIStorage {
     }
 
     function createTokenAndList(string memory tokenURI) public returns (uint256, uint256) {
-        uint256 defaultDurationInDays = 7;
+        // uint256 defaultDurationInDays = 3600;
 
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
@@ -91,18 +94,20 @@ contract NFTMarketplace is ERC721URIStorage {
 
         _listingIds.increment();
         uint256 listingId = _listingIds.current();
-        uint256 expirationTime = block.timestamp + (defaultDurationInDays * 1 days);
+        uint256 expirationTime = 0;
+        uint256 mintTime = block.timestamp;
 
         idToBarterListing[listingId] = BarterListing(
             listingId,
             newTokenId,
             msg.sender,
+            mintTime,
             expirationTime,
             true,
             false
         );
 
-        emit BarterListingCreated(listingId, newTokenId, msg.sender, expirationTime);
+        emit BarterListingCreated(listingId, newTokenId, msg.sender, mintTime);
 
         return (newTokenId, listingId);
     }
@@ -144,36 +149,6 @@ contract NFTMarketplace is ERC721URIStorage {
         return listings;
     }
 
-    function fetchAvailableNFTsForBarter(address walletAddress) public view returns (uint256[] memory) {
-        uint256[] memory ownedNFTs = fetchMyNFTs(walletAddress);
-        uint256[] memory availableNFTs = new uint256[](ownedNFTs.length);
-        uint256 availableCount = 0;
-
-        for (uint256 i = 0; i < ownedNFTs.length; i++) {
-            uint256 tokenId = ownedNFTs[i];
-            bool isAvailable = true;
-
-            // Check if the tokenId is involved in any active barter offer
-            for (uint256 offerId = 1; offerId <= _offerIds.current(); offerId++) {
-                if (idToBarterOffer[offerId].offerTokenId == tokenId && idToBarterOffer[offerId].isActive) {
-                    isAvailable = false;
-                    break;
-                }
-            }
-
-            if (isAvailable) {
-                availableNFTs[availableCount] = tokenId;
-                availableCount++;
-            }
-        }
-
-        // Resize the array to remove empty slots
-        assembly {
-            mstore(availableNFTs, availableCount)
-        }
-
-        return availableNFTs;
-    }
 
     function fetchNFTByListingId(uint256 listingId) public view returns (BarterListing memory, string memory, address) {
         require(idToBarterListing[listingId].listingId == listingId, "Listing does not exist");
@@ -187,19 +162,17 @@ contract NFTMarketplace is ERC721URIStorage {
         return (listing, tokenURI, currentOwner);
     }
 
-    // function fetchNFTByOfferId(uint256 offerId) public view returns (BarterOffer memory, string memory, address) {
-    //     require(idToBarterOffer[offerId].offerId == offerId, "Offer does not exist");
 
-    //     BarterOffer memory offer = idToBarterOffer[offerId];
-    //     require(offer.isActive, "Offer is not active");
-
-    //     string memory tokenURI = tokenURI(offer.offerTokenId);
-    //     address currentOwner = ownerOf(offer.offerTokenId);
-
-    //     return (offer, tokenURI, currentOwner);
-    // }
-
-    function fetchNFTByOfferId(uint256 offerId) public view returns (BarterOffer memory offer, string memory tokenURI, address currentOwner) {
+    function fetchNFTByOfferId(uint256 offerId)
+        public 
+        view 
+        returns (
+            BarterOffer memory offer, 
+            string memory fetchedTokenURI, 
+            address currentOwner, 
+            address itemOwner
+        ) 
+    {
         // Fetch the offer from storage
         offer = idToBarterOffer[offerId];
         
@@ -208,37 +181,33 @@ contract NFTMarketplace is ERC721URIStorage {
         
         // Check that the offer is active
         require(offer.isActive, "Offer is not active");
+        require(offer.offerer == msg.sender, "You didnt make this offer");
 
         // Check that the offer has not expired
         require(block.timestamp < offer.expirationTime, "Offer has expired");
 
         // Fetch the token URI for the offer token
-        tokenURI = tokenURI(offer.offerTokenId);
+        fetchedTokenURI = tokenURI(offer.offerTokenId);
         
         // Fetch the current owner of the offer token
         currentOwner = ownerOf(offer.offerTokenId);
 
-        return (offer, tokenURI, currentOwner);
+        // Fetch the itemOwner of the offer
+        itemOwner = offer.offerer;
+
+        return (offer, fetchedTokenURI, currentOwner, itemOwner);
     }
 
 
-
-
     // Function to create a barter offer for a specific listing
-    function createBarterOffer(
-        uint256 listingId,
-        uint256 durationInHours,
-        string memory offerTokenURI
-    )
-        public
-        returns (uint256)
-    {
+    function createBarterOffer(uint256 listingId, uint256 offerTokenId, uint256 durationInHours) public returns (uint256) {
+        // Ensure the listing is active
         require(idToBarterListing[listingId].isActive, "Listing is not active");
-        // Additional checks can be uncommented or modified as needed
-        // require(ownerOf(offerTokenId) == msg.sender, "You don't own this token");
-        // require(!tokenInActiveOffer[offerTokenId], "This token is already in an active offer");
+        require(ownerOf(offerTokenId) == msg.sender, "You don't own this token");
+        
+        // Ensure the token isn't already part of an active offer
+        require(!tokenInActiveOffer[offerTokenId], "This token is already in an active offer");
 
-        // Set default duration to 24 hours if not provided
         if (durationInHours == 0) {
             durationInHours = 24;
         }
@@ -249,16 +218,10 @@ contract NFTMarketplace is ERC721URIStorage {
         _offerIds.increment();
         uint256 offerId = _offerIds.current();
 
-        // Generate offerTokenId based on custom logic or current token count
-        _tokenIds.increment();
-        uint256 offerTokenId = _tokenIds.current();
+        // Transfer the offer token to the contract for escrow
+        transferFrom(msg.sender, address(this), offerTokenId);
 
-        // Mint the offer token to the offerer
-        _mint(msg.sender, offerTokenId);
-
-        // Set the token URI for the offer token
-        _setTokenURI(offerTokenId, offerTokenURI);
-
+        // Create the BarterOffer struct
         idToBarterOffer[offerId] = BarterOffer(
             offerId,
             listingId,
@@ -266,24 +229,40 @@ contract NFTMarketplace is ERC721URIStorage {
             msg.sender,
             true,
             false,
-            expirationTime,
+            expirationTime
         );
 
         offerToTokenId[offerId] = offerTokenId;
-
         listingToOffers[listingId].push(offerId);
         tokenInActiveOffer[offerTokenId] = true;
 
+        // Update the BarterListing to indicate it has an active offer
+        idToBarterListing[offerTokenId].isOffered = true;
+        // idToBarterListing[offerTokenId].expirationTime = expirationTime;
+
+        // Emit the BarterOfferCreated event
         emit BarterOfferCreated(offerId, listingId, offerTokenId, msg.sender, expirationTime);
 
         return offerId;
     }
 
 
+    function getBarterOfferByListingId(uint256 listingId) public view returns (BarterOffer memory) {
+    // Find the active offer associated with the listingId
+    for (uint i = 0; i < listingToOffers[listingId].length; i++) {
+        uint256 offerId = listingToOffers[listingId][i];
+        BarterOffer memory offer = idToBarterOffer[offerId];
 
-    function getBarterListing(uint256 listingId) public view returns (BarterListing memory) {
-        return idToBarterListing[listingId];
+        // Return the first active offer found
+        if (offer.isActive) {
+            return offer;
+        }
     }
+
+    // If no active offer is found, revert with a meaningful error
+    revert("No active offer found for the given listing");
+}
+
 
     function getBarterOffers(uint256 listingId) public view returns (BarterOfferDetails[] memory) {
         uint256[] memory offerIds = listingToOffers[listingId];
@@ -292,17 +271,19 @@ contract NFTMarketplace is ERC721URIStorage {
         for (uint i = 0; i < offerIds.length; i++) {
             BarterOffer storage offer = idToBarterOffer[offerIds[i]];
             string memory uri = tokenURI(offer.offerTokenId);
-            
+
             offerDetails[i] = BarterOfferDetails({
                 offeredTokenId: offer.offerTokenId,
                 offerer: offer.offerer,
                 isAccepted: offer.isAccepted,
-                tokenURI: uri
+                tokenURI: uri,
+                expirationTime: offer.expirationTime
             });
         }
 
         return offerDetails;
     }
+
 
     function acceptBarterOffer(uint256 listingId, uint256 offerId) public {
         require(idToBarterListing[listingId].itemOwner == msg.sender, "You are not the owner of this listing");
@@ -380,8 +361,12 @@ contract NFTMarketplace is ERC721URIStorage {
         require(idToBarterOffer[offerId].listingId == listingId, "Offer does not match listing");
         require(idToBarterOffer[offerId].isActive, "Offer is not active");
 
+        // Mark the offer as inactive
         idToBarterOffer[offerId].isActive = false;
         tokenInActiveOffer[idToBarterOffer[offerId].offerTokenId] = false;
+
+        // Return the offered token to the offerer
+        _transfer(address(this), idToBarterOffer[offerId].offerer, idToBarterOffer[offerId].offerTokenId);
 
         emit BarterOfferDeclined(listingId, offerId);
     }
@@ -391,11 +376,35 @@ contract NFTMarketplace is ERC721URIStorage {
         require(transaction.status == TransactionStatus.Accepted, "Transaction is not in Accepted state");
         require(msg.sender == transaction.lister || msg.sender == transaction.offerer, "You are not part of this transaction");
 
+        // Update the status to Cancelled
         transaction.status = TransactionStatus.Cancelled;
         idToBarterListing[transaction.listingId].isActive = true;
         idToBarterOffer[transaction.offerId].isActive = true;
 
+        // Return NFTs to their respective owners
+        _transfer(address(this), transaction.lister, transaction.listerTokenId);
+        _transfer(address(this), transaction.offerer, transaction.offererTokenId);
+
         emit BarterTransactionCancelled(transactionId);
+    }
+
+    function handleExpiredOffers(uint256 listingId) public {
+        for (uint i = 0; i < listingToOffers[listingId].length; i++) {
+            uint256 offerId = listingToOffers[listingId][i];
+            BarterOffer storage offer = idToBarterOffer[offerId];
+
+            // Check if the offer is active and has expired
+            if (offer.isActive && block.timestamp > offer.expirationTime) {
+                // Mark the offer as inactive
+                offer.isActive = false;
+                tokenInActiveOffer[offer.offerTokenId] = false;
+
+                // Return the offered token to the offerer
+                _transfer(address(this), offer.offerer, offer.offerTokenId);
+
+                emit BarterOfferExpired(listingId, offerId);
+            }
+        }
     }
 
     function fetchMyTransactions() public view returns (BarterTransaction[] memory) {
@@ -463,16 +472,3 @@ contract NFTMarketplace is ERC721URIStorage {
     }
 
 }
-    // function participantDepositForSwap(bytes32 swapId) public {
-    //     // Retrieve the swap information from the HTLC contract
-    //     HTLC.Swap memory swap = htlc.swaps(swapId);
-
-    //     // Ensure the participant matches the one recorded in the swap
-    //     require(msg.sender == swap.participant, "Only participant can deposit");
-
-    //     // Approve the HTLC contract to transfer the participant's NFT
-    //     approve(address(htlc), swap.participantTokenId);
-
-    //     // Execute the participant's deposit through the HTLC contract
-    //     htlc.participantDeposit(swapId);
-    // }
