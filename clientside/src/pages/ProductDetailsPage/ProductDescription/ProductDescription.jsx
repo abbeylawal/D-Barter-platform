@@ -115,25 +115,14 @@ const ProductDescription = ({ nft }) => {
     }
   }
 
-  // useEffect(() => {
-  //   const fetchOfferStatus = async () => {
-  //     try {
-  //       console.log("---- fetch Offer Status ---")
-  //       const offers = await getBarterOffers(nft.tokenId);
+  const handleAwaitingOfferClick = () => {
+    if (!nft.tokenId) {
+      console.error("Error: Listing ID is undefined.");
+      return; // Prevents routing if listingId is not set
+    }
 
-  //       console.log(offers)
-  //       if (offers.length > 0) {
-  //         const latestOffer = offers[offers.length - 1];
-  //         setOfferStatus(latestOffer);
-  //         setIsAccepted(latestOffer.isAccepted);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching barter offers:", error);
-  //     }
-  //   };
-
-  //   fetchOfferStatus();
-  // }, [nft.tokenId]);
+    router.push(`/view_offer?listingId=${nft.tokenId}`);
+  };
 
 
   const isOwner = currentAccount && nft.itemOwner &&
@@ -153,7 +142,7 @@ const ProductDescription = ({ nft }) => {
           <Button
             icon={<FaWallet />}
             btnName="Awaiting Offer"
-            handleClick={() => { }}
+            handleClick={handleAwaitingOfferClick}
             classStyle={Style.button}
           />
         </>
