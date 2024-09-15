@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { MdOutlineHttp, MdOutlineAttachFile } from "react-icons/md";
 import { FaPercent } from "react-icons/fa";
 import { AiTwoTonePropertySafety } from "react-icons/ai";
@@ -25,6 +25,7 @@ const UploadForm = ({ uploadToIPFS, createNFT }) => {
 
 
     const router = useRouter()
+    const dropZoneRef = useRef(null);
 
     const categoryArray = [
         {
@@ -61,21 +62,29 @@ const UploadForm = ({ uploadToIPFS, createNFT }) => {
         }
     };
 
+    const scrollToDropZone = () => {
+        if (dropZoneRef.current) {
+            dropZoneRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+
+
     return (
         <div className={Style.upload}>
-            <DropZone
-                title="JPG, PNG, WEBM, MAX 100MB"
-                heading="Drag & drop file"
-                subHeading="or Browse media on your device"
-                name={name}
-                description={description}
-                fileSize={fileSize}
-                category={category}
-                swapCategories={swapCategories}
-                // image={images.upload}
-                setImage={setImage}
-                uploadToIPFS={uploadToIPFS}
-            />
+            <div ref={dropZoneRef}> {/* Add the ref to the DropZone div */}
+                <DropZone
+                    title="JPG, PNG, WEBM, MAX 100MB"
+                    heading="Drag & drop file"
+                    subHeading="or Browse media on your device"
+                    name={name}
+                    description={description}
+                    fileSize={fileSize}
+                    category={category}
+                    swapCategories={swapCategories}
+                    setImage={setImage}
+                    uploadToIPFS={uploadToIPFS}
+                />
+            </div>
 
             <div className={Style.upload_box}>
                 <div className={Style.Form_box_input}>
@@ -171,7 +180,11 @@ const UploadForm = ({ uploadToIPFS, createNFT }) => {
                 }
                     classStyle={Style.upload_box_btn_style}
                 />
-                <Button btnName="Preview" handleClick={() => { }} classStyle={Style.upload_box_btn_style} />
+                <Button
+                    btnName="Preview"
+                    handleClick={scrollToDropZone}
+                    classStyle={Style.upload_box_btn_style}
+                />
             </div>
         </div>
     );
