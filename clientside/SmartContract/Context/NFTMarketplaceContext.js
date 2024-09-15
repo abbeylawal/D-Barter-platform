@@ -657,120 +657,143 @@ const connectWallet = async () => {
     //     }
     //   };
   
-    const fetchMyNFTs = async (walletAddress) => {
-      try {
-        const contract = await connectSmartContract();
-        console.log("Contract connected successfully");
+const fetchMyNFTs = async (walletAddress) => {
+  try {
+    const contract = await connectSmartContract();
+    console.log("Contract connected successfully");
 
-        // Fetch all listings from the smart contract
-        const allListings = await contract.fetchAllListings();
-        console.log("Fetched all listings:", allListings);
+    // Fetch all listings from the smart contract
+    const allListings = await contract.fetchAllListings();
+    console.log("Fetched all listings:", allListings);
 
-        if (!Array.isArray(allListings) || allListings.length === 0) {
-          console.log("No listings found or data is not in expected format");
-          return [];
-        }
+    if (!Array.isArray(allListings) || allListings.length === 0) {
+      console.log("No listings found or data is not in expected format");
+      return [];
+    }
 
-        console.log(
-          `Processing ${allListings.length} listings for wallet address ${walletAddress}...`
-        );
+    // Filter listings that belong to the specified wallet address
+    const myNFTs = allListings.filter(
+      (listing) =>
+        listing.itemOwner.toLowerCase() === walletAddress.toLowerCase()
+    );
 
-        // Filter listings that belong to the specified wallet address
-        const myNFTs = allListings.filter(
-          (listing) =>
-            listing.itemOwner.toLowerCase() === walletAddress.toLowerCase()
-        );
+    // Fetch all active offers where the offerer is the specified wallet address
+    let activeOffers = [];
+    try {
+      activeOffers = await contract.fetchActiveOffersByAddress(walletAddress);
+      console.log("Fetched active offers:", activeOffers);
+    } catch (error) {
+      console.error("Error fetching active offers:", error);
+      // Continue execution without active offers
+    }
 
-        // Process each NFT belonging to the specified wallet address
-        const items = await Promise.all(
-          myNFTs.map(async (i, index) => {
+    // Combine listings owned by wallet address with those offered by wallet address
+    const combinedNFTs = [...myNFTs, ...activeOffers];
+
+    // Process each NFT belonging to the specified wallet address
+    const items = await Promise.all(
+      combinedNFTs.map(async (i, index) => {
+        try {
+          console.log(`Processing NFT ${index + 1}/${combinedNFTs.length}`);
+          console.log("Listing data:", i);
+
+          // Convert tokenId to a regular number
+          const tokenId = i.tokenId.toNumber
+            ? i.tokenId.toNumber()
+            : Number(i.tokenId);
+
+          // Fetch the token URI for the NFT
+          const tokenURI = await contract.tokenURI(tokenId);
+          console.log(`TokenURI for tokenId ${tokenId}:`, tokenURI);
+
+          // Fetch metadata from the token URI
+          const meta = await axios.get(tokenURI);
+          console.log(`Metadata for tokenId ${tokenId}:`, meta.data);
+
+          // Retrieve the creatorId from the accountsMappingRef based on the itemOwner
+          const normalizedOwner = i.itemOwner.toLowerCase();
+          const creatorId = accountsMappingRef.current[normalizedOwner] || 0;
+
+          // Initialize expiration time
+          let expirationTime = i.expirationTime.toNumber
+            ? i.expirationTime.toNumber()
+            : Number(i.expirationTime);
+
+          // Determine the lock status
+          let lockStatus = "Unlocked"; // Default to 'Unlocked'
+
+          // Check if the listing is offered before fetching the BarterOffer
+          if (i.isOffered) {
             try {
-              console.log(`Processing NFT ${index + 1}/${myNFTs.length}`);
-              console.log("Listing data:", i);
+              // Fetch the corresponding BarterOffer for the listing
+              const offerData = await contract.getBarterOfferByListingId(
+                i.listingId
+              );
+              console.log(
+                `Fetched BarterOffer data for listingId ${i.listingId}:`,
+                offerData
+              );
 
-              // Convert tokenId to a regular number
-              const tokenId = i.tokenId.toNumber
-                ? i.tokenId.toNumber()
-                : Number(i.tokenId);
+              // Use the expiration time from the BarterOffer
+              expirationTime = offerData.expirationTime.toNumber
+                ? offerData.expirationTime.toNumber()
+                : Number(offerData.expirationTime);
 
-              // Fetch the token URI for the NFT
-              const tokenURI = await contract.tokenURI(tokenId);
-              console.log(`TokenURI for tokenId ${tokenId}:`, tokenURI);
-
-              // Fetch metadata from the token URI
-              const meta = await axios.get(tokenURI);
-              console.log(`Metadata for tokenId ${tokenId}:`, meta.data);
-
-              // Retrieve the creatorId from the accountsMappingRef based on the itemOwner
-              const normalizedOwner = i.itemOwner.toLowerCase();
-              const creatorId =
-                accountsMappingRef.current[normalizedOwner] || 0;
-
-              // Determine expiration time based on whether the listing is offered
-              let expirationTime = i.expirationTime.toNumber
-                ? i.expirationTime.toNumber()
-                : Number(i.expirationTime);
-
-              if (i.isOffered) {
-                // Fetch the corresponding BarterOffer for the listing
-                const offerData = await contract.getBarterOfferByListingId(
-                  i.listingId
-                );
-                console.log(
-                  `Fetched BarterOffer data for listingId ${i.listingId}:`,
-                  offerData
-                );
-
-                // Use the expiration time from the BarterOffer
-                expirationTime = offerData.expirationTime.toNumber
-                  ? offerData.expirationTime.toNumber()
-                  : Number(offerData.expirationTime);
-              }
-
-              // Generate random likes for UI display
-              const randomLikes = Math.floor(Math.random() * 501);
-
-              // Construct the item object with necessary details
-              let item = {
-                listingId: i.listingId.toNumber
-                  ? i.listingId.toNumber()
-                  : Number(i.listingId),
-                tokenId: tokenId,
-                expirationTime: expirationTime,
-                isActive: i.isActive,
-                isOffered: i.isOffered,
-                name: meta.data.name,
-                creatorId: creatorId,
-                contractOwner: contract.target,
-                itemOwner: i.itemOwner,
-                likes: randomLikes,
-                description: meta.data.description,
-                image: meta.data.image,
-                Category: meta.data.category,
-                swapCategory: meta.data.swapCategories,
-                lockStatus: i.isOffered ? "Locked" : "Unlocked",
-              };
-              console.log("Processed NFT:", item);
-              return item;
+              // Update lock status based on the offer's isActive status
+              lockStatus = offerData.isActive ? "Locked" : "Unlocked";
             } catch (error) {
-              console.error(`Error processing NFT ${index + 1}:`, error);
-              return null;
+              console.error(
+                `Error fetching offer data for listingId ${i.listingId}:`,
+                error
+              );
             }
-          })
-        );
+          }
 
-        // Filter out any null items resulting from processing errors
-        const validItems = items.filter((item) => item !== null);
-        console.log(
-          "Total valid NFTs processed for wallet address:",
-          validItems.length
-        );
-        return validItems;
-      } catch (error) {
-        console.error("Error in fetchMyNFTs:", error);
-        throw error;
-      }
-    };
+          // Generate random likes for UI display
+          const randomLikes = Math.floor(Math.random() * 501);
+
+          // Construct the item object with necessary details
+          let item = {
+            listingId: i.listingId.toNumber
+              ? i.listingId.toNumber()
+              : Number(i.listingId),
+            tokenId: tokenId,
+            expirationTime: expirationTime,
+            isActive: i.isActive,
+            isOffered: i.isOffered,
+            name: meta.data.name,
+            creatorId: creatorId,
+            contractOwner: contract.target,
+            itemOwner: i.itemOwner,
+            likes: randomLikes,
+            description: meta.data.description,
+            image: meta.data.image,
+            Category: meta.data.category,
+            swapCategory: meta.data.swapCategories,
+            lockStatus: lockStatus,
+          };
+          console.log("Processed NFT:", item);
+          return item;
+        } catch (error) {
+          console.error(`Error processing NFT ${index + 1}:`, error);
+          return null; // Continue processing other NFTs
+        }
+      })
+    );
+
+    // Filter out any null items resulting from processing errors
+    const validItems = items.filter((item) => item !== null);
+    console.log(
+      "Total valid NFTs processed for wallet address:",
+      validItems.length
+    );
+    return validItems;
+  } catch (error) {
+    console.error("Error in fetchMyNFTs:", error);
+    return [];
+  }
+};
+
 
 
 
@@ -1063,6 +1086,32 @@ const createBarterOffer = async (
     }
   };
 
+const handleExpiredOffers = async (listingId) => {
+  try {
+    const contract = await connectSmartContract();
+    const transaction = await contract.handleExpiredOffers(listingId);
+    await transaction.wait();
+    console.log("Expired offers handled successfully");
+  } catch (error) {
+    console.error("Error handling expired offers:", error);
+    setOpenError(true);
+    setError("Error handling expired offers");
+  }
+};
+
+  const declineBarterOffer = async (listingId, offerId) => {
+  try {
+    const contract = await connectSmartContract();
+    const transaction = await contract.declineBarterOffer(listingId, offerId);
+    await transaction.wait();
+    console.log("Barter offer declined successfully");
+  } catch (error) {
+    console.error("Error declining barter offer:", error);
+    setOpenError(true);
+    setError("Error declining barter offer");
+  }
+};
+
   const fetchMyTransactions = async () => {
     try {
       const contract = await connectSmartContract();
@@ -1110,12 +1159,12 @@ const createBarterOffer = async (
         fetchNFTByListingId,
         fetchNFTByOfferId,
         fetchMyNFTs,
-        // fetchAvailableNFTsForBarter,
         getBarterOffers,
         createBarterOffer,
         acceptBarterOffer,
         confirmBarterTransaction,
         cancelBarterTransaction,
+        declineBarterOffer,
         fetchMyTransactions,
       }}
     >
