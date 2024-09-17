@@ -109,7 +109,6 @@ const ViewOffer = () => {
           const timer = setTimeout(() => {
             router.back();
           }, 3000);
-
           return () => clearTimeout(timer);
         }
 
