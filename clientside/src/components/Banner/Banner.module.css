@@ -19,8 +19,8 @@
 @media screen and (max-width: 35em) {
     .banner_img_mobile {
         display: block;
-        width: 100%; /* Ensure the mobile image is fully responsive */
-        height: auto; /* Maintain the aspect ratio */
+        width: 100%;
+        height: auto;
     }
     .banner {
         display: none;
