@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { BsImages } from 'react-icons/bs';
+import { FaLock, FaBell } from 'react-icons/fa';
 import Image from "next/image";
 import styles from './NFTCard.module.css';
 import images from "../../assets/img";
@@ -96,14 +97,58 @@ const NFTCard = ({ initialCardArray, activeCategory }) => {
                                 </div>
                             </div>
 
-                            {card.remainingTime && (
+                            {(card.expirationTime > 0 || card.remainingTime) && (
                                 <div className={styles.NFTCard_box_update_right}>
                                     <div className={styles.NFTCard_box_update_right_info}>
-                                        <small>Duration</small>
-                                        <p>{card.remainingTime}</p>
+                                        {card.expirationTime > 0 ? (
+                                            <>
+                                                {/* Show "Lock For" and remaining time until expiration if expirationTime is valid */}
+                                                <small>
+                                                    <FaLock style={{
+                                                        marginRight: '4px',
+                                                        fontSize: '1.2rem',
+                                                        color: 'magenta'
+                                                    }} /> Lock For
+                                                </small>
+                                                <p>
+                                                    {card.expirationTime > Date.now() / 1000
+                                                        ? `${Math.floor((card.expirationTime - Date.now() / 1000) / 3600)}h:${Math.floor(
+                                                            ((card.expirationTime - Date.now() / 1000) % 3600) / 60
+                                                        )}m`
+                                                        : "Done"}
+                                                </p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                {/* Show "Duration" and remaining time if expirationTime is not valid */}
+                                                <small>Duration</small>
+                                                <p>{card.remainingTime || "N/A"}</p>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             )}
+
+                            {/* Show "Pending Offer" separately if isOffered is true */}
+                            {card.isOffered === true && (
+                                <div className={styles.NFTCard_box_update_right}>
+                                    <div className={styles.NFTCard_box_update_right_info}>
+                                    <small style={{ color: 'orange', marginTop: '5px' }}>
+                                            <FaBell style={{
+                                                marginRight: '4px',
+                                                fontSize: '1.2rem',
+                                     }} />
+                                        Pending
+                                    </small>
+                                        {/* <p style={{ color: 'blue', marginLeft: '10px' }}> */}
+                                    <p>
+                                        {card.activeOfferCount} Offers
+                                    </p>
+                                </div>
+                                </div>
+                            )}
+
+
                         </div>
 
                         <div className={styles.NFTCard_box_update_details}>
