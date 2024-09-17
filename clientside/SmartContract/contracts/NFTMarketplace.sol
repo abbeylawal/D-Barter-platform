@@ -352,8 +352,8 @@ function acceptBarterOffer(uint256 listingId, uint256 offerId) public {
     );
 
     // Transfer the NFTs
-    _transfer(address(this), listing.itemOwner, offer.offerTokenId); // Return the offer NFT to the listing owner
-    _transfer(listing.itemOwner, offer.offerer, listing.tokenId); // Transfer the listed NFT to the offerer
+    _transfer(address(this), listing.itemOwner, offer.offerTokenId);
+    _transfer(address(this), offer.offerer, listing.tokenId);
 
     // Update the status of the offer and tokens
     offer.isActive = false;
