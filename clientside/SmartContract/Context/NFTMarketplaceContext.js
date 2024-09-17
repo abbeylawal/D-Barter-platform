@@ -373,7 +373,10 @@ const connectWallet = async () => {
       console.log("Transaction:", transaction);
 
       await transaction.wait(); // Wait for the transaction to be mined
-      router.push("/searchPage");
+      router.push({
+        pathname: "/searchPage",
+        query: { scroll: "filter" },
+      });
     } catch (error) {
       console.error("Error creating NFT:", error);
       setOpenError(true);
@@ -660,9 +663,6 @@ const connectWallet = async () => {
 const fetchMyNFTs = async (walletAddress) => {
   try {
     const contract = await connectSmartContract();
-    console.log("Contract connected successfully");
-
-    // Fetch all listings from the smart contract
     const allListings = await contract.fetchAllListings();
     console.log("Fetched all listings:", allListings);
 
@@ -677,24 +677,37 @@ const fetchMyNFTs = async (walletAddress) => {
         listing.itemOwner.toLowerCase() === walletAddress.toLowerCase()
     );
 
+    console.log("my non offered nft:", myNFTs.length);
+
     // Fetch all active offers where the offerer is the specified wallet address
     let activeOffers = [];
     try {
-      activeOffers = await contract.fetchActiveOffersByAddress(walletAddress);
+      const activeOffersProxy = await contract.fetchActiveOffersByAddress(
+        walletAddress
+      );
+      activeOffers = Object.values(activeOffersProxy).map((offerProxy) => {
+        return {
+          offerId: offerProxy[0],
+          listingId: offerProxy[1], // listedToId
+          offerTokenId: offerProxy[2],
+          offerer: offerProxy[3],
+          isActive: offerProxy[4],
+          isAccepted: offerProxy[5],
+          transactionId: offerProxy[6],
+          expirationTime: offerProxy[7],
+        };
+      });
+
+      console.log("my Active Offered NFT:", activeOffers.length);
       console.log("Fetched active offers:", activeOffers);
     } catch (error) {
       console.error("Error fetching active offers:", error);
-      // Continue execution without active offers
     }
-
-    // Combine listings owned by wallet address with those offered by wallet address
-    const combinedNFTs = [...myNFTs, ...activeOffers];
-
     // Process each NFT belonging to the specified wallet address
     const items = await Promise.all(
-      combinedNFTs.map(async (i, index) => {
+      myNFTs.map(async (i, index) => {
         try {
-          console.log(`Processing NFT ${index + 1}/${combinedNFTs.length}`);
+          console.log(`Processing NFT ${index + 1}/${myNFTs.length}`);
           console.log("Listing data:", i);
 
           // Convert tokenId to a regular number
@@ -708,7 +721,6 @@ const fetchMyNFTs = async (walletAddress) => {
 
           // Fetch metadata from the token URI
           const meta = await axios.get(tokenURI);
-          console.log(`Metadata for tokenId ${tokenId}:`, meta.data);
 
           // Retrieve the creatorId from the accountsMappingRef based on the itemOwner
           const normalizedOwner = i.itemOwner.toLowerCase();
@@ -719,34 +731,32 @@ const fetchMyNFTs = async (walletAddress) => {
             ? i.expirationTime.toNumber()
             : Number(i.expirationTime);
 
-          // Determine the lock status
-          let lockStatus = "Unlocked"; // Default to 'Unlocked'
+          // Determine the lock status and listedToId
+          let lockStatus = "Unlocked";
+          let listedToId = "";
+          let offerId = "";
 
-          // Check if the listing is offered before fetching the BarterOffer
-          if (i.isOffered) {
-            try {
-              // Fetch the corresponding BarterOffer for the listing
-              const offerData = await contract.getBarterOfferByListingId(
-                i.listingId
-              );
-              console.log(
-                `Fetched BarterOffer data for listingId ${i.listingId}:`,
-                offerData
-              );
+          // Get the activeOfferCount from the listing and convert to number
+          const activeOfferCount = i.activeOffersCount ? Number(i.activeOffersCount) : 0;
 
-              // Use the expiration time from the BarterOffer
-              expirationTime = offerData.expirationTime.toNumber
-                ? offerData.expirationTime.toNumber()
-                : Number(offerData.expirationTime);
 
-              // Update lock status based on the offer's isActive status
-              lockStatus = offerData.isActive ? "Locked" : "Unlocked";
-            } catch (error) {
-              console.error(
-                `Error fetching offer data for listingId ${i.listingId}:`,
-                error
-              );
-            }
+          // Check if the NFT is involved in an active offer
+          const activeOffer = activeOffers.find(
+            (offer) =>
+              offer.offerTokenId.toString() === tokenId.toString() &&
+              offer.isActive
+          );
+
+          if (activeOffer) {
+            console.log(
+              `NFT with tokenId ${tokenId} is locked in an active offer.`
+            );
+            lockStatus = "Locked";
+            listedToId = activeOffer.listingId.toString();
+            offerId = activeOffer.offerId.toString();
+
+            // Use the expiration time from the active offer
+            expirationTime = Number(activeOffer.expirationTime);
           }
 
           // Generate random likes for UI display
@@ -758,9 +768,11 @@ const fetchMyNFTs = async (walletAddress) => {
               ? i.listingId.toNumber()
               : Number(i.listingId),
             tokenId: tokenId,
+            lockStatus: lockStatus,
             expirationTime: expirationTime,
             isActive: i.isActive,
             isOffered: i.isOffered,
+            activeOfferCount: activeOfferCount,
             name: meta.data.name,
             creatorId: creatorId,
             contractOwner: contract.target,
@@ -770,7 +782,8 @@ const fetchMyNFTs = async (walletAddress) => {
             image: meta.data.image,
             Category: meta.data.category,
             swapCategory: meta.data.swapCategories,
-            lockStatus: lockStatus,
+            listedToId: listedToId,
+            offerId: offerId, // Include the offerId in the item object
           };
           console.log("Processed NFT:", item);
           return item;
@@ -793,9 +806,6 @@ const fetchMyNFTs = async (walletAddress) => {
     return [];
   }
 };
-
-
-
 
 const fetchNFTByListingId = async (listingId) => {
   try {
@@ -878,7 +888,8 @@ const fetchNFTByOfferId = async (offerId) => {
     // Extract the offerer (itemOwner) from the returned data
     const offerDetails = data[0];
     const itemOwner = offerDetails[3];
-    const expirationTime = offerDetails[6];
+    const transactionId = offerDetails[6];
+    const expirationTime = offerDetails[7];
     console.log("owner:", owner);
     console.log(`Item Owner for offer ID ${offerId}:`, itemOwner);
     console.log(`Expiration Time for offer ID ${offerId}:`, expirationTime);
@@ -909,6 +920,7 @@ const fetchNFTByOfferId = async (offerId) => {
       category: meta.data.category,
       swapCategory: meta.data.swapCategories,
       offerExpire: expirationTime,
+      transactionId: transactionId,
       offerExpireDateTime: expirationDateTime
     };
 
@@ -921,59 +933,112 @@ const fetchNFTByOfferId = async (offerId) => {
 };
 
 
-  const getBarterOffers = async (listingId) => {
-    try {
-      const contract = await connectSmartContract();
+const getBarterOffers = async (listingId) => {
+  try {
+    const contract = await connectSmartContract();
 
     // Fetch all offers for a given listing ID from the smart contract
-    const offers = await contract.getBarterOffers(listingId);
-    console.log(`Fetched Offers for Listing ID ${listingId}:`, offers);
+    const offersProxy = await contract.getBarterOffers(listingId);
+    console.log(`Fetched Offers for Listing ID ${listingId}:`, offersProxy);
 
-      const items = await Promise.all(
-      offers.map(async (offer) => {
-        // Destructure offer details from the smart contract call
-        const { offeredTokenId, offerer, isAccepted, tokenURI, offerExpire } =
-          offer;
+    // Convert Proxy object to an array of offers
+    const offers = Object.values(offersProxy).map((offerProxy) => ({
+      offeredTokenId: offerProxy[0],
+      offerTransactionId: offerProxy[1],
+      offerer: offerProxy[2],
+      isAccepted: offerProxy[3],
+      tokenURI: offerProxy[4],
+      offerExpire: offerProxy[5],
+      expirationTime: offerProxy[6],
+    }));
 
-        // Convert BigInt values to numbers
-        const offeredTokenIdNumber = offeredTokenId;
-        // Ensure offerExpire is a number or BigInt and handle accordingly
-        const expirationTimeNumber =
-          typeof offerExpire === "bigint" ? Number(offerExpire) : offerExpire;
+    console.log(`Parsed Offers for Listing ID ${listingId}:`, offers);
 
-        // Convert expiration time to a human-readable format
-        const expirationDateTime = expirationTimeNumber
-          ? new Date(expirationTimeNumber * 1000).toLocaleString()
-          : "Invalid Date";
+    if (!Array.isArray(offers) || offers.length === 0) {
+      console.warn(
+        `No offers found or invalid format for Listing ID ${listingId}`
+      );
+      return [];
+    }
 
-        // Fetch metadata from the token URI
-        const meta = await axios.get(tokenURI);
+    const items = await Promise.all(
+      offers.map(async (offer, index) => {
+        try {
+          console.log(`Processing offer ${index + 1} of ${offers.length}`);
 
-        // Fetch creator ID from the account mapping
-        const creatorId =
-          accountsMappingRef.current[offerer.toLowerCase()] || 0;
+          // Convert BigInt values to numbers safely
+          const offeredTokenIdNumber =
+            typeof offer.offeredTokenId === "bigint"
+              ? Number(offer.offeredTokenId)
+              : offer.offeredTokenId;
+          const offerId =
+            typeof offer.offerTransactionId === "bigint"
+              ? Number(offer.offerTransactionId)
+              : offer.offerTransactionId;
+          const expirationTimeNumber =
+            typeof offer.expirationTime === "bigint"
+              ? Number(offer.expirationTime)
+              : offer.expirationTime;
 
-        // Generate random likes for the offer (or use actual data if available)
-        const randomLikes = Math.floor(Math.random() * 501);
+          // Check if any data is undefined or null
+          if (!offeredTokenIdNumber || !offer.offerer) {
+            console.warn(
+              `Offer data is incomplete for index ${index + 1}:`,
+              offer
+            );
+            return null; // Skip this offer if any required data is missing
+          }
 
-        return {
-          tokenId: offeredTokenIdNumber,
-          offerer: offerer,
-          creatorId: creatorId,
-          isAccepted: isAccepted,
-          name: meta.data.name,
-          description: meta.data.description,
-          image: meta.data.image,
-          category: meta.data.category,
-          swapCategory: meta.data.swapCategories,
-          likes: randomLikes,
-          offerExpire: expirationTimeNumber,
-          offerExpireDateTime: expirationDateTime,
-        };
+          // Convert expiration time to a human-readable format
+          const expirationDateTime = expirationTimeNumber
+            ? new Date(expirationTimeNumber * 1000).toLocaleString()
+            : "Invalid Date";
+
+          // Fetch metadata from the token URI
+          const meta = await axios.get(offer.tokenURI);
+          console.log(
+            `Metadata for offer token ${offeredTokenIdNumber}:`,
+            meta.data
+          );
+
+          // Fetch creator ID from the account mapping
+          const creatorId =
+            accountsMappingRef.current[offer.offerer.toLowerCase()] || 0;
+
+          // Generate random likes for the offer (or use actual data if available)
+          const randomLikes = Math.floor(Math.random() * 501);
+
+          // Construct the offer item object
+          const item = {
+            tokenId: offeredTokenIdNumber,
+            offerId: offerId,
+            offerer: offer.offerer,
+            itemOwner: offer.offerer,
+            creatorId: creatorId,
+            isAccepted: offer.isAccepted,
+            name: meta.data.name,
+            description: meta.data.description,
+            image: meta.data.image,
+            category: meta.data.category,
+            swapCategory: meta.data.swapCategories,
+            likes: randomLikes,
+            offerExpire: expirationTimeNumber,
+            offerExpireDateTime: expirationDateTime,
+          };
+
+          console.log("Processed offer item:", item);
+          return item;
+        } catch (innerError) {
+          console.error(`Error processing offer ${index + 1}:`, innerError);
+          return null; // Continue processing other offers even if one fails
+        }
       })
     );
 
-    return items;
+    // Filter out any null items resulting from processing errors
+    const validItems = items.filter((item) => item !== null);
+    console.log("Total valid offers processed:", validItems.length);
+    return validItems;
   } catch (error) {
     console.error("Error fetching barter offers:", error);
     setOpenError(true);
@@ -981,6 +1046,8 @@ const fetchNFTByOfferId = async (offerId) => {
     return [];
   }
 };
+
+
 
   
 const createBarterOffer = async (
@@ -990,15 +1057,12 @@ const createBarterOffer = async (
 ) => {
   try {
     const contract = await connectSmartContract();
-
-    // Create the barter offer on the contract
     const transaction = await contract.createBarterOffer(
       listingId,
       offerTokenId,
       durationInHours
     );
     console.log("Transaction hash:", transaction.hash);
-
     const receipt = await transaction.wait();
     console.log("Transaction receipt:", receipt);
 
@@ -1021,21 +1085,22 @@ const createBarterOffer = async (
       );
     }
 
-
     if (!offerCreatedEvent) {
       throw new Error(
         "BarterOfferCreated event not found in the transaction receipt"
       );
     }
 
-    // Extract the offerId from the event arguments
-    const offerIdBigInt = offerCreatedEvent.args.offerId;
+    // Extract the offerId and transactionId from the event arguments
+    const offerId = offerCreatedEvent.args.offerId.toString();
+    const transactionId = offerCreatedEvent.args.transactionId.toString();
     const offererAddress = offerCreatedEvent.args.offerer.toString();
-    const offerId = offerIdBigInt.toString();
 
     console.log("Barter offer created successfully with offerId:", offerId);
-    console.log("Barter offer created successfully with offerAddress:", offererAddress);
-    return offerId;
+    console.log("Barter offer created successfully with offererAddress:", offererAddress);
+    console.log("Associated transactionId:", transactionId);
+
+    return { offerId, transactionId }; // Return both offerId and transactionId
   } catch (error) {
     console.error("Error creating barter offer:", error);
     setError(`Error creating barter offer: ${error.message}`);
@@ -1047,14 +1112,37 @@ const createBarterOffer = async (
 
   const acceptBarterOffer = async (listingId, offerId) => {
     try {
+      if (!listingId || !offerId) {
+        console.error("Invalid listingId or offerId");
+        setOpenError(true);
+        setError("Invalid listingId or offerId");
+        return;
+      }
+
+          // Connect to the smart contract
       const contract = await connectSmartContract();
+      console.log("Contract connected:", contract.target);
+
+      // Log the parameters being sent to the contract function
+      console.log("Attempting to accept offer with:", { listingId, offerId });
+
+      // Send the transaction without gas estimation
       const transaction = await contract.acceptBarterOffer(listingId, offerId);
+      console.log("Transaction sent. Waiting for confirmation...");
+
       await transaction.wait();
       console.log("Barter offer accepted successfully");
+
+      router.push(`/author?tab=owned&walletAddress=${currentAccount.address}`);
     } catch (error) {
       console.error("Error accepting barter offer:", error);
+      if (error?.data?.message) {
+        console.error("Revert reason:", error.data.message);
+      } else if (error?.message) {
+        console.error("Error message:", error.message);
+      }
       setOpenError(true);
-      setError("Error accepting barter offer");
+      setError("Error accepting barter offer. Check console for details.");
     }
   };
 
@@ -1105,6 +1193,9 @@ const handleExpiredOffers = async (listingId) => {
     const transaction = await contract.declineBarterOffer(listingId, offerId);
     await transaction.wait();
     console.log("Barter offer declined successfully");
+    
+    // After successfully declining the offer, redirect to the author's owned page
+    router.push(`/author?tab=owned&walletAddress=${currentAccount.address}`);
   } catch (error) {
     console.error("Error declining barter offer:", error);
     setOpenError(true);
