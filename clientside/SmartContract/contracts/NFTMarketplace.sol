@@ -5,6 +5,8 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "hardhat/console.sol";
 import "./Counter.sol";
 import "./HTLC.sol";
+import "hardhat/console.sol";
+
 
 contract NFTMarketplace is ERC721URIStorage {
     using CounterLib for CounterLib.Counter;
@@ -25,6 +27,7 @@ contract NFTMarketplace is ERC721URIStorage {
         uint256 expirationTime;
         bool isActive;
         bool isOffered;
+        uint256 activeOffersCount;
     }
 
     struct BarterOffer {
@@ -34,10 +37,11 @@ contract NFTMarketplace is ERC721URIStorage {
         address offerer;
         bool isActive;
         bool isAccepted;
+        uint256 transactionId;
         uint256 expirationTime;
     }
 
-    enum TransactionStatus { Accepted, Completed, Cancelled } 
+    enum TransactionStatus { Accepted, Completed, Pending, Cancelled } 
 
     struct BarterTransaction {
         uint256 transactionId;
@@ -53,9 +57,11 @@ contract NFTMarketplace is ERC721URIStorage {
 
     struct BarterOfferDetails {
         uint256 offeredTokenId;
+        uint256 offerTransactionId;
         address offerer;
         bool isAccepted;
         string tokenURI;
+        uint256 transactionId;
         uint256 expirationTime;
     }
 
@@ -68,9 +74,9 @@ contract NFTMarketplace is ERC721URIStorage {
     mapping(uint256 => bool) private tokenInActiveOffer;
 
     event BarterListingCreated(uint256 indexed listingId, uint256 indexed tokenId, address itemOwner, uint256 expirationTime);
-    event BarterOfferCreated(uint256 indexed offerId, uint256 indexed listingId, uint256 offerTokenId, address offerer, uint256 expirationTime);
+    event BarterOfferCreated(uint256 indexed offerId, uint256 indexed listingId, uint256 offerTokenId, address offerer, uint256 expirationTime, uint256 transactionId);
     event HTLCSwapInitiated(bytes32 indexed swapId, uint256 indexed listingId, uint256 indexed offerId);
-    event BarterOfferAccepted(uint256 indexed transactionId, uint256 indexed listingId, uint256 indexed offerId);    
+    event BarterOfferAccepted(uint256 transactionId, uint256 indexed listingId, uint256 indexed offerId);    
     event BarterOfferDeclined(uint256 indexed listingId, uint256 indexed offerId);
     event BarterTransactionCompleted(uint256 indexed transactionId);
     event BarterTransactionCancelled(uint256 indexed transactionId);
@@ -96,6 +102,7 @@ contract NFTMarketplace is ERC721URIStorage {
         uint256 listingId = _listingIds.current();
         uint256 expirationTime = 0;
         uint256 mintTime = block.timestamp;
+        uint256 activeOffersCount = 0;
 
         idToBarterListing[listingId] = BarterListing(
             listingId,
@@ -104,7 +111,8 @@ contract NFTMarketplace is ERC721URIStorage {
             mintTime,
             expirationTime,
             true,
-            false
+            false,
+            activeOffersCount
         );
 
         emit BarterListingCreated(listingId, newTokenId, msg.sender, mintTime);
@@ -201,49 +209,45 @@ contract NFTMarketplace is ERC721URIStorage {
 
     // Function to create a barter offer for a specific listing
     function createBarterOffer(uint256 listingId, uint256 offerTokenId, uint256 durationInHours) public returns (uint256) {
-        // Ensure the listing is active
         require(idToBarterListing[listingId].isActive, "Listing is not active");
         require(ownerOf(offerTokenId) == msg.sender, "You don't own this token");
-        
-        // Ensure the token isn't already part of an active offer
         require(!tokenInActiveOffer[offerTokenId], "This token is already in an active offer");
-
         if (durationInHours == 0) {
             durationInHours = 24;
         }
-
         uint256 expirationTime = block.timestamp + (durationInHours * 1 hours);
 
-        // Generate new offerId
         _offerIds.increment();
         uint256 offerId = _offerIds.current();
 
         // Transfer the offer token to the contract for escrow
         transferFrom(msg.sender, address(this), offerTokenId);
 
-        // Create the BarterOffer struct
+        _transactionIds.increment();
+        uint256 transactionId = _transactionIds.current();
+
         idToBarterOffer[offerId] = BarterOffer(
             offerId,
             listingId,
             offerTokenId,
             msg.sender,
-            true,
-            false,
+            true,  // isActive
+            false, // isAccepted
+            transactionId,
             expirationTime
         );
 
         offerToTokenId[offerId] = offerTokenId;
         listingToOffers[listingId].push(offerId);
         tokenInActiveOffer[offerTokenId] = true;
-
-        // Update the BarterListing to indicate it has an active offer
+        idToBarterListing[listingId].activeOffersCount++;
         idToBarterListing[listingId].isOffered = true;
 
-        // Emit the BarterOfferCreated event
-        emit BarterOfferCreated(offerId, listingId, offerTokenId, msg.sender, expirationTime);
+        emit BarterOfferCreated(offerId, listingId, offerTokenId, msg.sender, expirationTime, transactionId);
 
         return offerId;
     }
+
 
 
     function getBarterOfferByListingId(uint256 listingId) public view returns (BarterOffer memory) {
@@ -262,34 +266,35 @@ contract NFTMarketplace is ERC721URIStorage {
     revert("No active offer found for the given listing");
 }
 
-function fetchActiveOffersByAddress(address walletAddress) public view returns (BarterOffer[] memory) {
-    require(walletAddress != address(0), "Invalid wallet address");
-    uint256 totalOffersCount = _offerIds.current();
-    uint256 activeOffersCount = 0;
+    function fetchActiveOffersByAddress(address walletAddress) public view returns (BarterOffer[] memory) {
+        require(walletAddress != address(0), "Invalid wallet address");
+        uint256 totalOffersCount = _offerIds.current();
+        uint256 activeOffersCount = 0;
 
-    // First loop: Count the number of active offers by the given wallet address
-    for (uint256 i = 1; i <= totalOffersCount; i++) {
-        if (idToBarterOffer[i].offerer == walletAddress && idToBarterOffer[i].isActive) {
-            activeOffersCount++;
-        }
-    }
-
-    // Always return an array, even if it's empty
-    BarterOffer[] memory activeOffers = new BarterOffer[](activeOffersCount);
-    
-    if (activeOffersCount > 0) {
-        uint256 currentIndex = 0;
-        // Second loop: Collect all active offers by the given wallet address
+        // First loop: Count the number of active offers by the given wallet address
         for (uint256 i = 1; i <= totalOffersCount; i++) {
             if (idToBarterOffer[i].offerer == walletAddress && idToBarterOffer[i].isActive) {
-                activeOffers[currentIndex] = idToBarterOffer[i];
-                currentIndex++;
+                activeOffersCount++;
             }
         }
+
+        // Always return an array, even if it's empty
+        BarterOffer[] memory activeOffers = new BarterOffer[](activeOffersCount);
+        
+        if (activeOffersCount > 0) {
+            uint256 currentIndex = 0;
+            // Second loop: Collect all active offers by the given wallet address
+            for (uint256 i = 1; i <= totalOffersCount; i++) {
+                if (idToBarterOffer[i].offerer == walletAddress && idToBarterOffer[i].isActive) {
+                    activeOffers[currentIndex] = idToBarterOffer[i];
+                    currentIndex++;
+                }
+            }
+        }
+
+        return activeOffers;
     }
 
-    return activeOffers;
-}
 
     function getBarterOffers(uint256 listingId) public view returns (BarterOfferDetails[] memory) {
         uint256[] memory offerIds = listingToOffers[listingId];
@@ -301,9 +306,11 @@ function fetchActiveOffersByAddress(address walletAddress) public view returns (
 
             offerDetails[i] = BarterOfferDetails({
                 offeredTokenId: offer.offerTokenId,
+                offerTransactionId: offer.offerId,
                 offerer: offer.offerer,
                 isAccepted: offer.isAccepted,
                 tokenURI: uri,
+                transactionId: offer.transactionId,
                 expirationTime: offer.expirationTime
             });
         }
@@ -312,55 +319,61 @@ function fetchActiveOffersByAddress(address walletAddress) public view returns (
     }
 
 
-    function acceptBarterOffer(uint256 listingId, uint256 offerId) public {
-        require(idToBarterListing[listingId].itemOwner == msg.sender, "You are not the owner of this listing");
-        require(idToBarterOffer[offerId].listingId == listingId, "Offer does not match listing");
-        require(idToBarterOffer[offerId].isActive, "Offer is not active");
-        require(block.timestamp < idToBarterOffer[offerId].expirationTime, "Offer has expired");
 
-        BarterListing memory listing = idToBarterListing[listingId];
-        BarterOffer memory offer = idToBarterOffer[offerId];
+function acceptBarterOffer(uint256 listingId, uint256 offerId) public {
+    console.log("AcceptBarterOffer called with listingId:", listingId);
+    console.log("AcceptBarterOffer called with offerId:", offerId);
+    console.log("Sender:", msg.sender);
 
-        _transactionIds.increment();
-        uint256 transactionId = _transactionIds.current();
+    // Ensure that the caller is the owner of the listing
+    BarterListing storage listing = idToBarterListing[listingId];
+    BarterOffer storage offer = idToBarterOffer[offerId];
 
-        idToBarterTransaction[transactionId] = BarterTransaction(
-            transactionId,
-            listingId,
-            offerId,
-            listing.itemOwner,
-            offer.offerer,
-            listing.tokenId,
-            offer.offerTokenId,
-            block.timestamp,
-            TransactionStatus.Accepted
-        );
+    require(listing.itemOwner == msg.sender, "You are not the owner of this listing");
+    require(offer.listingId == listingId, "Offer does not match listing");
+    require(offer.isActive, "Offer is not active");
+    require(block.timestamp < offer.expirationTime, "Offer has expired");
 
-        idToBarterListing[listingId].isActive = false;
-        idToBarterOffer[offerId].isActive = false;
+    // Increment the transaction ID
+    _transactionIds.increment();
+    uint256 transactionId = _transactionIds.current();
 
-        //----- Transfer NFTs
-        _transfer(listing.itemOwner, offer.offerer, listing.tokenId);
-        _transfer(offer.offerer, listing.itemOwner, offer.offerTokenId);
+    // Record the accepted transaction
+    idToBarterTransaction[transactionId] = BarterTransaction(
+        transactionId,
+        listingId,
+        offerId,
+        listing.itemOwner,
+        offer.offerer,
+        listing.tokenId,
+        offer.offerTokenId,
+        block.timestamp,
+        TransactionStatus.Accepted
+    );
 
-        // Update listings and offers
-        listing.isActive = false;
-        offer.isActive = false;
-        offer.isAccepted = true;
-        tokenInActiveOffer[offer.offerTokenId] = false;
+    // Transfer the NFTs
+    _transfer(address(this), listing.itemOwner, offer.offerTokenId); // Return the offer NFT to the listing owner
+    _transfer(listing.itemOwner, offer.offerer, listing.tokenId); // Transfer the listed NFT to the offerer
 
-        // Deactivate all other offers for this listing
-        for (uint i = 0; i < listingToOffers[listingId].length; i++) {
-            uint256 currentOfferId = listingToOffers[listingId][i];
-            if (currentOfferId != offerId && idToBarterOffer[currentOfferId].isActive) {
-                idToBarterOffer[currentOfferId].isActive = false;
-                tokenInActiveOffer[idToBarterOffer[currentOfferId].offerTokenId] = false;
-            }
+    // Update the status of the offer and tokens
+    offer.isActive = false;
+    offer.isAccepted = true;
+    offer.expirationTime = 0;
+    tokenInActiveOffer[offer.offerTokenId] = false;
+
+    // Deactivate all other offers for this listing
+    for (uint i = 0; i < listingToOffers[listingId].length; i++) {
+        uint256 currentOfferId = listingToOffers[listingId][i];
+        if (currentOfferId != offerId && idToBarterOffer[currentOfferId].isActive) {
+            idToBarterOffer[currentOfferId].isActive = false;
+            tokenInActiveOffer[idToBarterOffer[currentOfferId].offerTokenId] = false;
         }
-        // -------
-
-        emit BarterOfferAccepted(transactionId, listingId, offerId);
     }
+
+    emit BarterOfferAccepted(transactionId, listingId, offerId);
+}
+
+
 
 
     function confirmBarterTransaction(uint256 transactionId) public {
@@ -384,19 +397,43 @@ function fetchActiveOffersByAddress(address walletAddress) public view returns (
 
 
     function declineBarterOffer(uint256 listingId, uint256 offerId) public {
-        require(idToBarterListing[listingId].itemOwner == msg.sender, "You are not the owner of this listing");
-        require(idToBarterOffer[offerId].listingId == listingId, "Offer does not match listing");
-        require(idToBarterOffer[offerId].isActive, "Offer is not active");
+        console.log("DeclineBarterOffer called with listingId:", listingId);
+        console.log("DeclineBarterOffer called with offerId:", offerId);
+        console.log("Sender:", msg.sender);
+        BarterOffer storage offer = idToBarterOffer[offerId];
+        require(offer.isActive, "Offer is not active");
+        require(offer.listingId == listingId, "Offer does not match listing");
+
+        // Ensure that the caller is either the owner of the listing or the offerer
+        require(
+            idToBarterListing[listingId].itemOwner == msg.sender || offer.offerer == msg.sender,
+            "You are not authorized to decline this offer"
+        );
 
         // Mark the offer as inactive
-        idToBarterOffer[offerId].isActive = false;
-        tokenInActiveOffer[idToBarterOffer[offerId].offerTokenId] = false;
+        offer.isActive = false;
+        tokenInActiveOffer[offer.offerTokenId] = false;
 
         // Return the offered token to the offerer
-        _transfer(address(this), idToBarterOffer[offerId].offerer, idToBarterOffer[offerId].offerTokenId);
+        _transfer(address(this), offer.offerer, offer.offerTokenId);
+
+        // Decrement the active offers counter for the listing
+        if (idToBarterListing[listingId].activeOffersCount > 0) {
+            idToBarterListing[listingId].activeOffersCount--;
+        }
+
+        // Set isOffered to false only if no active offers remain
+        if (idToBarterListing[listingId].activeOffersCount == 0) {
+            idToBarterListing[listingId].isOffered = false;
+        }
+
+        offer.isActive = false;
+        offer.listingId = 0;
+        offer.expirationTime = 0;
 
         emit BarterOfferDeclined(listingId, offerId);
     }
+
 
     function cancelBarterTransaction(uint256 transactionId) public {
         BarterTransaction storage transaction = idToBarterTransaction[transactionId];
