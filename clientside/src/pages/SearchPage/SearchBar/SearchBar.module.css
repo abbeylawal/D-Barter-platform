@@ -1,10 +1,12 @@
 .searchBar {
     display: flex;
     width: 100%;
+    margin: 2rem;
 }
 
 .SearchBar {
     width: 100%;
+    margin: 2rem;
 }
 
 .SearchBar_box {
@@ -14,7 +16,7 @@
     align-items: center;
     display: flex;
     border-radius: 5rem;
-    margin-top: 8rem;
+    margin-top: 3rem;
     margin-bottom: 3rem;
     color: var(--main-bg-color);
     box-shadow: var(--box-shadow);
