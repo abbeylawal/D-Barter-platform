@@ -22,7 +22,7 @@ import { Button } from "../../../components/componentsIndex";
 import { ProductTabs } from "../ProductDetailsIndex"
 
 const ProductDescription = ({ nft }) => {
-  const { currentAccount, getBarterOffers, fetchAvailableNFTsForBarter } = useContext(NFTMarketplaceContext);
+  const { currentAccount} = useContext(NFTMarketplaceContext);
 
   const router = useRouter();
   let userId = 0;
@@ -121,9 +121,13 @@ const ProductDescription = ({ nft }) => {
       return; // Prevents routing if listingId is not set
     }
 
-    router.push(`/view_offer?listingId=${nft.tokenId}`);
-  };
+    // Construct the URL based on whether the NFT is locked or has offers
+    const url = nft.lockStatus === "Locked"
+      ? `/view_offer?listingId=${nft.listedToId}&offerId=${nft.offerId}`
+      : `/view_offer?listingId=${nft.tokenId}`;
 
+    router.push(url);
+  };
 
   const isOwner = currentAccount && nft.itemOwner &&
     currentAccount.address.toLowerCase() === nft.itemOwner.toLowerCase();
@@ -131,23 +135,56 @@ const ProductDescription = ({ nft }) => {
   const isContractOwner = currentAccount && nft.contractOwner &&
     currentAccount.address.toLowerCase() === nft.contractOwner.toLowerCase();
 
-
   const renderOfferButton = () => {
+    const isLocked = nft.lockStatus === "Locked"; // Determine if the NFT is locked
+    const isOffered = nft.isOffered === true; // Check if there are offers for this NFT
+
     if (isContractOwner) {
       return <p>Item Listed on MarketPlace</p>;
     } else if (isOwner) {
-      return (
-        <>
-          <p style={{ lineHeight: 1, color: 'yellow' }}>Item Listed on MarketPlace!</p>
-          <Button
-            icon={<FaWallet />}
-            btnName="Awaiting Offer"
-            handleClick={handleAwaitingOfferClick}
-            classStyle={Style.button}
-          />
-        </>
-      );
+      if (isLocked) {
+        // Handle when the item is locked due to a pending offer
+        return (
+          <>
+            <p style={{ lineHeight: 1, color: 'red' }}>Item is Locked on Pending Offer!!</p>
+            <Button
+              icon={<FaWallet />}
+              btnName="Preview Offer"
+              handleClick={handleAwaitingOfferClick}
+              classStyle={Style.button}
+              // style={{ border: '1px solid blue', color: 'blue' }}
+            />
+          </>
+        );
+      } else if (isOffered) {
+        // Handle when the item has offers
+        return (
+          <>
+            <p style={{ lineHeight: 2, color: 'yellow' }}>You have some offers for this product!!!</p>
+            <Button
+              icon={<FaWallet />}
+              btnName="View Offers"
+              handleClick={() => router.push(`/view_offer?listingId=${nft.tokenId}`)}
+              classStyle={Style.button}
+            />
+          </>
+        );
+      } else {
+        // Default case when the item is listed but no offers or locks
+        return (
+          <>
+            <p style={{ lineHeight: 2, color: 'yellow' }}>Item Listed on MarketPlace!</p>
+            <Button
+              icon={<FaWallet />}
+              btnName="Awaiting Offer"
+              handleClick={handleAwaitingOfferClick}
+              classStyle={Style.button}
+            />
+          </>
+        );
+      }
     } else {
+      // For users who are not the owner
       return (
         <Button
           icon={<FaWallet />}
@@ -158,6 +195,7 @@ const ProductDescription = ({ nft }) => {
       );
     }
   };
+
 
 
   return (
@@ -287,63 +325,6 @@ const ProductDescription = ({ nft }) => {
 
             <div className={Style.ProductDescription_box_profile_bidding_box_button}>
               {renderOfferButton()}
-              {/* {currentAccount && currentAccount.address && nft.contractOwner &&
-                currentAccount.address.toLowerCase() === nft.contractOwner.toLowerCase() ? (
-                <p>Item Listed on MarketPlace</p>
-              ) : currentAccount && currentAccount.address && nft.itemOwner &&
-                currentAccount.address.toLowerCase() === nft.itemOwner.toLowerCase() ? (
-                <p style={{ "lineHeight": 1, "color": 'yellow' }}>Item Listed on MarketPlace !!</p>
-
-                    // TODO: if there is an offer on the current product then a disabled button showing pending offer 
-                // <Button
-                //   icon={<FaWallet />}
-                //   btnName="List on Marketplace"
-                //   handleClick={() => { }}
-                //   classStyle={Style.button}
-                // />
-              ) : (
-                    // TODO: if the current userB as made and offer to the itemOwner then this should be a 2 day count down stimulating a open product time lock  and graded out
-                <Button
-                  icon={<FaWallet />}
-                  btnName="Make Offer"
-                  handleClick={() => makeOffer(nft)}
-                  classStyle={Style.button}
-                />
-              )}
-
-
-              {currentAccount && currentAccount.address && nft.contractOwner &&
-                currentAccount.address.toLowerCase() === nft.contractOwner.toLowerCase() ? (
-                <p>Item Listed on MarketPlace</p>
-              ) : currentAccount && currentAccount.address && nft.itemOwner &&
-                currentAccount.address.toLowerCase() === nft.itemOwner.toLowerCase() ? (
-                
-                // TODO: if there is an offer on the current product then button to view offer 
-                <Button
-                  icon={<FaWallet />}
-                  btnName="Awaiting Offer"
-                  handleClick={() => { }}
-                  classStyle={Style.button}
-                />
-                ) : (
-                    
-                    // TODO: if ther current userB as made and offer to the itemOwner then this should be a cancel offer and in red 
-                <Button
-                  icon={<FaWallet />}
-                  btnName="Make Offer"
-                  handleClick={() => makeOffer(nft)}
-                  classStyle={Style.button}
-                />
-              )} */}
-
-
-
-              {/* <Button
-                icon={<FaPercentage />}
-                btnName="Make Offer"
-                handleClick={() => { }}
-                classStyle={Style.button}
-              /> */}
 
             </div>
 
