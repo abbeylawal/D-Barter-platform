@@ -35,30 +35,36 @@ const OfferPage = ({
 
   const { fetchMyNFTs, createBarterOffer } = useContext(NFTMarketplaceContext);
 
-  useEffect(() => {
-    const fetchUserNFTs = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        console.log("Fetching My NFTs...");
-        const fetchedMyNFTs = offerAddress
-          ? await fetchMyNFTs(offerAddress)
-          : await fetchMyNFTs();
+useEffect(() => {
+  const fetchUserNFTs = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      console.log("Fetching My NFTs...");
+      const fetchedMyNFTs = offerAddress
+        ? await fetchMyNFTs(offerAddress)
+        : await fetchMyNFTs();
 
-        console.log("Fetched My NFTs:", fetchedMyNFTs);
-        setUserNFTs(fetchedMyNFTs);
-      } catch (error) {
-        console.error("Error fetching My NFTs:", error);
-        setError(
-          "Failed to fetch My NFTs. Please check the console for more details."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
+      // Filter out the NFTs that are locked
+      const unlockedNFTs = fetchedMyNFTs.filter(
+        (nft) => nft.lockStatus !== "Locked"
+      );
 
-    fetchUserNFTs();
-  }, [fetchMyNFTs, offerAddress]);
+      console.log("Fetched My NFTs (Unlocked only):", unlockedNFTs);
+      setUserNFTs(unlockedNFTs);
+    } catch (error) {
+      console.error("Error fetching My NFTs:", error);
+      setError(
+        "Failed to fetch My NFTs. Please check the console for more details."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchUserNFTs();
+}, [fetchMyNFTs, offerAddress]);
+
 
   const handleNFTSelection = (tokenId ) => {
     setSelectedNFTs((prevSelectedNFTs) => {
@@ -91,8 +97,11 @@ const OfferPage = ({
       
       for (const tokenId  of selectedNFTs) {
         console.log("selectedNft ID: ", tokenId )
-        const offerId = await createBarterOffer(listingId, tokenId , durationInHours);
-        console.log("offerId:", offerId)
+        const { offerId, transactionId } = await createBarterOffer(listingId, tokenId, durationInHours);
+
+        console.log("offerId:", offerId);
+        console.log("transactionId:", transactionId);
+
         if (offerId) {
           offerIds.push(offerId);
         }
@@ -185,7 +194,6 @@ const OfferPage = ({
             />
           </div>
         </div>
-        
         <div
           className={Styles.submitButton}
           style={{
